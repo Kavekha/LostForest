@@ -1,0 +1,21 @@
+v0.0.4
+    spawner de mobs.
+    refacto.
+
+v0.0.3
+    fov, map explorée.
+
+v0.0.2
+    Controles App / Game séparés. Bases.
+    Generation de map, tutoriel.
+
+
+v0.0.1
+    Moteur de rendu hors du corps de l'application principale.
+    Moteur du jeu, bases hors du corps de l'application principale.
+    Map, au sein du jeu.
+    Entities, au sein du jeu.
+
+v0.0.0
+    Base : Affichage personnages & controles.
+
