@@ -1,6 +1,6 @@
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
-from data.config import get_map_config, get_color_config
+from config.config import get_map_config, get_color_config
 from random import randint
 from utils.fov_functions import initialize_fov
 from spawners import Spawner
@@ -12,6 +12,7 @@ class GameMap:
     '''
     def __init__(self, map_type):
         # on recupere la configuration de la map, selon le type de map choisi par le jeu.
+        self.map_type = map_type
         map_config = get_map_config()
         self.width = map_config[map_type]['width']
         self.height = map_config[map_type]['height']

@@ -1,5 +1,5 @@
 import libtcodpy as libtcod
-from data.config import get_app_config
+from config.config import get_app_config
 from input_handlers import handle_keys
 from render_engine import Render
 from game import Game
