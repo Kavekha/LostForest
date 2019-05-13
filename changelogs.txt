@@ -1,3 +1,22 @@
+Next:
+    Table de mobs : Nombre de mobs max, poids
+    fight : stats & combat
+    map : camera, map plus grande que l'ecran de jeu
+    logs : accès archives
+    mouse : deplacements souris
+    fix : mauvais recalcul du fov, laisse des traces de lumiere au debut
+
+v0.0.6
+    refacto
+    interface
+    messages
+    mouse support (info).
+
+v0.0.5
+    systeme de combat,
+    gestion d'events,
+    interface sommaire.
+
 v0.0.4
     spawner de mobs.
     refacto.

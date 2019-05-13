@@ -1,28 +1,30 @@
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
-from config.config import get_map_config, get_color_config
-from random import randint
+from config.config import get_map_config
 from utils.fov_functions import initialize_fov
 from spawners import Spawner
+
+from random import randint
+
 
 
 class GameMap:
     '''
     gère la creation de la map et son contenu, ainsi que sa mise à jour.
     '''
-    def __init__(self, map_type):
+    def __init__(self, game, map_type):
         # on recupere la configuration de la map, selon le type de map choisi par le jeu.
         self.map_type = map_type
+        self.game = game
+
         map_config = get_map_config()
+        self.colors = map_config[map_type]['colors']
         self.width = map_config[map_type]['width']
         self.height = map_config[map_type]['height']
         self.room_max_size = map_config[map_type]['room_max_size']
         self.room_min_size = map_config[map_type]['room_min_size']
         self.max_rooms = map_config[map_type]['max_rooms']
         self.max_monsters_room = map_config[map_type]['max_monsters_per_room']
-
-        # on recupere les couleurs disponibles. Non liés à la carte. # TODO: Couleurs selon la map?
-        self.colors = get_color_config()
 
         # On créé une map pleine, non utilisable sans sa generation.
         self.tiles = self._initialize_tiles()   # tiles = la vraie map
@@ -54,10 +56,8 @@ class GameMap:
     def generate_map(self, game):
         # La map en elle meme.
         self._make_map_tutorial_method(game.player)
-
         # Ce qui est visible ou non du joueur.
         self.fov_map = initialize_fov(self)
-
         # On spawn les entités qui la peuplent.
         self.spawner.spawn_entities()
 

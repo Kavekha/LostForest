@@ -5,6 +5,7 @@ from data.monsters import get_monster_stats
 from components.fighter import Fighter
 from render_engine import RenderOrder
 
+
 class Spawner:
     def __init__(self, map):
         self.map_owner = map
@@ -44,7 +45,8 @@ class Spawner:
 
         ai_component = dict_stats['brain']
         fighter_component = Fighter(hp=monster_hp)
-        monster = Entity(x, y,
+        monster = Entity(self.map_owner.game,
+                         x, y,
                          monster_appearance, monster_color, monster_name, blocks=True,
                          fighter=fighter_component,
                          ai=ai_component,
