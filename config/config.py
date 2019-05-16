@@ -3,7 +3,7 @@ import libtcodpy as libtcod
 
 def get_app_config():
     configuration = {
-        'version': '0.0.6',
+        'version': '0.0.7',
         'screen_width': 80,
         'screen_height': 50,
         'bar_width': 20,
@@ -28,8 +28,9 @@ def get_map_config():
             'room_max_size': 10,
             'room_min_size': 5,
             'max_rooms': 30,
-            'max_monsters_per_room': 3,
+            'max_monsters_per_room': 2,
             'monster_table': 'standard_table',
+            'max_items_per_room': 1,
             'colors': {
                 'dark_wall': libtcod.Color(0, 0, 100),
                 'dark_ground': libtcod.Color(50, 50, 150),

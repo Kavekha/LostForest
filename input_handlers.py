@@ -2,6 +2,8 @@ import libtcodpy as libtcod
 
 
 def handle_keys(key):
+    key_char = chr(key.c)
+
     action = {'app': {}, 'game': {}}
     # Movement keys
 
@@ -13,6 +15,10 @@ def handle_keys(key):
         action['game'] = {'move': (-1, 0)}
     elif key.vk == libtcod.KEY_RIGHT:
         action['game'] = {'move': (1, 0)}
+
+    if key_char == 'g':
+        action['game'] = {'pickup': True}
+
 
     if key.vk == libtcod.KEY_ENTER and key.lalt:
         # Alt+Enter: toggle full screen

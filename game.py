@@ -6,6 +6,7 @@ from config.config import get_game_config
 from utils.fov_functions import recompute_fov, discover_new_tiles
 from states.game_states import GameStates
 from components.fighter import Fighter
+from components.inventory import Inventory
 from data.playable_archetypes import get_player_stats
 from event_handler import EventHandler
 from render_engine import RenderOrder
@@ -40,11 +41,13 @@ class Game:
         player_stats = get_player_stats('base_player')
         if player_stats:
             fighter_component = Fighter(hp=player_stats['hp'])
+            inventory_component = Inventory(26)
 
             player = Entity(self,
                             int(self.map.width / 2), int(self.map.height / 2),
                             '@', libtcod.white, 'Player', blocks=True,
                             fighter=fighter_component,
+                            inventory=inventory_component,
                             render_order=RenderOrder.ACTOR)
             return player
         else:
@@ -79,8 +82,10 @@ class Game:
         self.game_state = GameStates.PLAYERS_TURN
 
     def player_turn(self, player_action):
+        # TODO : Dans event handlers?
         # on recupere les actions faites par le joueur pour les gerer.
         move = player_action.get('move')
+        pickup = player_action.get('pickup')
 
         if move:
             # le joueur tente de se deplacer vers une case.
@@ -91,6 +96,16 @@ class Game:
             self.player.try_to_move(dx, dy)
             self.fov_recompute = True
             self.player_end_turn()
+
+        elif pickup:
+            for entity in self.map.entities:
+                if entity.item and entity.x == self.player.x and entity.y == self.player.y:
+                    self.player.inventory.add_item(entity)
+                    self.player_end_turn()
+                    break
+            else:
+                self.player.inventory.no_item_found()
+
 
     def player_end_turn(self):
         self.game_state = GameStates.ENEMY_TURN

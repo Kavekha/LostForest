@@ -25,6 +25,7 @@ class GameMap:
         self.room_min_size = map_config[map_type]['room_min_size']
         self.max_rooms = map_config[map_type]['max_rooms']
         self.max_monsters_room = map_config[map_type]['max_monsters_per_room']
+        self.max_items_room = map_config[map_type]['max_items_per_room']
 
         # On créé une map pleine, non utilisable sans sa generation.
         self.tiles = self._initialize_tiles()   # tiles = la vraie map
@@ -60,6 +61,7 @@ class GameMap:
         self.fov_map = initialize_fov(self)
         # On spawn les entités qui la peuplent.
         self.spawner.spawn_entities()
+        self.spawner.spawn_items()
 
     # La creation de la map basé sur le tutoriel Libtcod / Python.
     def _make_map_tutorial_method(self, player):

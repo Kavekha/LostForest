@@ -5,6 +5,16 @@ Next:
     logs : accès archives
     mouse : deplacements souris
     fix : mauvais recalcul du fov, laisse des traces de lumiere au debut
+    spawner : merger spawn items / entities? merger spawn item / entity? create item & create entity dans game?
+    player_turn : get_action dans event handlers?
+    refacto : event_handler & game message (fighter, event_handler, inventory)
+    message : Ne pas avoir a refaire un dictionnaire à chaque fois pour 'information, couleur'
+
+v0.0.7
+    spawners d'items.
+    inventaire & items.
+    menu d'item.
+    refacto - player turn, event handler, message.
 
 v0.0.6
     refacto
