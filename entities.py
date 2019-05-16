@@ -7,10 +7,11 @@ class Entity:
     """
     A generic object to represent players, enemies, items, etc.
     """
-    def __init__(self, x, y, char, color, name, blocks=False,
+    def __init__(self, game, x, y, char, color, name, blocks=False,
                  fighter=None, ai=None,
                  render_order=RenderOrder.CORPSE):
         # basics
+        self.game = game
         self.x = x
         self.y = y
         self.char = char
@@ -42,6 +43,25 @@ class Entity:
         self.x += dx
         self.y += dy
 
+    def try_to_move(self, dx, dy):
+        # on verifie que l on peut deplacer le personnage.  # TODO: On le garde ici?
+        destination_x = self.x + dx
+        destination_y = self.y + dy
+        # s il n y a pas de tuile bloquante...
+        if not self.game.map.is_blocked(destination_x, destination_y):
+            # y a t il des entités bloquantes?
+            blocking_entity_at_destination = get_blocking_entities_at_location(self.game.map.entities, destination_x,
+                                                                               destination_y)
+            if blocking_entity_at_destination:
+                self.interact_with_entity(blocking_entity_at_destination)
+            else:
+                self.move(dx, dy)
+
+    def interact_with_entity(self, entity):
+        if entity.fighter and self.fighter:
+            # Nous sommes des guerriers, on se tape.
+            self.fighter.attack(entity, self.game.events)
+
     def move_towards(self, target_x, target_y, game_map):
         dx = target_x - self.x
         dy = target_y - self.y
@@ -50,9 +70,7 @@ class Entity:
         dx = int(round(dx / distance))
         dy = int(round(dy / distance))
 
-        if not (game_map.is_blocked(self.x + dx, self.y + dy) or
-                get_blocking_entities_at_location(game_map.entities, self.x + dx, self.y + dy)):
-            self.move(dx, dy)
+        self.try_to_move(dx, dy)
 
     def distance_to(self, other):
         dx = other.x - self.x
@@ -106,7 +124,8 @@ class Entity:
         libtcod.path_delete(my_path)
 
 
-# Permets de savoir s'il y a une entité bloquante à un emplacement. # TODO: Où placer cette fonctionnalité?
+# Permets de savoir s'il y a une entité bloquante à un emplacement.
+# todo: on garde ici?
 def get_blocking_entities_at_location(entities, destination_x, destination_y):
     for entity in entities:
         if entity.blocks and entity.x == destination_x and entity.y == destination_y:

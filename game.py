@@ -1,6 +1,7 @@
-from map_objects.map import GameMap
-from entities import Entity, get_blocking_entities_at_location
 import libtcodpy as libtcod
+
+from map_objects.map import GameMap
+from entities import Entity
 from config.config import get_game_config
 from utils.fov_functions import recompute_fov, discover_new_tiles
 from states.game_states import GameStates
@@ -12,7 +13,7 @@ from render_engine import RenderOrder
 
 class Game:
     '''
-    gère les elements du jeu en lui-même : la carte, le combat, etc.
+    orchestre les differents elements du jeu : carte, commandes, events.
     '''
     def __init__(self):
         # recuperation de la config.
@@ -21,12 +22,11 @@ class Game:
         self.events = EventHandler(self)
 
         # gestion du fov.
-        # TODO : Aujourd'hui partagé avec Render, qui recalcule la FOV. Pas vraiment sa responsabilité.
         self.fov_algorithm = game_config['fov_algorithm']
         self.fov_recompute = True
 
         # Creation de la map du debut & creation joueur & son placement.
-        self.map = GameMap('standard_map')
+        self.map = GameMap(self, 'standard_map')
         self.player = self.create_player()
         self.map.add_player(self.player)
         self.map.generate_map(self)
@@ -35,22 +35,23 @@ class Game:
 
         self.game_state = GameStates.PLAYERS_TURN
 
+    # TODO : Est ce qu'on a besoin d'avoir la position à la creation? Ne peut on pas la donner lors de l'arrivée sur map
     def create_player(self):
         player_stats = get_player_stats('base_player')
         if player_stats:
             fighter_component = Fighter(hp=player_stats['hp'])
 
-            player = Entity(int(self.map.width / 2), int(self.map.height / 2),
+            player = Entity(self,
+                            int(self.map.width / 2), int(self.map.height / 2),
                             '@', libtcod.white, 'Player', blocks=True,
                             fighter=fighter_component,
                             render_order=RenderOrder.ACTOR)
-
             return player
         else:
             return None
 
     def game_turn(self, player_action):
-        self.events.resolve_events()
+        # TODO: Tour selon une timeline.
         if self.game_state == GameStates.PLAYERS_TURN:
             self.player_turn(player_action)
         elif self.game_state == GameStates.ENEMY_TURN:
@@ -58,9 +59,14 @@ class Game:
         elif self.game_state == GameStates.PLAYER_DEAD:
             pass
 
+        # event resolution
+        self.events.resolve_events()
+
         # Si une action a devoilé de nouvelles tiles, on les considère comme discovered.
-        # TODO: Aujourd'hui le recompute du fov se fait dans le render et ailleurs. A reunir.
+        # TODO Est ce que cela doit etre dans le game turn?
         if self.fov_recompute:
+            recompute_fov(self.map.fov_map, self.player.x, self.player.y, self.player.fov_radius,
+                          self.player.light_walls, self.fov_algorithm)
             discover_new_tiles(self.map)
 
     def enemy_turn(self):
@@ -77,23 +83,14 @@ class Game:
         move = player_action.get('move')
 
         if move:
+            # le joueur tente de se deplacer vers une case.
+            # Si vide : ok
+            # si wall : refusé
+            # si entité : interaction
             dx, dy = move
-            # on verifie que l on peut deplacer le personnage.  # TODO: On le garde ici?
-            destination_x = self.player.x + dx
-            destination_y = self.player.y + dy
-
-            # s il n y a pas de tuile bloquante...
-            if not self.map.is_blocked(destination_x, destination_y):
-                # y a t il des entités bloquantes?
-                target = get_blocking_entities_at_location(self.map.entities, destination_x, destination_y)
-                # Ici a lieu le contact avec une autre entité. Pas vraiment la place. # TODO: interaction ailleurs.
-                if target:
-                    self.player.fighter.attack(target, self.events)
-                else:
-                    self.player.move(dx, dy)
-                    self.fov_recompute = True
-                    # fin du tour. # TODO : Meilleur moyen pour dire que le tour est fini.
-                    self.player_end_turn()
+            self.player.try_to_move(dx, dy)
+            self.fov_recompute = True
+            self.player_end_turn()
 
     def player_end_turn(self):
         self.game_state = GameStates.ENEMY_TURN

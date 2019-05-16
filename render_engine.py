@@ -14,9 +14,19 @@ class Render:
     responsabilité: Afficher les elements du jeu & interface.
     doit pouvoir être remplacé facilement par une autre librairie.
     '''
-    def __init__(self, screen_width=80, screen_height=50):
+    def __init__(self, screen_width=80, screen_height=50, bar_width=20, panel_height=7):
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.panel_height = panel_height
+        self.bar_width = bar_width
+        self.panel_y = screen_height - panel_height
+        self.message_x = bar_width + 2
+        self.message_width = screen_width - bar_width - 2
+        self.message_height = panel_height - 1
+        self.log_message_x = bar_width + 2
+        self.log_message_width = screen_width - bar_width - 2
+        self.log_message_height = panel_height - 1
+
         self._initialize_render()
         self.game_window = None
 
@@ -26,27 +36,69 @@ class Render:
 
         # la fenetre dans lequel le jeu sera affiché.
         self.game_window = libtcod.console_new(self.screen_width, self.screen_height)
+        self.panel = libtcod.console_new(self.screen_width, self.panel_height)
 
-    def render_all(self, game):
+    def render_all(self, game, mouse):
         # doit-on recalculer le field of vision? # TODO : Est-ce vraiment responsabilité du render all de calculer FOV?
         if game.fov_recompute:
-            recompute_fov(game.map.fov_map, game.player.x, game.player.y, game.player.fov_radius,
-                          game.player.light_walls, game.fov_algorithm)
             self._render_map(game.map)
 
         self._render_entities(game.map.entities, game.map.fov_map)
 
+        libtcod.console_blit(self.game_window, 0, 0, self.screen_width, self.screen_height, 0, 0, 0)
+
+        self._render_under_mouse(game, mouse)
         self._render_interface(game)
 
-        libtcod.console_blit(self.game_window, 0, 0, self.screen_width, self.screen_height, 0, 0, 0)
+        # print message
+        self._render_messages(game)
+
         libtcod.console_flush()
         self._clear_all(game.map.entities)
         game.fov_recompute = False
 
+    def _render_under_mouse(self, game, mouse):
+        libtcod.console_set_default_foreground(self.panel, libtcod.light_gray)
+        libtcod.console_print_ex(self.panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT,
+                                 self.get_names_under_mouse(mouse, game))
+
+    def _render_messages(self, game):
+        messages = game.events.message_log.messages
+        y = 1
+        for message in messages:
+            libtcod.console_set_default_foreground(self.panel, message.color)
+            libtcod.console_print_ex(self.panel, self.log_message_x, y, libtcod.BKGND_NONE, libtcod.LEFT, message.text)
+            y += 1
+
+    def get_names_under_mouse(self, mouse, game):
+        (x, y) = (mouse.cx, mouse.cy)
+
+        names = [entity.name for entity in game.map.entities
+                 if entity.x == x and entity.y == y and libtcod.map_is_in_fov(game.map.fov_map, entity.x, entity.y)]
+        names = ', '.join(names)
+
+        return names.capitalize()
+
     def _render_interface(self, game):
-        libtcod.console_set_default_foreground(self.game_window, libtcod.white)
-        libtcod.console_print_ex(self.game_window, 1, self.screen_height - 2, libtcod.BKGND_NONE, libtcod.LEFT,
-                                 'HP: {0:02}/{1:02}'.format(game.player.fighter.hp, game.player.fighter.max_hp))
+        self.render_bar(1, 1, 'HP', game.player.fighter.hp, game.player.fighter.max_hp,
+                   libtcod.light_red, libtcod.darker_red)
+        libtcod.console_blit(self.panel, 0, 0, self.screen_width, self.panel_height, 0, 0, self.panel_y)
+        libtcod.console_set_default_background(self.panel, libtcod.black)
+        libtcod.console_clear(self.panel)
+
+    def render_bar(self, x, y, name, value, maximum, bar_color, back_color):
+        current_bar_width = int(float(value) / maximum * self.bar_width)
+
+        libtcod.console_set_default_background(self.panel, back_color)
+        libtcod.console_rect(self.panel, x, y, self.bar_width, 1, False, libtcod.BKGND_SCREEN)
+
+        libtcod.console_set_default_background(self.panel, bar_color)
+        if current_bar_width > 0:
+            libtcod.console_rect(self.panel, x, y, current_bar_width, 1, False, libtcod.BKGND_SCREEN)
+
+        libtcod.console_set_default_foreground(self.panel, libtcod.white)
+        libtcod.console_print_ex(self.panel, int(x + self.bar_width / 2), y, libtcod.BKGND_NONE, libtcod.CENTER,
+                                 '{0}: {1}/{2}'.format(name, value, maximum))
 
     def _render_map(self, game_map):
         for y in range(game_map.height):

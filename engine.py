@@ -4,7 +4,6 @@ from input_handlers import handle_keys
 from render_engine import Render
 from game import Game
 
-
 class App:
     def __init__(self):
         # app config
@@ -12,8 +11,12 @@ class App:
         screen_width = config['screen_width']
         screen_height = config['screen_height']
 
+        # interface # TODO : Est ce sa place ici?
+        self.bar_width = config['bar_width']
+        self.panel_height = config['panel_height']
+
         # render engine
-        self.render_engine = Render(screen_width, screen_height)
+        self.render_engine = Render(screen_width, screen_height, self.bar_width, self.panel_height)
 
         # launch game
         self.game = Game()
@@ -26,10 +29,10 @@ class App:
         # main loop
         while not libtcod.console_is_window_closed():
             # check key / mouse event
-            libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS, key, mouse)
+            libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
 
             # render game
-            self.render_engine.render_all(self.game)
+            self.render_engine.render_all(self.game, mouse)
 
             # get player action for both app & game
             action = handle_keys(key)
