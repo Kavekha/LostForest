@@ -14,7 +14,6 @@ class MessageLog:
         self.history = []
 
     def add_message(self, message, color=libtcod.white):
-        print(message)
         self.messages.append(Message(message, color))
         if len(self.messages) > 5:
             self.add_history(self.messages[0])

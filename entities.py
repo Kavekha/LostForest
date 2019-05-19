@@ -8,7 +8,8 @@ class Entity:
     A generic object to represent players, enemies, items, etc.
     """
     def __init__(self, game, x, y, char, color, name, blocks=False,
-                 fighter=None, ai=None,
+                 fighter=None, ai=None, inventory=None,
+                 item=None,
                  render_order=RenderOrder.CORPSE):
         # basics
         self.game = game
@@ -20,9 +21,11 @@ class Entity:
         self.render_order = render_order
 
         # components
-        component_list = [fighter, ai]
+        component_list = [fighter, ai, inventory, item]
         self.fighter = fighter
         self.ai = ai
+        self.inventory = inventory
+        self.item = item
         self.add_component(component_list)
 
         # fov # TODO : Ne devrait pas être pour les entités pures, plutot les Vivants.
