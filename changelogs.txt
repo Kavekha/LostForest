@@ -1,4 +1,11 @@
 Next:
+    handle_keys : Meilleur gestion de la prise en compte des touches du joueur et des actions selon state.
+        Fixer la repetition de l'effet FullScreen et Exit notamment.
+        Rendre generique le choix d une option parmi une liste de 26.
+    use inventory : Nawak, tout se melange entre game pour l'usage, iventory pour le consume, etc.
+    tofix : Map peut être hors index, en tout cas sans bord pour bloquer le passage
+        >(Genre : case non bloqué sur le bord : j'avance, crash car hors index).
+        > Probablement du à l'effet sur les corridors de 1 tile supp de large
     Table de mobs : Nombre de mobs max, poids
     fight : stats & combat
     map : camera, map plus grande que l'ecran de jeu
@@ -9,6 +16,13 @@ Next:
     player_turn : get_action dans event handlers?
     refacto : event_handler & game message (fighter, event_handler, inventory)
     message : Ne pas avoir a refaire un dictionnaire à chaque fois pour 'information, couleur'
+        > color donné, uniformiser l'information.  Avoir des constantes pour le type de couleur?
+
+v0.0.8
+    affichage de l'inventaire.
+    utilisation d'un objet modele.
+    controles sous menu d'options.
+
 
 v0.0.7
     spawners d'items.

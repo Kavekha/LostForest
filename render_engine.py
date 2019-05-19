@@ -1,6 +1,7 @@
 import libtcodpy as libtcod
-from utils.fov_functions import recompute_fov
+from states.game_states import GameStates
 from enum import Enum
+from menus.main_menu import menu
 
 
 class RenderOrder(Enum):
@@ -28,7 +29,6 @@ class Render:
         self.log_message_height = panel_height - 1
 
         self._initialize_render()
-        self.game_window = None
 
     def _initialize_render(self):
         libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
@@ -37,25 +37,80 @@ class Render:
         # la fenetre dans lequel le jeu sera affiché.
         self.game_window = libtcod.console_new(self.screen_width, self.screen_height)
         self.panel = libtcod.console_new(self.screen_width, self.panel_height)
+        self.menu_window = libtcod.console_new(self.screen_width, self.screen_height)
 
     def render_all(self, game, mouse):
+
         # doit-on recalculer le field of vision? # TODO : Est-ce vraiment responsabilité du render all de calculer FOV?
+        # if game.fov_recompute:
+        self._render_map(game.map)
         if game.fov_recompute:
-            self._render_map(game.map)
+            print('self menu windows : ', self.menu_window)
+            print('self game windows : ', self.game_window)
+            print('self panel window : ', self.panel)
+
+        libtcod.console_set_default_background(self.menu_window, libtcod.black)
+        libtcod.console_clear(self.menu_window)
 
         self._render_entities(game.map.entities, game.map.fov_map)
 
         libtcod.console_blit(self.game_window, 0, 0, self.screen_width, self.screen_height, 0, 0, 0)
 
-        self._render_under_mouse(game, mouse)
-        self._render_interface(game)
+        libtcod.console_set_default_background(self.panel, libtcod.black)
+        libtcod.console_clear(self.panel)
 
         # print message
         self._render_messages(game)
+        self._render_under_mouse(game, mouse)
+        self._render_interface(game)
+        libtcod.console_blit(self.panel, 0, 0, self.screen_width, self.panel_height, 0, 0, self.panel_y)
 
+        # if menu
+
+        if game.game_state == GameStates.SHOW_INVENTORY:
+            self._render_menu(game)
+
+        game.fov_recompute = False
         libtcod.console_flush()
         self._clear_all(game.map.entities)
-        game.fov_recompute = False
+
+    def menu(self, con, header, options, width, screen_width, screen_height):
+        if len(options) > 26:
+            raise ValueError('Cannot have a menu with more than 26 options.')
+
+        # calculate total height for the header (after auto-wrap) and one line per option
+        header_height = libtcod.console_get_height_rect(con, 0, 0, width, screen_height, header)
+        height = len(options) + header_height
+
+        # create an off-screen console that represents the menu's window
+        self.menu_window = libtcod.console_new(self.screen_width, self.screen_height)
+
+        # print the header, with auto-wrap
+        libtcod.console_set_default_foreground(self.menu_window, libtcod.white)
+        libtcod.console_print_rect_ex(self.menu_window, 0, 0, width, height, libtcod.BKGND_NONE, libtcod.LEFT, header)
+
+        # print all the options
+        y = header_height
+        letter_index = ord('a')
+
+        for option_text in options:
+            text = '(' + chr(letter_index) + ') ' + option_text
+            libtcod.console_print_ex(self.menu_window, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, text)
+            y += 1
+            letter_index += 1
+
+        # blit the contents of "window" to the root console
+        x = int(screen_width / 2 - width / 2)
+        y = int(screen_height / 2 - height / 2)
+        libtcod.console_blit(self.menu_window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
+
+    def _render_interface(self, game):
+        self.render_bar(1, 1, 'HP', game.player.fighter.hp, game.player.fighter.max_hp,
+                   libtcod.light_red, libtcod.darker_red)
+
+    def _render_menu(self, game):
+        header, options = game.player.inventory.menu_options()
+        self.menu(self.game_window, header, options, int(self.screen_width / 1.5), self.screen_width, self.screen_height)
 
     def _render_under_mouse(self, game, mouse):
         libtcod.console_set_default_foreground(self.panel, libtcod.light_gray)
@@ -78,13 +133,6 @@ class Render:
         names = ', '.join(names)
 
         return names.capitalize()
-
-    def _render_interface(self, game):
-        self.render_bar(1, 1, 'HP', game.player.fighter.hp, game.player.fighter.max_hp,
-                   libtcod.light_red, libtcod.darker_red)
-        libtcod.console_blit(self.panel, 0, 0, self.screen_width, self.panel_height, 0, 0, self.panel_y)
-        libtcod.console_set_default_background(self.panel, libtcod.black)
-        libtcod.console_clear(self.panel)
 
     def render_bar(self, x, y, name, value, maximum, bar_color, back_color):
         current_bar_width = int(float(value) / maximum * self.bar_width)

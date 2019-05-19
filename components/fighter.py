@@ -24,3 +24,9 @@ class Fighter:
         self.hp -= amount
         if self.hp <= 0:
             events.add_event({'dead': self.owner})
+
+    def heal(self, amount):
+        self.hp += amount
+
+        if self.hp > self.max_hp:
+            self.hp = self.max_hp

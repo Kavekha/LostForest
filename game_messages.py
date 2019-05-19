@@ -1,6 +1,4 @@
 import libtcodpy as libtcod
-import textwrap
-
 
 class Message:
     def __init__(self, text, color=libtcod.white):

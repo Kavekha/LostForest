@@ -40,7 +40,7 @@ class Spawner:
             item_name = item_list[rand]
             item_attributes = get_item_attributes(item_name)
             if item_attributes:
-                item_component = Item()
+                item_component = Item(item_attributes['use_function'], item_attributes['power'])
                 item = Entity(self.map_owner.game,
                               x, y, item_attributes['char'], item_attributes['color'], item_name,
                               item=item_component,
