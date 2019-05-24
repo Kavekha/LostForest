@@ -8,7 +8,7 @@ from states.game_states import GameStates
 from components.fighter import Fighter
 from components.inventory import Inventory
 from data.playable_archetypes import get_player_stats
-from event_handler import EventHandler
+from handlers.event_handler import EventHandler
 from render_engine import RenderOrder
 
 
@@ -17,6 +17,8 @@ class Game:
     orchestre les differents elements du jeu : carte, commandes, events.
     '''
     def __init__(self):
+        # Action to handle action from entities and player.
+
         # recuperation de la config.
         game_config = get_game_config()
 
@@ -35,6 +37,7 @@ class Game:
                       self.fov_algorithm)
 
         self.game_state = GameStates.PLAYERS_TURN
+        self.previous_game_state = None
 
     # TODO : Est ce qu'on a besoin d'avoir la position à la creation? Ne peut on pas la donner lors de l'arrivée sur map
     def create_player(self):
@@ -55,12 +58,12 @@ class Game:
 
     def game_turn(self, player_action):
         # TODO: Tour selon une timeline.
-        if self.game_state == GameStates.PLAYERS_TURN:
+        if self.game_state in [GameStates.PLAYERS_TURN, GameStates.SHOW_INVENTORY, GameStates.PLAYER_DEAD]:
             self.player_turn(player_action)
         elif self.game_state == GameStates.ENEMY_TURN:
             self.enemy_turn()
-        elif self.game_state == GameStates.PLAYER_DEAD:
-            pass
+        # elif self.game_state == GameStates.PLAYER_DEAD:
+        #    pass
 
         # event resolution
         self.events.resolve_events()
@@ -82,10 +85,16 @@ class Game:
         self.game_state = GameStates.PLAYERS_TURN
 
     def player_turn(self, player_action):
+        # With ActionHandler:
+        # self.action_handler joue tout seul?
+
         # TODO : Dans event handlers?
         # on recupere les actions faites par le joueur pour les gerer.
         move = player_action.get('move')
         pickup = player_action.get('pickup')
+        show_inventory = player_action.get('show_inventory')
+        exit = player_action.get('exit')
+        game_option_choice = player_action.get('game_option_choice')
 
         if move:
             # le joueur tente de se deplacer vers une case.
@@ -97,7 +106,7 @@ class Game:
             self.fov_recompute = True
             self.player_end_turn()
 
-        elif pickup:
+        if pickup:
             for entity in self.map.entities:
                 if entity.item and entity.x == self.player.x and entity.y == self.player.y:
                     self.player.inventory.add_item(entity)
@@ -106,6 +115,23 @@ class Game:
             else:
                 self.player.inventory.no_item_found()
 
+        if show_inventory:
+            self.previous_game_state = self.game_state
+            self.game_state = GameStates.SHOW_INVENTORY
+
+        # Si un element d'une liste a été choisi, qu'on est pas mort et que le nb est inferieur au nb items
+        # dans l'inventaire.
+        if game_option_choice is not None \
+                and self.previous_game_state != GameStates.PLAYER_DEAD \
+                and game_option_choice < len(self.player.inventory.items):
+            item = self.player.inventory.items[game_option_choice]
+            self.player.inventory.use(item)
+
+        if exit:
+            if self.game_state == GameStates.SHOW_INVENTORY:
+                self.game_state = self.previous_game_state
+                self.previous_game_state = None
+            # TODO: Ask for leave the game or not
 
     def player_end_turn(self):
         self.game_state = GameStates.ENEMY_TURN

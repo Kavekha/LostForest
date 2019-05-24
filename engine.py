@@ -1,8 +1,9 @@
 import libtcodpy as libtcod
 from config.config import get_app_config
-from input_handlers import handle_keys
+from handlers.input_handlers import handle_keys
 from render_engine import Render
 from game import Game
+
 
 class App:
     def __init__(self):
@@ -34,8 +35,8 @@ class App:
             # render game
             self.render_engine.render_all(self.game, mouse)
 
-            # get player action for both app & game
-            action = handle_keys(key)
+            action = handle_keys(key, self.game.game_state)
+
             game_action = action.get('game')
             app_action = action.get('app')
 
