@@ -10,6 +10,7 @@ from components.inventory import Inventory
 from data.playable_archetypes import get_player_stats
 from handlers.event_handler import EventHandler
 from render_engine import RenderOrder
+from data.data_loaders import save_game
 
 
 class Game:
@@ -17,8 +18,15 @@ class Game:
     orchestre les differents elements du jeu : carte, commandes, events.
     '''
     def __init__(self):
-        # Action to handle action from entities and player.
+        self.events = None
+        self.fov_algorithm = None
+        self.fov_recompute = True
+        self.map = None
+        self.player = None
+        self.game_state = None
+        self.previous_game_state = GameStates.PLAYERS_TURN
 
+    def initialize(self):
         # recuperation de la config.
         game_config = get_game_config()
 
@@ -33,11 +41,12 @@ class Game:
         self.player = self.create_player()
         self.map.add_player(self.player)
         self.map.generate_map(self)
+        self.recompute_fov()
+        self.game_state = GameStates.PLAYERS_TURN
+
+    def recompute_fov(self):
         recompute_fov(self.map.fov_map, self.player.x, self.player.y, self.player.fov_radius, self.player.light_walls,
                       self.fov_algorithm)
-
-        self.game_state = GameStates.PLAYERS_TURN
-        self.previous_game_state = None
 
     # TODO : Est ce qu'on a besoin d'avoir la position à la creation? Ne peut on pas la donner lors de l'arrivée sur map
     def create_player(self):
@@ -71,8 +80,7 @@ class Game:
         # Si une action a devoilé de nouvelles tiles, on les considère comme discovered.
         # TODO Est ce que cela doit etre dans le game turn?
         if self.fov_recompute:
-            recompute_fov(self.map.fov_map, self.player.x, self.player.y, self.player.fov_radius,
-                          self.player.light_walls, self.fov_algorithm)
+            self.recompute_fov()
             discover_new_tiles(self.map)
 
     def enemy_turn(self):
@@ -131,10 +139,13 @@ class Game:
             if self.game_state == GameStates.SHOW_INVENTORY:
                 self.game_state = self.previous_game_state
                 self.previous_game_state = None
-            # TODO: Ask for leave the game or not
+            else:
+                # TODO: Ask for leave the game or not
+                save_game(self)
 
     def player_end_turn(self):
         self.game_state = GameStates.ENEMY_TURN
+
 
 
 
