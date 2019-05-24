@@ -41,7 +41,10 @@ class Spawner:
             item_attributes = get_item_attributes(item_name)
             if item_attributes:
                 item_component = Item(item_attributes['use_function'], item_attributes['power'])
-                item = Entity(self.map_owner.game,
+                # TODO: Pas ouf de remonter comme ca aussi haut pour recuperer le game.
+                # TODO: Pertinence du Game dans Entity
+                game = self.map_owner.dungeon.game
+                item = Entity(game,
                               x, y, item_attributes['char'], item_attributes['color'], item_name,
                               item=item_component,
                               render_order=RenderOrder.ITEM)
@@ -83,7 +86,10 @@ class Spawner:
 
         ai_component = dict_stats['brain']
         fighter_component = Fighter(hp=monster_hp)
-        monster = Entity(self.map_owner.game,
+        # TODO: Pas ouf de remonter comme ca aussi haut pour recuperer le game.
+        # TODO: Pertinence du Game dans Entity
+        game = self.map_owner.dungeon.game
+        monster = Entity(game,
                          x, y,
                          monster_appearance, monster_color, monster_name, blocks=True,
                          fighter=fighter_component,

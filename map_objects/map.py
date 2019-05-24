@@ -3,19 +3,23 @@ from map_objects.rectangle import Rect
 from config.config import get_map_config
 from utils.fov_functions import initialize_fov
 from spawners import Spawner
+from components.stairs import Stairs
+from entities import Entity
+import libtcodpy as libtcod
+from render_engine import RenderOrder
+from config.constants import ConstColors
 
 from random import randint
-
 
 
 class GameMap:
     '''
     gère la creation de la map et son contenu, ainsi que sa mise à jour.
     '''
-    def __init__(self, game, map_type):
+    def __init__(self, dungeon, map_type='standard_map'):
         # on recupere la configuration de la map, selon le type de map choisi par le jeu.
         self.map_type = map_type
-        self.game = game
+        self.dungeon = dungeon
 
         map_config = get_map_config()
         self.colors = map_config[map_type]['colors']
@@ -54,9 +58,9 @@ class GameMap:
         return False
 
     # On genere la map. # TODO : Pouvoir choisir la methode, selon que ce soit caverne, donj, etc.
-    def generate_map(self, game):
+    def generate_map(self, player):
         # La map en elle meme.
-        self._make_map_tutorial_method(game.player)
+        self._make_map_tutorial_method(player)
         # Ce qui est visible ou non du joueur.
         self.fov_map = initialize_fov(self)
         # On spawn les entités qui la peuplent.
@@ -67,6 +71,9 @@ class GameMap:
     def _make_map_tutorial_method(self, player):
         rooms = []
         num_rooms = 0
+
+        center_last_room_x = None
+        center_last_room_y = None
 
         for r in range(self.max_rooms):
             # random width and height
@@ -91,6 +98,9 @@ class GameMap:
 
                 # center coordinates of new room, will be useful later
                 (new_x, new_y) = new_room.center()
+                # we want to know the last created room for the stairs.
+                center_last_room_x = new_x
+                center_last_room_y = new_y
 
                 if num_rooms == 0:
                     # this is the first room, where the player starts at
@@ -116,6 +126,12 @@ class GameMap:
                 # finally, append the new room to the list
                 rooms.append(new_room)
                 num_rooms += 1
+
+        stairs_component = Stairs(self.dungeon.current_floor + 1)
+        down_stairs = Entity(self.dungeon, center_last_room_x, center_last_room_y, '>', libtcod.white, 'Stairs',
+                             render_order=RenderOrder.STAIRS, stairs=stairs_component)
+        self.entities.append(down_stairs)
+
         self.rooms.extend(rooms)
 
     # creation d une salle. # TODO: Aujourd'hui, forcement un Rectangle. Personnalisable à faire?

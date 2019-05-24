@@ -6,8 +6,9 @@ from enum import Enum
 
 class RenderOrder(Enum):
     CORPSE = 1
-    ITEM = 2
-    ACTOR = 3
+    STAIRS = 2
+    ITEM = 3
+    ACTOR = 4
 
 
 class Render:
@@ -51,17 +52,15 @@ class Render:
         libtcod.console_flush()
         libtcod.console_clear(self.app_window)
 
-
-
     def render_all(self, game, mouse):
         # doit-on recalculer le field of vision? # TODO : Est-ce vraiment responsabilité du render all de calculer FOV?
         if game.fov_recompute:
-            self._render_map(game.map)
+            self._render_map(game)
 
         libtcod.console_set_default_background(self.menu_window, libtcod.black)
         libtcod.console_clear(self.menu_window)
 
-        self._render_entities(game.map.entities, game.map.fov_map)
+        self._render_entities(game)
 
         libtcod.console_blit(self.game_window, 0, 0, self.screen_width, self.screen_height, 0, 0, 0)
 
@@ -72,6 +71,7 @@ class Render:
         self._render_messages(game)
         self._render_under_mouse(game, mouse)
         self._render_interface(game)
+        self._render_dungeon_level(game)
         libtcod.console_blit(self.panel, 0, 0, self.screen_width, self.panel_height, 0, 0, self.panel_y)
 
         # if menu
@@ -81,7 +81,7 @@ class Render:
 
         game.fov_recompute = False
         libtcod.console_flush()
-        self._clear_all(game.map.entities)
+        self._clear_all(game.dungeon.current_map.entities)
 
     def _menu(self, con, header, options, width, screen_width, screen_height):
         if len(options) > 26:
@@ -126,12 +126,13 @@ class Render:
         self._menu(con, '', ['Play a new game', 'Continue last game', 'Quit'], 24, screen_width, screen_height)
 
     def _render_interface(self, game):
-        self.render_bar(1, 1, 'HP', game.player.fighter.hp, game.player.fighter.max_hp,
+        self._render_bar(1, 1, 'HP', game.player.fighter.hp, game.player.fighter.max_hp,
                    libtcod.light_red, libtcod.darker_red)
 
     def _render_option_menu(self, game):
         header, options = game.player.inventory.menu_options()
-        self._menu(self.game_window, header, options, int(self.screen_width / 1.5), self.screen_width, self.screen_height)
+        self._menu(self.game_window, header, options, int(self.screen_width / 1.5), self.screen_width,
+                   self.screen_height)
 
     def _render_under_mouse(self, game, mouse):
         libtcod.console_set_default_foreground(self.panel, libtcod.light_gray)
@@ -149,13 +150,18 @@ class Render:
     def get_names_under_mouse(self, mouse, game):
         (x, y) = (mouse.cx, mouse.cy)
 
-        names = [entity.name for entity in game.map.entities
+        names = [entity.name for entity in game.dungeon.current_map.entities
                  if entity.x == x and entity.y == y and libtcod.map_is_in_fov(game.map.fov_map, entity.x, entity.y)]
         names = ', '.join(names)
 
         return names.capitalize()
 
-    def render_bar(self, x, y, name, value, maximum, bar_color, back_color):
+    def _render_dungeon_level(self, game):
+        dungeon = game.dungeon
+        libtcod.console_print_ex(self.panel, 1, 3, libtcod.BKGND_NONE, libtcod.LEFT,
+                             '{0} : {1}'.format(dungeon.name, dungeon.current_floor))
+
+    def _render_bar(self, x, y, name, value, maximum, bar_color, back_color):
         current_bar_width = int(float(value) / maximum * self.bar_width)
 
         libtcod.console_set_default_background(self.panel, back_color)
@@ -169,7 +175,8 @@ class Render:
         libtcod.console_print_ex(self.panel, int(x + self.bar_width / 2), y, libtcod.BKGND_NONE, libtcod.CENTER,
                                  '{0}: {1}/{2}'.format(name, value, maximum))
 
-    def _render_map(self, game_map):
+    def _render_map(self, game):
+        game_map = game.dungeon.current_map
         for y in range(game_map.height):
             for x in range(game_map.width):
                 visible = libtcod.map_is_in_fov(game_map.fov_map, x, y)
@@ -183,17 +190,21 @@ class Render:
                                                             libtcod.BKGND_SET)
                 elif game_map.tiles[x][y].explored:
                     if wall:
-                        libtcod.console_set_char_background(self.game_window, x, y, game_map.colors.get('dark_wall'), libtcod.BKGND_SET)
+                        libtcod.console_set_char_background(self.game_window, x, y, game_map.colors.get('dark_wall'),
+                                                            libtcod.BKGND_SET)
                     else:
-                        libtcod.console_set_char_background(self.game_window, x, y, game_map.colors.get('dark_ground'), libtcod.BKGND_SET)
+                        libtcod.console_set_char_background(self.game_window, x, y, game_map.colors.get('dark_ground'),
+                                                            libtcod.BKGND_SET)
 
-    def _render_entities(self, entities, fov_map):
-        entities_in_render_order = sorted(entities, key=lambda x: x.render_order.value)
+    def _render_entities(self, game):
+        game_map = game.dungeon.current_map
+        entities_in_render_order = sorted(game_map.entities, key=lambda x: x.render_order.value)
         for entity in entities_in_render_order:
-            self._draw_entity(entity, fov_map)
+            self._draw_entity(entity, game_map)
 
-    def _draw_entity(self, entity, fov_map):
-        if libtcod.map_is_in_fov(fov_map, entity.x, entity.y):
+    def _draw_entity(self, entity, game_map):
+        if libtcod.map_is_in_fov(game_map.fov_map, entity.x, entity.y) or \
+                (entity.stairs and game_map.tiles[entity.x][entity.y].explored):
             libtcod.console_set_default_foreground(self.game_window, entity.color)
             libtcod.console_put_char(self.game_window, entity.x, entity.y, entity.char, libtcod.BKGND_NONE)
 

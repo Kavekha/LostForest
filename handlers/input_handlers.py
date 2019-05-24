@@ -102,14 +102,21 @@ def handle_player_turn_keys(key):
     if key_char == 'g':
         action['game'] = {'pickup': True}
     elif key_char == 'i':
+        print('handler: inventory')
         action['game'] = {'show_inventory': True}
+    #elif key.vk == libtcod.KEY_ENTER:
+    elif key_char == 'j':
+        action['game'] = {'take_stairs': True}
+    elif key_char == 'z':
+        action['game'] = {'wait': True}
 
     # others
+    '''
     if key.vk == libtcod.KEY_ENTER and key.lalt:
         # Alt+Enter: toggle full screen
         action['app'] = {'fullscreen': True}
-
-    elif key.vk == libtcod.KEY_ESCAPE:
+    '''
+    if key.vk == libtcod.KEY_ESCAPE:
         # Exit the game
         action['game'] = {'exit': True}
         action['app'] = {'exit': True}

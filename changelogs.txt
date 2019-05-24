@@ -1,26 +1,63 @@
-Next:
-    save & load : config Appli.
-    box : La rendre utilisable partout in game.
-    TODO: Faire en sorte que la BOX et le menu du fond ne se confondent pas.
-    TODO: Faire que les controles permettent de quitter la BOX et qu'il ne soit pas possible de lancer un jeu sans la fermer d'abord.
-    handle_keys : Meilleur gestion de la prise en compte des touches du joueur et des actions selon state.
-        Fixer la repetition de l'effet FullScreen et Exit notamment.
-        Rendre generique le choix d une option parmi une liste de 26.
-    use inventory : Nawak, tout se melange entre game pour l'usage, iventory pour le consume, etc.
-    tofix : Map peut être hors index, en tout cas sans bord pour bloquer le passage
-        >(Genre : case non bloqué sur le bord : j'avance, crash car hors index).
-        > Probablement du à l'effet sur les corridors de 1 tile supp de large
-    Table de mobs : Nombre de mobs max, poids
-    fight : stats & combat
-    map : camera, map plus grande que l'ecran de jeu
-    logs : accès archives
-    mouse : deplacements souris
-    fix : mauvais recalcul du fov, laisse des traces de lumiere au debut
-    spawner : merger spawn items / entities? merger spawn item / entity? create item & create entity dans game?
-    player_turn : get_action dans event handlers?
-    refacto : event_handler & game message (fighter, event_handler, inventory)
-    message : Ne pas avoir a refaire un dictionnaire à chaque fois pour 'information, couleur'
-        > color donné, uniformiser l'information.  Avoir des constantes pour le type de couleur?
+NEXT:
+    DONGEON:
+        [/] 1000    Dongeon : Meilleure structure pour gerer le changement de floor et le futur (branches and co)
+        [ ] 250     fix le changement d'etage degueu.
+        [ ] 100     Ajouter des fonctions get_entities_from_map? Pour meilleur accès aux infos dans la map pour game?
+
+    SAVES:
+        10      save & load : config Appli.
+
+    INTERFACE:
+        250     box :       La rendre utilisable partout in game.
+        50      box :       Faire en sorte que la BOX et le menu du fond ne se confondent pas.
+        100     options:    Rendre generique le choix d une option parmi une liste de 26.
+
+    CONTROLES:
+        100     Faire que les controles permettent de quitter la BOX et qu'il ne soit pas possible de lancer un jeu sans la fermer d'abord.
+        250     handle_keys : Meilleur gestion de la prise en compte des touches du joueur et des actions selon state.
+        100     Pouvoir utiliser espace pour Stairs.
+        100     Fixer la repetition de l'effet FullScreen et Exit notamment.
+        250     mouse : deplacements souris
+        100     player_turn : get_action dans event handlers?
+        500     refacto : event_handler & game message (fighter, event_handler, inventory)
+
+    INVENTORY:
+        100     use inventory : Nawak, tout se melange entre game pour l'usage, iventory pour le consume, etc.
+
+    MAKE_MAP:
+        50      tofix : Map peut être hors index, en tout cas sans bord pour bloquer le passage
+                >(Genre : case non bloqué sur le bord : j'avance, crash car hors index).
+                > Probablement du à l'effet sur les corridors de 1 tile supp de large
+
+    LOOTS:
+        500     Table de mobs : Nombre de mobs max, poids
+        100     spawner : merger spawn items / entities? merger spawn item / entity? create item & create entity dans game?
+
+    FIGHT:
+        500     Death : Flow du code pour le passage "combat" > Death. J oublie tjrs, donc probablement pas logique.
+        250     fight : stats & combat
+
+    CAMERA / RENDER:
+        250     map : camera, map plus grande que l'ecran de jeu
+        100     fix : mauvais recalcul du fov, laisse des traces de lumiere au debut
+        50      les stairs apparaissent une case dans le Fog du FOV.
+
+    LOGS:
+        [ ] 100     Clarifier si c'est un EventHandler ou un MessageHandler.
+        [ ] 25      logs : accès archives
+        [/] 100     message : Ne pas avoir a refaire un dictionnaire à chaque fois pour 'information, couleur'
+        [/] 100     > color donné, uniformiser l'information.  Avoir des constantes pour le type de couleur?
+
+
+
+
+
+
+v0.0.10  # 1200.
+    'Wait' turn.
+    Constants avec les codes couleurs de chaque type d'information pour les logs.
+    Plusieurs etages et la possibilité de circuler de passer à l'etage suivant, via classe Dungeon.
+    Refacto : Classe dungeon qui remplace la Map.
 
 
 v0.0.9

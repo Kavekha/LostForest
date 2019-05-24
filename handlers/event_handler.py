@@ -1,8 +1,14 @@
 from utils.death_functions import kill_player, kill_monster
+from config.constants import ConstColors
 from game_messages import MessageLog
-import libtcodpy as libtcod
 
 
+''' 
+1. Fonction : Envoyer des messages.
+2. Fonction : Gère aussi les events de type Mort, monster killed, item added, mais pas plein d'autres choses.
+'''
+
+# TODO: Clarifier si c'est un EventHandler ou un MessageHandler.
 class EventHandler:
     def __init__(self, game):
         self.events = []
@@ -21,25 +27,27 @@ class EventHandler:
             color = event.get('color')
 
             if not color:
-                color = libtcod.white
+                color = ConstColors.NEUTRAL_INFO_COLOR
 
             if message:
                 self.message_log.add_message(message, color)
 
+            # TODO: Contournement pour gerer le dead_entity, kill_monster.
+            # Surtout dû au fait qu'on file le game state PLAYER_DEAD via ce truc, hors ce n est pas son role.
             if information:
                 self.message_log.add_message(information['text'], information['color'])
 
             if dead_entity:
                 if dead_entity == self.game.player:
                     message, self.game.game_state = kill_player(dead_entity)
-                    self.add_event({'information': {'text': message, 'color': libtcod.red}})
+                    self.add_event({'information': {'text': message, 'color': ConstColors.YOU_ARE_DEAD}})
                 else:
                     message = kill_monster(dead_entity)
-                    self.add_event({'information': {'text': message, 'color': libtcod.orange}})
+                    self.add_event({'information': {'text': message, 'color': ConstColors.HOSTILE_KILLED}})
 
             if item_added:
                 self.add_event({'information': {'text': 'You pick up the {0}!'.format(item_added.name),
-                                'color': libtcod.light_blue}})
+                                'color': ConstColors.ITEM_PICKED}})
 
         self.reset_event_list()
 

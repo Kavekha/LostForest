@@ -1,7 +1,9 @@
+from config.constants import ConstColors
+
+
 '''
 Fighter class : combat system.
 '''
-
 
 class Fighter:
     def __init__(self, hp):
@@ -15,10 +17,12 @@ class Fighter:
 
         if damage > 0:
             events.add_event({'message': '{0} attacks {1} for {2} hit points.'.format(
-                self.owner.name.capitalize(), target.name, str(damage))})
+                self.owner.name.capitalize(), target.name, str(damage)),
+            'color': ConstColors.DAMAGING_ATTACK})
         else:
             events.add_event({'message': '{0} attacks {1} but does no damage.'.format(
-                self.owner.name.capitalize(), target.name)})
+                self.owner.name.capitalize(), target.name),
+            'color': ConstColors.NO_DAMAGE_ATTACK})
 
     def take_damage(self, amount, events):
         self.hp -= amount
