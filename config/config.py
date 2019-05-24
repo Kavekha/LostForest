@@ -3,7 +3,7 @@ import libtcodpy as libtcod
 
 def get_app_config():
     configuration = {
-        'version': '0.0.9',
+        'version': '0.0.10',
         'screen_width': 80,
         'screen_height': 50,
         'bar_width': 20,

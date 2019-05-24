@@ -9,7 +9,7 @@ class Entity:
     """
     def __init__(self, game, x, y, char, color, name, blocks=False,
                  fighter=None, ai=None, inventory=None,
-                 item=None,
+                 item=None, stairs=None,
                  render_order=RenderOrder.CORPSE):
         # basics
         self.game = game
@@ -21,11 +21,12 @@ class Entity:
         self.render_order = render_order
 
         # components
-        component_list = [fighter, ai, inventory, item]
+        component_list = [fighter, ai, inventory, item, stairs]
         self.fighter = fighter
         self.ai = ai
         self.inventory = inventory
         self.item = item
+        self.stairs = stairs
         self.add_component(component_list)
 
         # fov # TODO : Ne devrait pas être pour les entités pures, plutot les Vivants.
@@ -51,10 +52,10 @@ class Entity:
         destination_x = self.x + dx
         destination_y = self.y + dy
         # s il n y a pas de tuile bloquante...
-        if not self.game.map.is_blocked(destination_x, destination_y):
+        if not self.game.dungeon.current_map.is_blocked(destination_x, destination_y):
             # y a t il des entités bloquantes?
-            blocking_entity_at_destination = get_blocking_entities_at_location(self.game.map.entities, destination_x,
-                                                                               destination_y)
+            blocking_entity_at_destination = get_blocking_entities_at_location(self.game.dungeon.current_map.entities,
+                                                                               destination_x, destination_y)
             if blocking_entity_at_destination:
                 self.interact_with_entity(blocking_entity_at_destination)
             else:
@@ -65,7 +66,7 @@ class Entity:
             # Nous sommes des guerriers, on se tape.
             self.fighter.attack(entity, self.game.events)
 
-    def move_towards(self, target_x, target_y, game_map):
+    def move_towards(self, target_x, target_y):
         dx = target_x - self.x
         dy = target_y - self.y
         distance = math.sqrt(dx ** 2 + dy ** 2)
@@ -121,7 +122,7 @@ class Entity:
             # Keep the old move function as a backup so that if there are no paths
             # (for example another monster blocks a corridor)
             # it will still try to move towards the player (closer to the corridor opening)
-            self.move_towards(target.x, target.y, game_map)
+            self.move_towards(target.x, target.y)
 
             # Delete the path to free memory
         libtcod.path_delete(my_path)

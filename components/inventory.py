@@ -1,4 +1,4 @@
-import libtcodpy as libtcod
+from config.constants import ConstColors
 
 
 class Inventory:
@@ -10,17 +10,17 @@ class Inventory:
     def add_item(self, item):
         event_handler = self.owner.game.events
         if len(self.items) >= self.capacity:
-            event_handler.add_event({'information': {'text': 'You cannot carry any more, your inventory is full',
-                                                     'color': libtcod.yellow}})
+            event_handler.add_event({'message': 'You cannot carry any more, your inventory is full',
+                                     'color': ConstColors.INVENTORY_FULL})
         else:
             event_handler.add_event({'item_added': item})
-            self.owner.game.map.entities.remove(item)
+            self.owner.game.dungeon.current_map.entities.remove(item)
             self.items.append(item)
 
     def no_item_found(self):
         event_handler = self.owner.game.events
-        event_handler.add_event({'information': {'text': 'There is nothing here to pick up.',
-                                                 'color': libtcod.yellow}})
+        event_handler.add_event({'message': 'There is nothing here to pick up.',
+                                 'color': ConstColors.NOTHING_TO_PICK_UP})
 
     def menu_options(self):
         header = 'Press the key next to an item to use it, or Esc to cancel.\n'
@@ -31,14 +31,14 @@ class Inventory:
         return header, options
 
     def use(self, item_entity, **kwargs):
-        print('inventory:use: item_ent, kwargs', item_entity, **kwargs)
+        # print('inventory:use: item_ent, kwargs', item_entity, **kwargs)
         event_handler = self.owner.game.events
 
         item_component = item_entity.item
 
         if item_component.use_function is None:
             event_handler.add_event({'message': 'The {0} cannot be used'.format(item_entity.name),
-                                     'color': libtcod.yellow})
+                                     'color': ConstColors.CANNOT_BE_USED})
         else:
             kwargs = {**item_component.function_kwargs, **kwargs}
             item_use_result = item_component.use_function(self.owner, item_component.power, **kwargs)

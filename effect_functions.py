@@ -1,4 +1,4 @@
-import libtcodpy as libtcod
+from config.constants import ConstColors
 
 
 # TODO: texte "heal" dans l'objet, peut etre plutot dans l'effet de la potion (Sur Fighter?)
@@ -7,14 +7,12 @@ def heal(*args, **kwargs):
     entity = args[0]
     power = args[1]
 
-    results = None
-
     if entity.fighter.hp == entity.fighter.max_hp:
         return {'consume_item': False,
                 'message': 'You are already at full health',
-                'color': libtcod.yellow}
+                'color': ConstColors.FULL_HEAL_ALREADY}
     else:
         entity.fighter.heal(power)
         return {'consume_item': True,
                 'message': 'Your wounds start to feel better!',
-                "color": libtcod.green}
+                "color": ConstColors.WOUND_HEALED}

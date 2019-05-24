@@ -1,7 +1,7 @@
-def get_player_stats(type):
+def get_player_stats(type='base_player'):
     player_archetype = {
         'base_player': {
-            'hp': 30
+            'hp': 300
         }
     }
     try:

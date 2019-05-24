@@ -56,7 +56,7 @@ class App:
                     try:
                         self.game = load_game('savegame')
                         # This is needed so the map & chars are fully rendered.
-                        self.game.map.fov_map = initialize_fov(self.game.map)
+                        self.game.dungeon.current_map.fov_map = initialize_fov(self.game.dungeon.current_map)
                         self.game.fov_recompute = True
                         self.game.recompute_fov()
                         self.app_states = AppStates.GAME
