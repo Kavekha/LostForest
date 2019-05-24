@@ -27,7 +27,6 @@ class EventHandler:
                 self.message_log.add_message(message, color)
 
             if information:
-                print('information is ', information)
                 self.message_log.add_message(information['text'], information['color'])
 
             if dead_entity:

@@ -1,7 +1,7 @@
 import libtcodpy as libtcod
 from states.game_states import GameStates
+from states.app_states import AppStates
 from enum import Enum
-from menus.main_menu import menu
 
 
 class RenderOrder(Enum):
@@ -15,7 +15,7 @@ class Render:
     responsabilité: Afficher les elements du jeu & interface.
     doit pouvoir être remplacé facilement par une autre librairie.
     '''
-    def __init__(self, screen_width=80, screen_height=50, bar_width=20, panel_height=7):
+    def __init__(self, main_menu_background_image, screen_width=80, screen_height=50, bar_width=20, panel_height=7):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.panel_height = panel_height
@@ -27,6 +27,7 @@ class Render:
         self.log_message_x = bar_width + 2
         self.log_message_width = screen_width - bar_width - 2
         self.log_message_height = panel_height - 1
+        self.main_menu_background_image = main_menu_background_image
 
         self._initialize_render()
 
@@ -38,16 +39,24 @@ class Render:
         self.game_window = libtcod.console_new(self.screen_width, self.screen_height)
         self.panel = libtcod.console_new(self.screen_width, self.panel_height)
         self.menu_window = libtcod.console_new(self.screen_width, self.screen_height)
+        self.app_window = libtcod.console_new(self.screen_width, self.screen_height)
+
+    def render_main_menu(self, app):
+        if app.app_states == AppStates.MAIN_MENU:
+            self._main_menu(self.app_window, self.main_menu_background_image, self.screen_width, self.screen_height)
+
+        elif app.app_states == AppStates.BOX:
+            self._menu(self.app_window, 'Erreur : File Not Found', [], 24, self.screen_width, self.screen_height)
+
+        libtcod.console_flush()
+        libtcod.console_clear(self.app_window)
+
+
 
     def render_all(self, game, mouse):
-
         # doit-on recalculer le field of vision? # TODO : Est-ce vraiment responsabilité du render all de calculer FOV?
-        # if game.fov_recompute:
-        self._render_map(game.map)
         if game.fov_recompute:
-            print('self menu windows : ', self.menu_window)
-            print('self game windows : ', self.game_window)
-            print('self panel window : ', self.panel)
+            self._render_map(game.map)
 
         libtcod.console_set_default_background(self.menu_window, libtcod.black)
         libtcod.console_clear(self.menu_window)
@@ -68,13 +77,13 @@ class Render:
         # if menu
 
         if game.game_state == GameStates.SHOW_INVENTORY:
-            self._render_menu(game)
+            self._render_option_menu(game)
 
         game.fov_recompute = False
         libtcod.console_flush()
         self._clear_all(game.map.entities)
 
-    def menu(self, con, header, options, width, screen_width, screen_height):
+    def _menu(self, con, header, options, width, screen_width, screen_height):
         if len(options) > 26:
             raise ValueError('Cannot have a menu with more than 26 options.')
 
@@ -104,13 +113,25 @@ class Render:
         y = int(screen_height / 2 - height / 2)
         libtcod.console_blit(self.menu_window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
 
+    def _main_menu(self, con, background_image, screen_width, screen_height):
+        libtcod.image_blit_2x(background_image, 0, 0, 0)
+
+        libtcod.console_set_default_foreground(0, libtcod.light_yellow)
+        libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, libtcod.BKGND_NONE,
+                                 libtcod.CENTER,
+                                 'LOST FOREST')
+        # libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 2), libtcod.BKGND_NONE, libtcod.CENTER,
+        #                         'By (Your name here)')
+
+        self._menu(con, '', ['Play a new game', 'Continue last game', 'Quit'], 24, screen_width, screen_height)
+
     def _render_interface(self, game):
         self.render_bar(1, 1, 'HP', game.player.fighter.hp, game.player.fighter.max_hp,
                    libtcod.light_red, libtcod.darker_red)
 
-    def _render_menu(self, game):
+    def _render_option_menu(self, game):
         header, options = game.player.inventory.menu_options()
-        self.menu(self.game_window, header, options, int(self.screen_width / 1.5), self.screen_width, self.screen_height)
+        self._menu(self.game_window, header, options, int(self.screen_width / 1.5), self.screen_width, self.screen_height)
 
     def _render_under_mouse(self, game, mouse):
         libtcod.console_set_default_foreground(self.panel, libtcod.light_gray)

@@ -17,10 +17,23 @@ def handle_keys(key, game_state):
     elif game_state == GameStates.SHOW_INVENTORY:
         action = handle_player_options_keys(key)
 
-    #if action != {'app': {}, 'game': {}}:
-    #    print('action is : ', action)
-
     return action
+
+
+def handle_main_menu(key):
+    key_char = chr(key.c)
+
+    if key_char == 'a':
+        print('handle main menu: new_game')
+        return {'new_game': True}
+    elif key_char == 'b':
+        print('handle main menu: load_game')
+        return {'load_save_game': True}
+    elif key_char == 'c' or key.vk == libtcod.KEY_ESCAPE:
+        print('handle main menu: game_exit')
+        return {'game_exit': True}
+
+    return {}
 
 
 # Originaly meant for inventory.
