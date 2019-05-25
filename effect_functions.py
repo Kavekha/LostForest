@@ -1,4 +1,4 @@
-from config.constants import ConstColors
+from config.constants import ConstColors, ConstTexts
 
 
 # TODO: texte "heal" dans l'objet, peut etre plutot dans l'effet de la potion (Sur Fighter?)
@@ -9,10 +9,10 @@ def heal(*args, **kwargs):
 
     if entity.fighter.hp == entity.fighter.max_hp:
         return {'consume_item': False,
-                'message': 'You are already at full health',
+                'message': ConstTexts.FULL_HEAL_ALREADY,
                 'color': ConstColors.FULL_HEAL_ALREADY}
     else:
         entity.fighter.heal(power)
         return {'consume_item': True,
-                'message': 'Your wounds start to feel better!',
+                'message': ConstTexts.WOUND_HEALED,
                 "color": ConstColors.WOUND_HEALED}

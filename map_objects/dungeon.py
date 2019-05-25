@@ -1,6 +1,6 @@
 from config.dungeon_config import get_dungeon_config
 from map_objects.map import GameMap
-from config.constants import ConstColors
+from config.constants import ConstColors, ConstTexts
 
 
 class Dungeon:
@@ -24,12 +24,14 @@ class Dungeon:
             self.current_floor += 1
             self.generate_floor()
             self.game.recompute_fov()
+            # empecher artefacts de la carte precedente. Fix merdique. Dans Engine, render et Game aussi.
+            self.game.reset_game_windows = True
 
             self.game.player.fighter.heal(self.game.player.fighter.max_hp // 2)
-            self.game.events.add_event({'message': 'You take a moment to rest, and recover your strength.',
+            self.game.events.add_event({'message': ConstTexts.REST_AFTER_STAIRS,
                                         'color': ConstColors.REST_AFTER_STAIRS_COLOR})
         else:
-            self.game.events.add_event({'message': 'VICTORY !! You are at the top floor of the dungeon!',
+            self.game.events.add_event({'message': ConstTexts.VICTORY_LAST_FLOOR_BASIC,
                                         'color': ConstColors.POSITIVE_INFO_COLOR})
 
 

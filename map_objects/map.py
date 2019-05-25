@@ -7,7 +7,6 @@ from components.stairs import Stairs
 from entities import Entity
 import libtcodpy as libtcod
 from render_engine import RenderOrder
-from config.constants import ConstColors
 
 from random import randint
 

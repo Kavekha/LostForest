@@ -12,7 +12,8 @@ from render_engine import RenderOrder
 from data.data_loaders import save_game
 from map_objects.dungeon import Dungeon
 from utils.fov_functions import initialize_fov
-from config.constants import ConstColors
+from config.constants import ConstColors, ConstTexts
+from utils.death_functions import kill_player
 
 
 
@@ -38,6 +39,7 @@ class Game:
         # gestion du fov.
         self.fov_algorithm = game_config['fov_algorithm']
         self.fov_recompute = True
+        self.reset_game_windows = False # Pour contré les artefacts lors d'un changement d'etage.
 
         # Creation du joueur.
         self.player = self.create_player()
@@ -46,12 +48,19 @@ class Game:
         self.dungeon = Dungeon(self)
         self.dungeon.generate_floor()
 
-        self.recompute_fov()
+        self.full_recompute_fov()
         self.game_state = GameStates.PLAYERS_TURN
 
     def recompute_fov(self):
         recompute_fov(self.dungeon.current_map.fov_map, self.player.x, self.player.y, self.player.fov_radius,
                       self.player.light_walls, self.fov_algorithm)
+
+    def full_recompute_fov(self):
+        game_map = self.dungeon.current_map
+        game_map.fov_map = initialize_fov(game_map)
+        self.recompute_fov()
+        self.fov_recompute = True
+        print('full recompute fov : ', game_map.fov_map)
 
     def create_player(self):
         player_stats = get_player_stats('base_player')
@@ -86,6 +95,7 @@ class Game:
         if self.fov_recompute:
             self.recompute_fov()
             discover_new_tiles(self.dungeon.current_map)
+        save_game(self)
 
     def enemy_turn(self):
         for entity in self.dungeon.current_map.entities:
@@ -129,19 +139,18 @@ class Game:
                     self.player_end_turn()
                     break
             else:
-                self.player.inventory.no_item_found()
+                self.events.add_event({'message': ConstTexts.NOTHING_TO_PICK_UP,
+                                         'color': ConstColors.NOTHING_TO_PICK_UP})
 
-        # v10 TODO: Duplicata du code de reinit de map (Post save, post changement de floor)
+
         if take_stairs and self.game_state == GameStates.PLAYERS_TURN:
                 for entity in self.dungeon.current_map.entities:
                     if entity.stairs and entity.x == self.player.x and entity.y == self.player.y:
                         self.dungeon.next_floor()
-                        self.fov_map = initialize_fov(self.dungeon.current_map)
-                        self.recompute_fov()
-                        self.fov_recompute = True
+                        self.full_recompute_fov()
                         break
                 else:
-                    self.events.add_event({'message': 'There are no stairs here.',
+                    self.events.add_event({'message': ConstTexts.NO_STAIRS_THERE,
                                            'color': ConstColors.IMPORTANT_INFO_COLOR})
 
         if show_inventory:

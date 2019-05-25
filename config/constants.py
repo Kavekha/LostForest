@@ -20,3 +20,19 @@ class ConstColors:
     FULL_HEAL_ALREADY = libtcod.yellow
     WOUND_HEALED = libtcod.green
     REST_AFTER_STAIRS_COLOR = libtcod.light_violet
+
+
+class ConstTexts:
+    # travel
+    NO_STAIRS_THERE = 'There are no stairs here.'
+    REST_AFTER_STAIRS = 'You take a moment to rest, and recover your strength.'
+    # health
+    FULL_HEAL_ALREADY = 'You are already at full health'
+    WOUND_HEALED = 'Your wounds start to feel better!'
+    # inventory & items / collections
+    INVENTORY_FULL = 'You cannot carry any more, your inventory is full'
+    NOTHING_TO_PICK_UP = 'There is nothing here to pick up.'
+    INVENTORY_EMPTY = 'inventory is empty'
+    INVENTORY_HEADER = 'Press the key next to an item to use it, or Esc to cancel.\n'
+    # victory
+    VICTORY_LAST_FLOOR_BASIC = 'VICTORY !! You are at the top floor of the dungeon!'

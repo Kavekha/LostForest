@@ -2,7 +2,6 @@ import libtcodpy as libtcod
 
 from states.game_states import GameStates
 from render_engine import RenderOrder
-from game_messages import Message
 
 
 def become_corpse(entity):

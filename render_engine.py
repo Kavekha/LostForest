@@ -36,26 +36,43 @@ class Render:
         libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
         libtcod.console_init_root(self.screen_width, self.screen_height, 'Lost Forest', False)
 
-        # la fenetre dans lequel le jeu sera affiché.
-        self.game_window = libtcod.console_new(self.screen_width, self.screen_height)
-        self.panel = libtcod.console_new(self.screen_width, self.panel_height)
-        self.menu_window = libtcod.console_new(self.screen_width, self.screen_height)
-        self.app_window = libtcod.console_new(self.screen_width, self.screen_height)
+        # create render windows
+        self.reset_render_windows()
 
+    def reset_render_windows(self, game_win=True, panel_win=True, menu_win=True, app_win=True):
+        # la fenetre dans lequel le personnage circule.
+        if game_win:
+            self.game_window = libtcod.console_new(self.screen_width, self.screen_height)
+        # interface
+        if panel_win:
+            self.panel = libtcod.console_new(self.screen_width, self.panel_height)
+        # les menus divers
+        if menu_win:
+            self.menu_window = libtcod.console_new(self.screen_width, self.screen_height)
+        # le main menu
+        if app_win:
+            self.app_window = libtcod.console_new(self.screen_width, self.screen_height)
+
+    # Nous sommes dans APP.
     def render_main_menu(self, app):
-        if app.app_states == AppStates.MAIN_MENU:
+        if app.app_states == AppStates.MAIN_MENU and not app.box_message:
             self._main_menu(self.app_window, self.main_menu_background_image, self.screen_width, self.screen_height)
 
-        elif app.app_states == AppStates.BOX:
-            self._menu(self.app_window, 'Erreur : File Not Found', [], 24, self.screen_width, self.screen_height)
+        if app.box_message:
+            header = app.box_message.get('header', '')
+            options = app.box_message.get('options', [])
+            self._menu(self.app_window, header, options, 24, self.screen_width, self.screen_height)
 
         libtcod.console_flush()
         libtcod.console_clear(self.app_window)
 
+    # Nous sommes In Game.
     def render_all(self, game, mouse):
-        # doit-on recalculer le field of vision? # TODO : Est-ce vraiment responsabilité du render all de calculer FOV?
         if game.fov_recompute:
             self._render_map(game)
+        # fix pour eviter artefact lors de changement de niveau...TODO: autre solution.
+        if game.reset_game_windows:
+            game.reset_game_windows = False
 
         libtcod.console_set_default_background(self.menu_window, libtcod.black)
         libtcod.console_clear(self.menu_window)
@@ -151,7 +168,8 @@ class Render:
         (x, y) = (mouse.cx, mouse.cy)
 
         names = [entity.name for entity in game.dungeon.current_map.entities
-                 if entity.x == x and entity.y == y and libtcod.map_is_in_fov(game.map.fov_map, entity.x, entity.y)]
+                 if entity.x == x and entity.y == y and libtcod.map_is_in_fov(game.dungeon.current_map.fov_map,
+                                                                              entity.x, entity.y)]
         names = ', '.join(names)
 
         return names.capitalize()

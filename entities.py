@@ -19,6 +19,7 @@ class Entity:
         self.color = color
         self.name = name
         self.render_order = render_order
+        self.kill_function = None
 
         # components
         component_list = [fighter, ai, inventory, item, stairs]

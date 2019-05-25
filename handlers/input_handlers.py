@@ -24,14 +24,14 @@ def handle_main_menu(key):
     key_char = chr(key.c)
 
     if key_char == 'a':
-        print('handle main menu: new_game')
+        # print('handle main menu: new_game')
         return {'new_game': True}
     elif key_char == 'b':
-        print('handle main menu: load_game')
+        # print('handle main menu: load_game')
         return {'load_save_game': True}
     elif key_char == 'c' or key.vk == libtcod.KEY_ESCAPE:
-        print('handle main menu: game_exit')
-        return {'game_exit': True}
+        # print('handle main menu: app_exit')
+        return {'app_exit': True}
 
     return {}
 
@@ -46,8 +46,6 @@ def handle_player_options_keys(key):
 
     if index >= 0:
         action['game'] = {'game_option_choice': index}
-        if action['game'] == 0:
-            print('index : 0')
 
     # others
     if key.vk == libtcod.KEY_ENTER and key.lalt:
