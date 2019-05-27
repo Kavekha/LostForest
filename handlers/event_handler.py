@@ -18,6 +18,9 @@ class EventHandler:
         self.events.append(event)
 
     def resolve_events(self):
+        if self.events:
+            print('event to resolve : ', self.events)
+
         for event in self.events:
             message = event.get('message')
             color = event.get('color')

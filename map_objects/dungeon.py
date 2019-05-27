@@ -1,4 +1,4 @@
-from config.dungeon_config import get_dungeon_config
+from data.dungeon_specs import get_dungeon_config
 from map_objects.map import GameMap
 from config.constants import ConstColors, ConstTexts
 

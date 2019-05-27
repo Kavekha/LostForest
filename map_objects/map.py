@@ -1,6 +1,6 @@
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
-from config.map_config import get_map_config
+from data.map_specs import get_map_config
 from utils.fov_functions import initialize_fov
 from spawners import Spawner
 from components.stairs import Stairs
