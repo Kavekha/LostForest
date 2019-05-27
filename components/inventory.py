@@ -30,7 +30,8 @@ class Inventory:
             event_handler.add_event({'message': ConstTexts.INVENTORY_FULL,
                                      'color': ConstColors.INVENTORY_FULL})
         else:
-            event_handler.add_event({'item_added': item})
+            event_handler.add_event({'message': 'You pick up the {0}!'.format(item.name),
+                                     'color': ConstColors.ITEM_PICKED})
             self.owner.game.dungeon.current_map.entities.remove(item)
             self.items.append(item)
 

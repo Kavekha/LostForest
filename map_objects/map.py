@@ -1,6 +1,6 @@
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
-from config.config import get_map_config
+from config.map_config import get_map_config
 from utils.fov_functions import initialize_fov
 from spawners import Spawner
 from components.stairs import Stairs
@@ -27,8 +27,9 @@ class GameMap:
         self.room_max_size = map_config[map_type]['room_max_size']
         self.room_min_size = map_config[map_type]['room_min_size']
         self.max_rooms = map_config[map_type]['max_rooms']
-        self.max_monsters_room = map_config[map_type]['max_monsters_per_room']
-        self.max_items_room = map_config[map_type]['max_items_per_room']
+        # for spawner
+        max_monsters_room_table = map_config[map_type]['max_monsters_per_room']
+        max_items_room_table = map_config[map_type]['max_items_per_room']
 
         # On créé une map pleine, non utilisable sans sa generation.
         self.tiles = self._initialize_tiles()   # tiles = la vraie map
@@ -38,7 +39,7 @@ class GameMap:
         self.entities = []
 
         # On genere un spawner, pour gerer le placement des mobs & items.
-        self.spawner = Spawner(self)
+        self.spawner = Spawner(self, max_monsters_room_table, max_items_room_table)
 
     def add_player(self, player):
         self.entities.append(player)

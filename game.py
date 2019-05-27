@@ -45,8 +45,8 @@ class Game:
         self.player = self.create_player()
 
         # Creation du dongeon
-        self.dungeon = Dungeon(self)
-        self.dungeon.generate_floor()
+        self.dungeon = Dungeon(self, 'Foret eternelle')
+        self.dungeon.initialize()
 
         self.full_recompute_fov()
         self.game_state = GameStates.PLAYERS_TURN
@@ -65,7 +65,7 @@ class Game:
     def create_player(self):
         player_stats = get_player_stats('base_player')
         if player_stats:
-            fighter_component = Fighter(hp=player_stats['hp'])
+            fighter_component = Fighter(hp=player_stats['hp'], death_function=kill_player)
             inventory_component = Inventory(26)
 
             player = Entity(self,
@@ -140,8 +140,7 @@ class Game:
                     break
             else:
                 self.events.add_event({'message': ConstTexts.NOTHING_TO_PICK_UP,
-                                         'color': ConstColors.NOTHING_TO_PICK_UP})
-
+                                       'color': ConstColors.NOTHING_TO_PICK_UP})
 
         if take_stairs and self.game_state == GameStates.PLAYERS_TURN:
                 for entity in self.dungeon.current_map.entities:
