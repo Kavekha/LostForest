@@ -23,10 +23,6 @@ class Fighter:
 
     def attack(self, target, events):
         # target is entity, not entity.fighter # TODO: Choisir si on envoie du entity.fighter ou entity
-        print('I am {}, my target is {}. Its hp {}, might {}, vitality {}'.format(self.owner.name, target.name,
-                                                                                  target.fighter.hp,
-                                                                                  target.fighter.might,
-                                                                                  target.fighter.vitality))
         base_damage = randint(0, 2)
         damage = base_damage
         if self.might < base_damage:

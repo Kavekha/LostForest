@@ -7,6 +7,7 @@ from data.data_loaders import save_game
 from map_objects.dungeon import Dungeon
 from utils.fov_functions import initialize_fov
 from config.constants import ConstColors, ConstTexts
+import libtcodpy as libtcod
 
 
 class Game:
@@ -77,8 +78,9 @@ class Game:
 
     def enemy_turn(self):
         for entity in self.dungeon.current_map.entities:
-            if entity.ai:
-                entity.ai.take_turn(self.dungeon.current_map, self.player, self.events)
+            if libtcod.map_is_in_fov(self.dungeon.current_map.fov_map, entity.x, entity.y):
+                if entity.ai:
+                    entity.ai.take_turn(self.dungeon.current_map, self.player, self.events)
         self.enemy_end_turn()
 
     def enemy_end_turn(self):

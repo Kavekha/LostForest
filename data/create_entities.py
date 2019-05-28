@@ -7,21 +7,28 @@ from data.monsters import get_base_monster_stats, get_monster_stats
 from data.playable_archetypes import get_player_stats, get_base_player_stats
 from entities import Entity
 from render_engine import RenderOrder
+from components.ai import BasicMonster, Brainless
+
+
+def get_brain(brain):
+    if brain == 'BasicMonster':
+        return BasicMonster()
+    elif brain == 'Brainless':
+        return Brainless()
+    else:
+        return None
 
 
 def create_fighting_entity(game, entity_name, x, y, player=False):
-    print('create fighting entity : ', entity_name, x, y, player)
     if not player:
         entity_stats = get_monster_stats(entity_name)
     else:
         entity_stats = get_player_stats(entity_name)
-    print('entity stats:', entity_stats)
     base = entity_stats.get('base')
     if not player:
         dict_stats = get_base_monster_stats(base)
     else:
         dict_stats = get_base_player_stats(base)
-    print('base stats: ', dict_stats)
 
     entity_appearance = dict_stats.get('char', '?')
     entity_color = dict_stats.get('color', libtcod.red)
@@ -30,7 +37,7 @@ def create_fighting_entity(game, entity_name, x, y, player=False):
     entity_hp = dict_stats.get('hp', 10)
     entity_might = dict_stats.get('might', 3)
     entity_vitality = dict_stats.get('vitality', 3)
-    ai_component = dict_stats.get('brain', None)
+    ai_component = get_brain(dict_stats.get('brain', None))
 
     if entity_stats.get('char'):
         entity_appearance = entity_stats.get('char')
@@ -41,13 +48,13 @@ def create_fighting_entity(game, entity_name, x, y, player=False):
     if entity_stats.get('death_function'):
         death_function = entity_stats.get('death_function', kill_monster)
     if entity_stats.get('hp'):
-        entity_hp += entity_stats.get('hp')
+        entity_hp = entity_stats.get('hp')
     if entity_stats.get('might'):
-        entity_might += entity_stats.get('might')
+        entity_might = entity_stats.get('might')
     if entity_stats.get('vitality'):
-        entity_vitality += entity_stats.get('vitality')
+        entity_vitality = entity_stats.get('vitality')
     if entity_stats.get('brain'):
-        ai_component += entity_stats.get('brain')
+        ai_component = get_brain(entity_stats.get('brain'))
 
     fighter_component = Fighter(hp=entity_hp, might=entity_might, vitality=entity_vitality,
                                 death_function=death_function)
@@ -63,7 +70,6 @@ def create_fighting_entity(game, entity_name, x, y, player=False):
                     inventory=inventory_component,
                     ai=ai_component,
                     render_order=RenderOrder.ACTOR)
-    print('ai component at end : ', entity.ai)
     return entity
 
 

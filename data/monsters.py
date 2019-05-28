@@ -9,15 +9,15 @@ class MonsterCompendium:
         },
         'ougloth_weak': {
             'base': 'ougloth',
-            'color': libtcod.red,
+            'color': libtcod.desaturated_red,
             'hp': 7,
             'vitality': 2
         },
         'ougloth_brute': {
             'base': 'ougloth',
-            'color': libtcod.dark_red,
+            'color': libtcod.red,
             'hp': 14,
-            'might': 4
+            'might': 3
         },
         'living root': {
             'base': 'root'
@@ -29,8 +29,8 @@ class BaseMonsterCompendium:
     base_monster_compendium = {
         'ougloth': {
             'char': 'o',
-            'color': libtcod.desaturated_red,
-            'brain': BasicMonster(),
+            'color': libtcod.dark_red,
+            'brain': 'BasicMonster',
             'hp': 10,
             'might': 2,
             'vitality': 3
@@ -38,7 +38,7 @@ class BaseMonsterCompendium:
         'root': {
             'char': 'x',
             'color': libtcod.desaturated_red,
-            'brain': Brainless(),
+            'brain': 'Brainless',
             'hp': 5,
             'might': 0,
             'vitality': 1

@@ -18,6 +18,7 @@ class Brainless(Brain):
     # Sentient, but can't interact.
     pass
 
+
 class BasicMonster(Brain):
     def take_turn(self, game_map, target, events):
         monster = self.owner

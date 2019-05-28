@@ -3,7 +3,6 @@ import libtcodpy as libtcod
 from render_engine import RenderOrder
 
 
-
 # TODO: Pas ouf de remonter comme ca aussi haut pour recuperer le game.
 # TODO: Pertinence du Game dans Entity
 class Entity:

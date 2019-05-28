@@ -32,11 +32,13 @@ NEXT:
         [ ] 250     Niveau de danger pour modifier un monstre de base selon le niveau du donjon.
         [ ] 250     Table de mobs / items : poids dependant du niveau de danger.
         [/] 100     Creation de monstres & items ailleurs que dans Spawner non?
+        [ ] 50      Nom de monstre vs nom de reference du monstre
 
     FIGHT:
         [/] 100     fight : stats & combat
         [ ] 10      Si joueur meurt, les mobs jouent encore et un autre message de combat peut avoir lieu apres "you are dead"
         [ ] 250     Items de baston.
+        [ ] 250     Mieux penser Might & Vitality pour que ca scale de facon moins radicale.
 
     CAMERA / RENDER:
         [ ] 250     map : camera, map plus grande que l'ecran de jeu
@@ -47,7 +49,7 @@ NEXT:
         [ ] 25      logs : accès archives
 
     GAMEPLAY
-        50      Tour par Tour? Timeline?
+        50      Tour par Tour? Timeline? Heartbeats
         250     Equipement, items.
         250     Monstres.
 
@@ -60,10 +62,7 @@ NEXT:
         [/] 250     Format des datas pour monsters & items compendiums...
         [ ] 250     Inventory: use item : wrapper les fonctions effects par un item_use pour meilleur controle et garder les Effets plus neutres (utilisable par sort & etc).
         [ ] 50      render : solution degueu du reset game window pour artefacts map precedente.
-        [ ] 50      Creer entité / item necessite game, map pour ajouter events, etc. Pas très autonome.
-
-     BUG
-        [ ] 500     Mobs sont aveugles, en tout cas not in fov map dans take turn (ai).
+        [ ] 100      Creer entité / item necessite game, map pour ajouter events, etc. Pas très autonome.
 
     TO LEARN:
         Decorator pour entourer les fonctionnalités use_function des items. Le decorateur etait joué dés le main menu,

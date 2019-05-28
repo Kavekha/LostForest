@@ -1,7 +1,8 @@
-v0.0.13 +500
+v0.0.13 +550
+    fight : stats might & vitality pour le combat.
     fonction unique pour creer des entités combattantes et des items.
     BaseMonster contenant les stats de base d'un type de monstre, Monster contenant ses variantes.
-    to fix : mob n'attaque plus : map_is_in_fov retourne false dans take_turn AI...?
+
 
 v0.0.12 +1400
     death_function maintenant dans Fighter. Event envoyé pour changer le game state en cas de mort de joueur.
