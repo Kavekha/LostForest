@@ -6,12 +6,18 @@ from game import Game
 from states.app_states import AppStates
 from data.data_loaders import load_game
 from utils.fov_functions import initialize_fov
+from systems.commands import CommandController
+from handlers.input_handlers import InputHandler
 
 
 class App:
     def __init__(self):
         # app config
         config = get_app_config()
+
+        # input handler
+        self.command_controller = CommandController()
+        self.input_handler = InputHandler(self, self.command_controller)
 
         # render engine
         screen_width = config['screen_width']
@@ -80,6 +86,7 @@ class App:
                 # render game
                 self.render_engine.render_all(self.game, mouse)
 
+                self.input_handler.press(key)
                 action = handle_keys(key, self.game.game_state)
 
                 game_action = action.get('game')

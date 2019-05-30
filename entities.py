@@ -1,6 +1,7 @@
 import math
 import libtcodpy as libtcod
 from render_engine import RenderOrder
+from config.constants import ConstColors, ConstTexts
 
 
 # TODO: Pas ouf de remonter comme ca aussi haut pour recuperer le game.
@@ -22,6 +23,7 @@ class Entity:
         self.name = name
         self.render_order = render_order
         self.kill_function = None
+        self.round = game.round
 
         # components
         component_list = [fighter, ai, inventory, item, stairs]
@@ -45,13 +47,42 @@ class Entity:
             else:
                 continue
 
+    def end_turn(self):
+        self.round += 1
+
+    def wait(self):
+        self.end_turn()
+
+    def pick_up(self):
+        if self.inventory:
+            result = self.inventory.pick_up()   # True if success.
+            if result:
+                self.end_turn()
+
+    def take_stairs(self):
+        entities = self.game.dungeon.current_map.entities
+
+        for entity in entities:
+            if entity.stairs and entity.x == self.x and entity.y == self.y:
+                self.game.dungeon.next_floor()
+                self.game.full_recompute_fov()
+                self.end_turn()
+                break
+        else:
+            self.game.events.add_event({'message': ConstTexts.NO_STAIRS_THERE,
+                                        'color': ConstColors.IMPORTANT_INFO_COLOR})
+
     def move(self, dx, dy):
         # Move the entity by a given amount
         self.x += dx
         self.y += dy
+        self.end_turn()
 
     def try_to_move(self, dx, dy):
-        # on verifie que l on peut deplacer le personnage.  # TODO: On le garde ici?
+        # TODO: Si mort, peut pas bouger. Fait sens, mais vie dans Fighter et Move dans Entity.
+        if self.fighter:
+            if self.fighter.hp <= 0:
+                return
         destination_x = self.x + dx
         destination_y = self.y + dy
         # s il n y a pas de tuile bloquante...
@@ -68,6 +99,7 @@ class Entity:
         if entity.fighter and self.fighter:
             # Nous sommes des guerriers, on se tape.
             self.fighter.attack(entity, self.game.events)
+        self.end_turn()
 
     def move_towards(self, target_x, target_y):
         dx = target_x - self.x

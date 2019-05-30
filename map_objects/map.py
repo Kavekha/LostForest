@@ -128,7 +128,7 @@ class GameMap:
                 num_rooms += 1
 
         stairs_component = Stairs(self.dungeon.current_floor + 1)
-        down_stairs = Entity(self.dungeon, center_last_room_x, center_last_room_y, '>', libtcod.white, 'Stairs',
+        down_stairs = Entity(self.dungeon.game, center_last_room_x, center_last_room_y, '>', libtcod.white, 'Stairs',
                              render_order=RenderOrder.STAIRS, stairs=stairs_component)
         self.entities.append(down_stairs)
 
