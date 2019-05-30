@@ -100,7 +100,6 @@ def handle_player_turn_keys(key):
     if key_char == 'g':
         action['game'] = {'pickup': True}
     elif key_char == 'i':
-        print('handler: inventory')
         action['game'] = {'show_inventory': True}
     #elif key.vk == libtcod.KEY_ENTER:
     elif key_char == 'j':

@@ -1,20 +1,13 @@
-import libtcodpy as libtcod
-
-from entities import Entity
+from data.create_entities import create_fighting_entity
 from config.config import get_game_config
 from utils.fov_functions import recompute_fov, discover_new_tiles
 from states.game_states import GameStates
-from components.fighter import Fighter
-from components.inventory import Inventory
-from data.playable_archetypes import get_player_stats
 from handlers.event_handler import EventHandler
-from render_engine import RenderOrder
 from data.data_loaders import save_game
 from map_objects.dungeon import Dungeon
 from utils.fov_functions import initialize_fov
 from config.constants import ConstColors, ConstTexts
-from utils.death_functions import kill_player
-
+import libtcodpy as libtcod
 
 
 class Game:
@@ -60,47 +53,34 @@ class Game:
         game_map.fov_map = initialize_fov(game_map)
         self.recompute_fov()
         self.fov_recompute = True
-        print('full recompute fov : ', game_map.fov_map)
 
     def create_player(self):
-        player_stats = get_player_stats('base_player')
-        if player_stats:
-            fighter_component = Fighter(hp=player_stats['hp'], death_function=kill_player)
-            inventory_component = Inventory(26)
-
-            player = Entity(self,
-                            0, 0,
-                            '@', libtcod.white, 'Player', blocks=True,
-                            fighter=fighter_component,
-                            inventory=inventory_component,
-                            render_order=RenderOrder.ACTOR)
-            return player
-        else:
-            return None
+        player = create_fighting_entity(self, 'player', 0, 0, player=True)
+        return player
 
     def game_turn(self, player_action):
-        # TODO: Tour selon une timeline.
+        # TODO: Tour selon une timeline?
         if self.game_state in [GameStates.PLAYERS_TURN, GameStates.SHOW_INVENTORY, GameStates.PLAYER_DEAD]:
             self.player_turn(player_action)
         elif self.game_state == GameStates.ENEMY_TURN:
             self.enemy_turn()
-        # elif self.game_state == GameStates.PLAYER_DEAD:
-        #    pass
 
         # event resolution
         self.events.resolve_events()
 
         # Si une action a devoilé de nouvelles tiles, on les considère comme discovered.
-        # TODO Est ce que cela doit etre dans le game turn?
         if self.fov_recompute:
             self.recompute_fov()
             discover_new_tiles(self.dungeon.current_map)
+
+        # save
         save_game(self)
 
     def enemy_turn(self):
         for entity in self.dungeon.current_map.entities:
-            if entity.ai:
-                entity.ai.take_turn(self.dungeon.current_map, self.player, self.events)
+            if libtcod.map_is_in_fov(self.dungeon.current_map.fov_map, entity.x, entity.y):
+                if entity.ai:
+                    entity.ai.take_turn(self.dungeon.current_map, self.player, self.events)
         self.enemy_end_turn()
 
     def enemy_end_turn(self):
