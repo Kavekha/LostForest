@@ -24,16 +24,18 @@ class Inventory:
         self.items = []
         self.owner = None
 
-    def add_item(self, item):
-        event_handler = self.owner.game.events
+    def add_item(self, item, event_handler=None):
         if len(self.items) >= self.capacity:
-            event_handler.add_event({'message': ConstTexts.INVENTORY_FULL,
-                                     'color': ConstColors.INVENTORY_FULL})
+            if event_handler:
+                event_handler.add_event({'message': ConstTexts.INVENTORY_FULL, 'color': ConstColors.INVENTORY_FULL})
+            return False
         else:
-            event_handler.add_event({'message': 'You pick up the {0}!'.format(item.name),
-                                     'color': ConstColors.ITEM_PICKED})
+            if event_handler:
+                event_handler.add_event({'message': 'You pick up the {0}!'.format(item.name),
+                                         'color': ConstColors.ITEM_PICKED})
             self.owner.game.dungeon.current_map.entities.remove(item)
             self.items.append(item)
+            return True
 
     def menu_options(self):
         header = ConstTexts.INVENTORY_HEADER
@@ -65,6 +67,20 @@ class Inventory:
                 self.remove_item(item_entity)
 
             event_handler.add_event(item_use_result)
+
+    def pick_up(self):
+        event_handler = self.owner.game.events
+        entities = self.owner.game.dungeon.current_map.entities
+        for entity in entities:
+            if entity.item and entity.x == self.owner.x and entity.y == self.owner.y:
+                action_resolution = self.add_item(entity, event_handler)
+                if action_resolution:
+                    return True  # On indique que l'action est un succès.
+                else:
+                    break
+        else:
+            event_handler.add_event({'message': ConstTexts.NOTHING_TO_PICK_UP, 'color': ConstColors.NOTHING_TO_PICK_UP})
+        return False    # On indique que l action n a pas reussi.
 
     def remove_item(self, item):
         self.items.remove(item)

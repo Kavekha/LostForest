@@ -1,10 +1,81 @@
 import libtcodpy as libtcod
 from states.game_states import GameStates
+from systems.commands import *
+
+
+# Command version of inputhandler. v0.0.14
+class InputHandler:
+    def __init__(self, app, command_controller):
+        self.app = app
+        self.user_command_controller = command_controller
+
+    def press(self, key):
+        # key comes from libtcod.
+        key = self.convert_libtcod_to_key(key)
+        key = self.get_command_from_key(key)
+        self.command_requested(key)
+
+    def convert_libtcod_to_key(self, key):
+        key_char = chr(key.c)
+
+        if key.vk == libtcod.KEY_UP:
+            return 'button_arrow_up'
+        elif key.vk == libtcod.KEY_DOWN:
+            return 'button_arrow_down'
+        elif key.vk == libtcod.KEY_LEFT:
+            return 'button_arrow_left'
+        elif key.vk == libtcod.KEY_RIGHT:
+            return 'button_arrow_right'
+
+        if key_char == 'z':
+            return 'button_z'
+        elif key_char == 'g':
+            return 'button_g'
+        elif key_char == 'j':
+            return 'button_j'
+
+        return
+
+    def get_command_from_key(self, key):
+        if key == 'button_arrow_up':
+            return 'move_up'
+        elif key == 'button_arrow_down':
+            return 'move_down'
+        elif key == 'button_arrow_left':
+            return 'move_left'
+        elif key == 'button_arrow_right':
+            return 'move_right'
+        elif key == 'button_z':
+            return 'wait'
+        elif key == 'button_g':
+            return 'pick_up'
+        elif key == 'button_j':
+            return 'take_stairs'
+
+        return
+
+    def command_requested(self, cmd):
+        if not cmd:
+            return
+        else:
+            cmd = cmd.strip().lower()
+            if cmd == 'move_up':
+                self.user_command_controller.execute(MoveUpCommand(self.app.game.player))
+            elif cmd == 'move_down':
+                self.user_command_controller.execute(MoveDownCommand(self.app.game.player))
+            elif cmd == 'move_left':
+                self.user_command_controller.execute(MoveLeftCommand(self.app.game.player))
+            elif cmd == 'move_right':
+                self.user_command_controller.execute(MoveRightCommand(self.app.game.player))
+            elif cmd == 'wait':
+                self.user_command_controller.execute(WaitCommand(self.app.game.player))
+            elif cmd == 'pick_up':
+                self.user_command_controller.execute(PickUpCommand(self.app.game.player))
+            elif cmd == 'take_stairs':
+                self.user_command_controller.execute(TakeStairsCommand(self.app.game.player))
 
 
 # TODO : Repetitions de l'effet Fullscreen et Exit.
-
-
 def handle_keys(key, game_state):
     action = {'app': {}, 'game': {}}
 
@@ -87,25 +158,8 @@ def handle_player_turn_keys(key):
 
     action = {'app': {}, 'game': {}}
     # Movement keys
-
-    if key.vk == libtcod.KEY_UP:
-        action['game'] = {'move': (0, -1)}
-    elif key.vk == libtcod.KEY_DOWN:
-        action['game'] = {'move': (0, 1)}
-    elif key.vk == libtcod.KEY_LEFT:
-        action['game'] = {'move': (-1, 0)}
-    elif key.vk == libtcod.KEY_RIGHT:
-        action['game'] = {'move': (1, 0)}
-
-    if key_char == 'g':
-        action['game'] = {'pickup': True}
-    elif key_char == 'i':
+    if key_char == 'i':
         action['game'] = {'show_inventory': True}
-    #elif key.vk == libtcod.KEY_ENTER:
-    elif key_char == 'j':
-        action['game'] = {'take_stairs': True}
-    elif key_char == 'z':
-        action['game'] = {'wait': True}
 
     # others
     '''
