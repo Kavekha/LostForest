@@ -1,3 +1,8 @@
+v0.0.17
+    Clean des GameStates : ils ne sont plus necessaires.
+    Menu de validation pour quitter une partie en cours.
+    Victoire et QuitGame reconduisent au Main Menu.
+
 v0.0.16
     fix: Si reload, utilisation du stairs et menus possibles.
     leveling system : gain d'xp en tuant du mob.

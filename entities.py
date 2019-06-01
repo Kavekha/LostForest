@@ -154,6 +154,7 @@ class Entity:
                 # Set self's coordinates to the next path tile
                 self.x = x
                 self.y = y
+                self.end_turn()
         else:
             # Keep the old move function as a backup so that if there are no paths
             # (for example another monster blocks a corridor)

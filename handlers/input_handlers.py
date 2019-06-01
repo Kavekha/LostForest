@@ -1,5 +1,4 @@
 import libtcodpy as libtcod
-from states.game_states import GameStates
 from states.app_states import AppStates
 from systems.commands import *
 

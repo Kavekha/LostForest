@@ -16,6 +16,7 @@ class Menu:
         self._options = []
         self.display_options = None
         self.forced_width = None    # To force width in Render menu
+        self.back_to_main = False   # Si True : quitter ce menu rammene au MainScreen / APP (Victory / Death)
 
     @property
     def options(self):

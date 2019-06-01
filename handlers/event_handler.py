@@ -23,7 +23,6 @@ class EventHandler:
         for event in self.events:
             message = event.get('message')
             color = event.get('color')
-            change_state = event.get('change_state')
             victory = event.get('victory')      # True
             level_up = event.get('level_up')    # Entity
 
@@ -32,9 +31,6 @@ class EventHandler:
 
             if message:
                 self.message_log.add_message(message, color)
-
-            if change_state:
-                self.game.game_state = change_state
 
             if victory:
                 self.game.current_menu = VictoryMenu()

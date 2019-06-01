@@ -49,4 +49,8 @@ class ConstTexts:
     # XP
     LEVEL_UP = 'You reach level {} ! You feel powerfull.'
     LEVEL_UP_MENU_HEADER = 'Choose which stat you want to increase. \n Available : {}.'
+    # MENUS
+    QUIT_GAME_MENU_HEADER = 'Do you want to quit?'
+    YES_MENU = 'YES'
+    NO_MENU = 'NO'
 
