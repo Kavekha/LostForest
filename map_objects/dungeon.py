@@ -49,6 +49,7 @@ class Dungeon:
         else:
             self.game.events.add_event({'message': ConstTexts.VICTORY_LAST_FLOOR_BASIC,
                                         'color': ConstColors.POSITIVE_INFO_COLOR})
+            self.game.events.add_event({'victory': True})
 
 
 

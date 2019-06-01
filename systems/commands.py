@@ -8,12 +8,36 @@ class CommandController:
 
 
 class Command(object):
-    """The COMMAND interface"""
     def __init__(self, obj):
         self._obj = obj
 
     def execute(self):
         raise NotImplementedError
+
+
+# APPLICATION
+class FullScreenCommand(Command):
+    def execute(self):
+        self._obj.full_screen()
+
+
+class ExitWindow(Command):
+    def execute(self):
+        self._obj.exit_window()
+
+
+# IN GAME : ENTITY
+
+# LEVEL
+class ShowCharacterScreen(Command):
+    def execute(self):
+        self._obj.show_character_screen()
+
+
+# INVENTORY
+class ShowInventory(Command):
+    def execute(self):
+        self._obj.show_inventory()
 
 
 class MoveUpCommand(Command):

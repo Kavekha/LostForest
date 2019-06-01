@@ -1,5 +1,7 @@
 from config.constants import ConstColors
 from game_messages import MessageLog
+from menus.victory_menu import VictoryMenu
+from menus.level_menu import LevelUpMenu
 
 
 ''' 
@@ -22,6 +24,8 @@ class EventHandler:
             message = event.get('message')
             color = event.get('color')
             change_state = event.get('change_state')
+            victory = event.get('victory')      # True
+            level_up = event.get('level_up')    # Entity
 
             if not color:
                 color = ConstColors.NEUTRAL_INFO_COLOR
@@ -31,6 +35,12 @@ class EventHandler:
 
             if change_state:
                 self.game.game_state = change_state
+
+            if victory:
+                self.game.current_menu = VictoryMenu()
+
+            if level_up:
+                self.game.current_menu = LevelUpMenu(level_up)
 
         self.reset_event_list()
 

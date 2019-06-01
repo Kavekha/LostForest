@@ -13,7 +13,8 @@ class Game:
     '''
     orchestre les differents elements du jeu : carte, commandes, events.
     '''
-    def __init__(self):
+    def __init__(self, app):
+        self.app = app
         self.events = None
         self.fov_algorithm = None
         self.fov_recompute = True
@@ -21,6 +22,7 @@ class Game:
         self.dungeon = None
         self.game_state = None
         self.previous_game_state = GameStates.PLAYERS_TURN
+        self.current_menu = None
         self.round = 1
 
     def initialize(self):
@@ -58,16 +60,20 @@ class Game:
         player = create_fighting_entity(self, 'player', 0, 0, player=True)
         return player
 
-    def game_turn(self, player_action):
+    def save_game(self):
+        save_game(self)
+
+    def game_turn(self):
         if self.player.round <= self.round:
-            self.player_turn(player_action)
+            self.player_turn()
         else:
             self.enemy_turn()
             self.new_round()
 
     def new_round(self):
         self.round += 1
-        print('Current round is now ', self.round)
+        print('--- Round {}'.format(self.round))
+        self.save_game()
 
     def enemy_turn(self):
         for entity in self.dungeon.current_map.entities:
@@ -75,44 +81,11 @@ class Game:
                 if entity.ai:
                     entity.ai.take_turn(self.dungeon.current_map, self.player, self.events)
         self.events.resolve_events()
-        save_game(self)
 
-    def player_turn(self, player_action):
+    def player_turn(self):
         self.fov_recompute = True
 
         self.events.resolve_events()
         if self.fov_recompute:
             self.recompute_fov()
             discover_new_tiles(self.dungeon.current_map)
-        save_game(self)
-
-        show_inventory = player_action.get('show_inventory')
-        exit = player_action.get('exit')
-        game_option_choice = player_action.get('game_option_choice')
-
-        if show_inventory:
-            self.previous_game_state = self.game_state
-            self.game_state = GameStates.SHOW_INVENTORY
-
-        # Si un element d'une liste a été choisi, qu'on est pas mort et que le nb est inferieur au nb items
-        # dans l'inventaire.
-        if game_option_choice is not None \
-                and self.previous_game_state != GameStates.PLAYER_DEAD \
-                and game_option_choice < len(self.player.inventory.items):
-            item = self.player.inventory.items[game_option_choice]
-            self.player.inventory.use(item)
-
-        if exit:
-            if self.game_state == GameStates.SHOW_INVENTORY:
-                self.game_state = self.previous_game_state
-                self.previous_game_state = None
-            else:
-                # TODO: Ask for leave the game or not
-                save_game(self)
-
-
-
-
-
-
-

@@ -1,3 +1,23 @@
+v0.0.16
+    fix: Si reload, utilisation du stairs et menus possibles.
+    leveling system : gain d'xp en tuant du mob.
+    Calculateur automatique de valeur xp à la creation d'un combattant.
+    Menu augmentation de stats : points disponibles, choix.
+    Fiche de personnage avec stats et accès au menu de depense des points de stats.
+    Nouvelle formule Degats / reduction degats.
+    Ajout de quelques monstres supplementaires.
+
+v0.0.15 +1150
+    Refacto player input dans Application & Menus.
+    fix : desactivation game commands dans main menu.
+    Affichage: Menu graphique et menu standard generique dans Render.
+    Main menu, error menu, Inventory menu.
+    Inventory can be displayed and used.
+    fix: Player cant move during Inventory.
+    Ecran de victoire si l'on atteint le dernier niveau.
+    Sauvegarde se fait uniquement à la fin du round.
+    KNOWN BUG: If reload save, cant use stairs or have any menu (inventory).
+
 v0.0.14 +610
     Meilleure gestion des inputs du joueur pour le controle du personnage joueur.
     Systeme de round : Si le personnage.round <= game round, alors il peut agir.

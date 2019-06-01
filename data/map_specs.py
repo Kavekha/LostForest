@@ -12,7 +12,7 @@ def get_map_config():
             'room_min_size': 5,
             'max_rooms': 30,
             'max_monsters_per_room': [[1, 1], [2, 3], [3, 6], [4, 10]],
-            'monster_table': 'standard_table',
+            #'monster_table': 'standard_table',
             'max_items_per_room': [[1, 1], [2, 4], [3, 8]],
             'colors': {
                 'dark_wall': libtcod.Color(0, 0, 100),
@@ -28,7 +28,7 @@ def get_map_config():
             'room_min_size': 5,
             'max_rooms': 30,
             'max_monsters_per_room': [[1, 1], [3, 3], [4, 6], [5, 10]],
-            'monster_table': 'standard_table',
+            #'monster_table': 'standard_table',
             'max_items_per_room': [[1, 1], [2, 3], [3, 7]],
             'colors': {
                 'dark_wall': libtcod.Color(20, 50, 50),
@@ -44,7 +44,7 @@ def get_map_config():
             'room_min_size': 5,
             'max_rooms': 30,
             'max_monsters_per_room': [[1, 1], [3, 3], [4, 6], [5, 10]],
-            'monster_table': 'standard_table',
+            #'monster_table': 'standard_table',
             'max_items_per_room': [[1, 1], [2, 3], [3, 7]],
             'colors': {
                 'dark_wall': libtcod.Color(20, 40, 60),
@@ -60,7 +60,7 @@ def get_map_config():
             'room_min_size': 3,
             'max_rooms': 30,
             'max_monsters_per_room': [[1, 1], [3, 3], [4, 6], [5, 10]],
-            'monster_table': 'standard_table',
+            #'monster_table': 'standard_table',
             'max_items_per_room': [[1, 1], [2, 3], [3, 7]],
             'colors': {
                 'dark_wall': libtcod.Color(30, 30, 20),

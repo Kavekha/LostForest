@@ -1,5 +1,6 @@
 import libtcodpy as libtcod
 from states.game_states import GameStates
+from states.app_states import AppStates
 from systems.commands import *
 
 
@@ -11,9 +12,21 @@ class InputHandler:
 
     def press(self, key):
         # key comes from libtcod.
-        key = self.convert_libtcod_to_key(key)
-        key = self.get_command_from_key(key)
-        self.command_requested(key)
+        converted_key = self.convert_libtcod_to_key(key)
+        command_key = self.get_command_from_key(converted_key)
+        self.command_requested(command_key)
+
+        current_menu = None
+
+        if self.app.game and self.app.game.current_menu:
+            current_menu = self.app.game.current_menu
+        elif self.app.current_menu:
+            current_menu = self.app.current_menu
+
+        if current_menu:
+            index = key.c - ord('a')
+            if index >= 0:
+                current_menu.receive_option_choice(index)
 
     def convert_libtcod_to_key(self, key):
         key_char = chr(key.c)
@@ -33,6 +46,16 @@ class InputHandler:
             return 'button_g'
         elif key_char == 'j':
             return 'button_j'
+        elif key_char == 'i':
+            return 'button_i'
+        elif key_char == 'c':
+            return 'button_c'
+
+        if key.vk == libtcod.KEY_ESCAPE:
+            return 'button_escape'
+
+        if key.vk == libtcod.KEY_ENTER and key.lalt:
+            return 'button_alt_enter'
 
         return
 
@@ -51,6 +74,15 @@ class InputHandler:
             return 'pick_up'
         elif key == 'button_j':
             return 'take_stairs'
+        elif key == 'button_i':
+            return 'show_inventory'
+        elif key == 'button_c':
+            return 'character_screen'
+
+        if key == 'button_alt_enter':
+            return 'full_screen'
+        elif key == 'button_escape':
+            return 'exit_window'
 
         return
 
@@ -59,119 +91,25 @@ class InputHandler:
             return
         else:
             cmd = cmd.strip().lower()
-            if cmd == 'move_up':
-                self.user_command_controller.execute(MoveUpCommand(self.app.game.player))
-            elif cmd == 'move_down':
-                self.user_command_controller.execute(MoveDownCommand(self.app.game.player))
-            elif cmd == 'move_left':
-                self.user_command_controller.execute(MoveLeftCommand(self.app.game.player))
-            elif cmd == 'move_right':
-                self.user_command_controller.execute(MoveRightCommand(self.app.game.player))
-            elif cmd == 'wait':
-                self.user_command_controller.execute(WaitCommand(self.app.game.player))
-            elif cmd == 'pick_up':
-                self.user_command_controller.execute(PickUpCommand(self.app.game.player))
-            elif cmd == 'take_stairs':
-                self.user_command_controller.execute(TakeStairsCommand(self.app.game.player))
+            if self.app.app_states == AppStates.GAME and not self.app.game.current_menu:
+                if cmd == 'move_up':
+                    self.user_command_controller.execute(MoveUpCommand(self.app.game.player))
+                elif cmd == 'move_down':
+                    self.user_command_controller.execute(MoveDownCommand(self.app.game.player))
+                elif cmd == 'move_left':
+                    self.user_command_controller.execute(MoveLeftCommand(self.app.game.player))
+                elif cmd == 'move_right':
+                    self.user_command_controller.execute(MoveRightCommand(self.app.game.player))
+                elif cmd == 'wait':
+                    self.user_command_controller.execute(WaitCommand(self.app.game.player))
+                elif cmd == 'pick_up':
+                    self.user_command_controller.execute(PickUpCommand(self.app.game.player))
+                elif cmd == 'take_stairs':
+                    self.user_command_controller.execute(TakeStairsCommand(self.app.game.player))
+                elif cmd == 'show_inventory':
+                    self.user_command_controller.execute(ShowInventory(self.app.game.player.inventory))
+                elif cmd == 'character_screen':
+                    self.user_command_controller.execute(ShowCharacterScreen(self.app.game.player.level))
 
-
-# TODO : Repetitions de l'effet Fullscreen et Exit.
-def handle_keys(key, game_state):
-    action = {'app': {}, 'game': {}}
-
-    if game_state == GameStates.PLAYERS_TURN:
-        action = handle_player_turn_keys(key)
-
-    elif game_state == GameStates.PLAYER_DEAD:
-        action = handle_player_dead_keys(key)
-
-    elif game_state == GameStates.SHOW_INVENTORY:
-        action = handle_player_options_keys(key)
-
-    return action
-
-
-def handle_main_menu(key):
-    key_char = chr(key.c)
-
-    if key_char == 'a':
-        # print('handle main menu: new_game')
-        return {'new_game': True}
-    elif key_char == 'b':
-        # print('handle main menu: load_game')
-        return {'load_save_game': True}
-    elif key_char == 'c' or key.vk == libtcod.KEY_ESCAPE:
-        # print('handle main menu: app_exit')
-        return {'app_exit': True}
-
-    return {}
-
-
-# Originaly meant for inventory.
-# CHECK : To make more generic for other situation where keys = options from a list
-def handle_player_options_keys(key):
-    action = {'app': {}, 'game': {}}
-
-    # converting the key pressed to an index. 'a' will be 0, 'b' will be 1, and so on.
-    index = key.c - ord('a')
-
-    if index >= 0:
-        action['game'] = {'game_option_choice': index}
-
-    # others
-    if key.vk == libtcod.KEY_ENTER and key.lalt:
-        # Alt+Enter: toggle full screen
-        action['app'] = {'fullscreen': True}
-
-    elif key.vk == libtcod.KEY_ESCAPE:
-        # Exit the game
-        action['game'] = {'exit': True}
-
-    # No key was pressed
-    return action
-
-
-def handle_player_dead_keys(key):
-    key_char = chr(key.c)
-
-    action = {'app': {}, 'game': {}}
-
-    if key_char == 'i':
-        action['game'] = {'show_inventory': True}
-
-    # others
-    if key.vk == libtcod.KEY_ENTER and key.lalt:
-        # Alt+Enter: toggle full screen
-        action['app'] = {'fullscreen': True}
-
-    elif key.vk == libtcod.KEY_ESCAPE:
-        # Exit the game
-        action['game'] = {'exit': True}
-        action['app'] = {'exit': True}
-
-    # No key was pressed
-    return action
-
-
-def handle_player_turn_keys(key):
-    key_char = chr(key.c)
-
-    action = {'app': {}, 'game': {}}
-    # Movement keys
-    if key_char == 'i':
-        action['game'] = {'show_inventory': True}
-
-    # others
-    '''
-    if key.vk == libtcod.KEY_ENTER and key.lalt:
-        # Alt+Enter: toggle full screen
-        action['app'] = {'fullscreen': True}
-    '''
-    if key.vk == libtcod.KEY_ESCAPE:
-        # Exit the game
-        action['game'] = {'exit': True}
-        action['app'] = {'exit': True}
-
-    # No key was pressed
-    return action
-
+            if cmd == 'exit_window':
+                self.user_command_controller.execute(ExitWindow(self.app))
