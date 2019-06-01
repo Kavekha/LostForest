@@ -6,3 +6,19 @@
     * Multi usages : Dans l'ideal, un element de gameplay doit avoir au moins 4 usages / variantes interessantes.
     * Pas de collectionnite : Il faut utiliser les objets pour progresser, pas les conserver eternellement.
 
+
+# ITEMS & ACTIONS
+
+Actuellement : Use
+Futur : Throw, Drink, Equip
+
+Throw :
+    Si item combat, inflige l'effet au toucher. Chance de miss, chance de dodge, chance de catch & throw back.
+    Si item positif & cible allié : chance de miss, de catch, et de miss catch.
+
+
+Potion Santé
+    Soigne le buveur.
+    Sur plante : Regenere et fait grossir une plante.
+    Sur item : Le repare?
+    Sur creatures mort vivantes : degats.

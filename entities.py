@@ -12,7 +12,7 @@ class Entity:
     """
     def __init__(self, game, x, y, char, color, name, blocks=False,
                  fighter=None, ai=None, inventory=None,
-                 item=None, stairs=None,
+                 item=None, stairs=None, level=None,
                  render_order=RenderOrder.CORPSE):
         # basics
         self.game = game
@@ -26,12 +26,13 @@ class Entity:
         self.round = game.round
 
         # components
-        component_list = [fighter, ai, inventory, item, stairs]
+        component_list = [fighter, ai, inventory, item, stairs, level]
         self.fighter = fighter
         self.ai = ai
         self.inventory = inventory
         self.item = item
         self.stairs = stairs
+        self.level = level
         self.add_component(component_list)
 
         # fov # TODO : Ne devrait pas être pour les entités pures, plutot les Vivants.

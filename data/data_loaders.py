@@ -14,6 +14,7 @@ def load_game(file):
         except Exception:
             print('ERROR load')
 
+
 def save_game(game):
     filename = 'savegame'
     data_file = shelve.open(filename)

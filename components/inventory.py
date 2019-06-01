@@ -1,4 +1,5 @@
 from config.constants import ConstColors, ConstTexts
+from menus.inventory_menu import InventoryMenu
 
 
 '''
@@ -37,13 +38,14 @@ class Inventory:
             self.items.append(item)
             return True
 
-    def menu_options(self):
-        header = ConstTexts.INVENTORY_HEADER
-        if len(self.items) == 0:
-            options = [ConstTexts.INVENTORY_EMPTY]
-        else:
-            options = [item.name for item in self.items]
-        return header, options
+    def show_inventory(self):
+        print('show inventory requested')
+        game = self.owner.game
+        game.current_menu = self.create_inventory_menu()
+
+    def create_inventory_menu(self):
+        inventory_menu = InventoryMenu(self)
+        return inventory_menu
 
     def use(self, item_entity, **kwargs):
         # Comment je communique les infos.
@@ -55,6 +57,7 @@ class Inventory:
         if item_component.use_function is None:
             event_handler.add_event({'message': 'The {0} cannot be used'.format(item_entity.name),
                                      'color': ConstColors.CANNOT_BE_USED})
+            return False    # Can t be use
 
         else:
             kwargs = {**item_component.function_kwargs, **kwargs}
@@ -67,6 +70,7 @@ class Inventory:
                 self.remove_item(item_entity)
 
             event_handler.add_event(item_use_result)
+            return True     # Has been used
 
     def pick_up(self):
         event_handler = self.owner.game.events

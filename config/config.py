@@ -1,6 +1,6 @@
 def get_app_config():
     configuration = {
-        'version': '0.0.14',
+        'version': '0.0.16',
         'screen_width': 80,
         'screen_height': 50,
         'bar_width': 20,

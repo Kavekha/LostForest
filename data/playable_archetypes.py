@@ -10,14 +10,16 @@ class PlayerCompendium:
     }
     base_player_archetype = {
         'base_player': {
+            'name': 'Vagabond',
             'char': '@',
             'color': libtcod.white,
             'brain': None,
             'death_function': kill_player,
             'inventory': True,
-            'hp': 100,
+            'hp': 30,
             'might': 3,
-            'vitality': 3
+            'vitality': 3,
+            'base_damage': (0, 2)
         }
     }
 

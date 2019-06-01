@@ -2,6 +2,7 @@ import libtcodpy as libtcod
 from states.game_states import GameStates
 from states.app_states import AppStates
 from enum import Enum
+from menus.menu import MenuType
 
 
 class RenderOrder(Enum):
@@ -16,7 +17,7 @@ class Render:
     responsabilité: Afficher les elements du jeu & interface.
     doit pouvoir être remplacé facilement par une autre librairie.
     '''
-    def __init__(self, main_menu_background_image, screen_width=80, screen_height=50, bar_width=20, panel_height=7):
+    def __init__(self, screen_width=80, screen_height=50, bar_width=20, panel_height=7):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.panel_height = panel_height
@@ -28,13 +29,12 @@ class Render:
         self.log_message_x = bar_width + 2
         self.log_message_width = screen_width - bar_width - 2
         self.log_message_height = panel_height - 1
-        self.main_menu_background_image = main_menu_background_image
 
         self._initialize_render()
 
     def _initialize_render(self):
         libtcod.console_set_custom_font('arial10x10.png', libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD)
-        libtcod.console_init_root(self.screen_width, self.screen_height, 'Lost Forest', False)
+        libtcod.console_init_root(self.screen_width, self.screen_height, 'Cursed Forest', False)
 
         # create render windows
         self.reset_render_windows()
@@ -53,25 +53,90 @@ class Render:
         if app_win:
             self.app_window = libtcod.console_new(self.screen_width, self.screen_height)
 
-    # Nous sommes dans APP.
-    def render_main_menu(self, app):
-        if app.app_states == AppStates.MAIN_MENU and not app.box_message:
-            self._main_menu(self.app_window, self.main_menu_background_image, self.screen_width, self.screen_height)
+    def render_app(self, app, mouse):
+        if app.app_states == AppStates.MAIN_MENU:
+            self._render_main_menu(app)
+        elif app.app_states == AppStates.GAME:
+            self._render_all(app, mouse)
+        else:
+            print('ERROR : Nothing to render.')
 
-        if app.box_message:
-            header = app.box_message.get('header', '')
-            options = app.box_message.get('options', [])
-            self._menu(self.app_window, header, options, 24, self.screen_width, self.screen_height)
+    # STATIC METHODS.
+    # Nous sommes dans APP.
+    def _render_main_menu(self, app):
+        current_menu = None
+        if app.game and app.game.current_menu:
+            current_menu = app.game.current_menu
+        elif app.current_menu:
+            current_menu = app.current_menu
+
+        if current_menu:
+            if current_menu.type == MenuType.GRAPHIC:
+                self._main_menu(self.app_window, current_menu, self.screen_width, self.screen_height)
+            elif current_menu.type == MenuType.STANDARD:
+                self._menu(self.app_window, current_menu,
+                               int(self.screen_width / 1.5), self.screen_width, self.screen_height)
 
         libtcod.console_flush()
         libtcod.console_clear(self.app_window)
 
+    # v0.0.15
+    def _menu(self, con, current_menu, width, screen_width, screen_height):
+        if len(current_menu.options) > 26:
+            raise ValueError('Cannot have a menu with more than 26 options.')
+
+        # calculate total height for the header (after auto-wrap) and one line per option
+        header_height = libtcod.console_get_height_rect(con, 0, 0, width, screen_height, current_menu.header)
+        height = len(current_menu.options) + header_height
+
+        # create an off-screen console that represents the menu's window
+        self.menu_window = libtcod.console_new(self.screen_width, self.screen_height)
+
+        # print the header, with auto-wrap
+        libtcod.console_set_default_foreground(self.menu_window, libtcod.white)
+        libtcod.console_print_rect_ex(self.menu_window, 0, 0, width, height, libtcod.BKGND_NONE, libtcod.LEFT,
+                                      current_menu.header)
+
+        # print all the options
+        y = header_height
+        letter_index = ord('a')
+
+        for option_text in current_menu.options:
+            text = '(' + chr(letter_index) + ') ' + option_text
+            libtcod.console_print_ex(self.menu_window, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, text)
+            y += 1
+            letter_index += 1
+
+        # blit the contents of "window" to the root console
+        x = int(screen_width / 2 - width / 2)
+        y = int(screen_height / 2 - height / 2)
+        libtcod.console_blit(self.menu_window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
+
+    # v0.0.15
+    def _main_menu(self, con, current_menu_object, screen_width, screen_height):
+        libtcod.image_blit_2x(current_menu_object.background_image, 0, 0, 0)
+
+        libtcod.console_set_default_foreground(0, libtcod.light_yellow)
+        libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, libtcod.BKGND_NONE,
+                                 libtcod.CENTER,
+                                 current_menu_object.title)
+        # libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 2), libtcod.BKGND_NONE, libtcod.CENTER,
+        #                         'By (Your name here)')
+        if current_menu_object.forced_width:
+            width = current_menu_object.forced_width
+        else:
+            width = 24
+        self._menu(con, current_menu_object, width, screen_width, screen_height)
+
     # Nous sommes In Game.
-    def render_all(self, game, mouse):
+    def _render_all(self, app, mouse):
+        game = app.game
         if game.fov_recompute:
             self._render_map(game)
+
         # fix pour eviter artefact lors de changement de niveau...TODO: autre solution.
         if game.reset_game_windows:
+            self.reset_render_windows()
             game.reset_game_windows = False
 
         libtcod.console_set_default_background(self.menu_window, libtcod.black)
@@ -91,70 +156,21 @@ class Render:
         self._render_dungeon_level(game)
         libtcod.console_blit(self.panel, 0, 0, self.screen_width, self.panel_height, 0, 0, self.panel_y)
 
-        # if menu
-
-        if game.game_state == GameStates.SHOW_INVENTORY:
-            self._render_option_menu(game)
+        if game.current_menu:
+            self._render_main_menu(app)
 
         game.fov_recompute = False
         libtcod.console_flush()
         self._clear_all(game.dungeon.current_map.entities)
 
-    def _menu(self, con, header, options, width, screen_width, screen_height):
-        if len(options) > 26:
-            raise ValueError('Cannot have a menu with more than 26 options.')
-
-        # calculate total height for the header (after auto-wrap) and one line per option
-        header_height = libtcod.console_get_height_rect(con, 0, 0, width, screen_height, header)
-        height = len(options) + header_height
-
-        # create an off-screen console that represents the menu's window
-        self.menu_window = libtcod.console_new(self.screen_width, self.screen_height)
-
-        # print the header, with auto-wrap
-        libtcod.console_set_default_foreground(self.menu_window, libtcod.white)
-        libtcod.console_print_rect_ex(self.menu_window, 0, 0, width, height, libtcod.BKGND_NONE, libtcod.LEFT, header)
-
-        # print all the options
-        y = header_height
-        letter_index = ord('a')
-
-        for option_text in options:
-            text = '(' + chr(letter_index) + ') ' + option_text
-            libtcod.console_print_ex(self.menu_window, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, text)
-            y += 1
-            letter_index += 1
-
-        # blit the contents of "window" to the root console
-        x = int(screen_width / 2 - width / 2)
-        y = int(screen_height / 2 - height / 2)
-        libtcod.console_blit(self.menu_window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
-
-    def _main_menu(self, con, background_image, screen_width, screen_height):
-        libtcod.image_blit_2x(background_image, 0, 0, 0)
-
-        libtcod.console_set_default_foreground(0, libtcod.light_yellow)
-        libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height / 2) - 4, libtcod.BKGND_NONE,
-                                 libtcod.CENTER,
-                                 'LOST FOREST')
-        # libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 2), libtcod.BKGND_NONE, libtcod.CENTER,
-        #                         'By (Your name here)')
-
-        self._menu(con, '', ['Play a new game', 'Continue last game', 'Quit'], 24, screen_width, screen_height)
-
     def _render_interface(self, game):
         self._render_bar(1, 1, 'HP', game.player.fighter.hp, game.player.fighter.max_hp,
                    libtcod.light_red, libtcod.darker_red)
 
-    def _render_option_menu(self, game):
-        header, options = game.player.inventory.menu_options()
-        self._menu(self.game_window, header, options, int(self.screen_width / 1.5), self.screen_width,
-                   self.screen_height)
-
     def _render_under_mouse(self, game, mouse):
         libtcod.console_set_default_foreground(self.panel, libtcod.light_gray)
         libtcod.console_print_ex(self.panel, 1, 0, libtcod.BKGND_NONE, libtcod.LEFT,
-                                 self.get_names_under_mouse(mouse, game))
+                                 self._get_names_under_mouse(mouse, game))
 
     def _render_messages(self, game):
         messages = game.events.message_log.messages
@@ -164,7 +180,7 @@ class Render:
             libtcod.console_print_ex(self.panel, self.log_message_x, y, libtcod.BKGND_NONE, libtcod.LEFT, message.text)
             y += 1
 
-    def get_names_under_mouse(self, mouse, game):
+    def _get_names_under_mouse(self, mouse, game):
         (x, y) = (mouse.cx, mouse.cy)
 
         names = [entity.name for entity in game.dungeon.current_map.entities
