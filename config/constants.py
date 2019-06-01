@@ -30,6 +30,9 @@ class ConstColors:
     FULL_HEAL_ALREADY = libtcod.yellow
     WOUND_HEALED = libtcod.green
     REST_AFTER_STAIRS_COLOR = libtcod.light_violet
+    # Equipement
+    UNEQUIP = libtcod.dark_yellow
+    EQUIP = libtcod.yellow
 
 
 class ConstTexts:
@@ -53,4 +56,12 @@ class ConstTexts:
     QUIT_GAME_MENU_HEADER = 'Do you want to quit?'
     YES_MENU = 'YES'
     NO_MENU = 'NO'
+    # Equipment
+    UNEQUIP_ITEM = 'You dequipped {}.'
+    EQUIP_ITEM = 'You equipped {}'
+    EQUIPMENT_SLOT_NONE = 'Inconnu'
+    EQUIPMENT_SLOT_MAIN_HAND = 'Main Droite'
+    EQUIPMENT_SLOT_OFF_HAND = 'Main Gauche'
+    EQUIPMENT_SLOT_NECK = 'Cou'
+    EQUIPMENT_SLOT_CHEST = 'Torse'
 

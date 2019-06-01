@@ -5,8 +5,13 @@ def get_item_table(map_type):
             'greater healing potion': 3
         },
         'forest_map': {
-            'healing potion': 12,
-            'greater healing potion': 1
+            'healing potion': 16,
+            'greater healing potion': 5,
+            'staff': 10,
+            'bracelet': 5,
+            'staff_force': 3,
+            'talisman': 5,
+            'robe': 8
         },
         'old_forest': {
             'healing potion': 15,

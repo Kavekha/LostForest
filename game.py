@@ -1,7 +1,6 @@
 from data.create_entities import create_fighting_entity
 from config.config import get_game_config
 from utils.fov_functions import recompute_fov, discover_new_tiles
-from states.game_states import GameStates
 from handlers.event_handler import EventHandler
 from data.data_loaders import save_game
 from map_objects.dungeon import Dungeon
@@ -20,8 +19,6 @@ class Game:
         self.fov_recompute = True
         self.player = None
         self.dungeon = None
-        self.game_state = None
-        self.previous_game_state = GameStates.PLAYERS_TURN
         self.current_menu = None
         self.round = 1
 
@@ -44,7 +41,6 @@ class Game:
         self.dungeon.initialize()
 
         self.full_recompute_fov()
-        self.game_state = GameStates.PLAYERS_TURN
 
     def recompute_fov(self):
         recompute_fov(self.dungeon.current_map.fov_map, self.player.x, self.player.y, self.player.fov_radius,

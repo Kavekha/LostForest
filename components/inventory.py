@@ -38,6 +38,9 @@ class Inventory:
             self.items.append(item)
             return True
 
+    def action_take_round(self):
+        self.owner.end_turn()
+
     def show_inventory(self):
         print('show inventory requested')
         game = self.owner.game
@@ -52,9 +55,16 @@ class Inventory:
         event_handler = self.owner.game.events
         # J'utilise la partie "item" de l'entité.
         item_component = item_entity.item
+        equippable_component = item_entity.equippable
+
+        # Equipable item and can be equip by inventory owner
+        if equippable_component and self.owner.equipment:
+            self.owner.equipment.toggle_equip(item_entity)
+            self.action_take_round()
+            return True     # has been equipped
 
         # L item que j utilise n a pas de fonctionnalité.
-        if item_component.use_function is None:
+        elif item_component.use_function is None:
             event_handler.add_event({'message': 'The {0} cannot be used'.format(item_entity.name),
                                      'color': ConstColors.CANNOT_BE_USED})
             return False    # Can t be use
@@ -70,6 +80,7 @@ class Inventory:
                 self.remove_item(item_entity)
 
             event_handler.add_event(item_use_result)
+            self.action_take_round()
             return True     # Has been used
 
     def pick_up(self):

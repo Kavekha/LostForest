@@ -1,3 +1,11 @@
+v0.0.18
+    Des items peuvent être équipés.
+    Les personnages peuvent avoir un equipement.
+    Les armes ont leur propre weapon damage, qui remplace celle de base.
+    Les objets équipés apparaissent dans le menu inventaire.
+    Equipements divers ajoutés.
+
+
 v0.0.17
     Clean des GameStates : ils ne sont plus necessaires.
     Menu de validation pour quitter une partie en cours.

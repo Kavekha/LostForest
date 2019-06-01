@@ -17,17 +17,22 @@ class CharacterMenu(Menu):
             self.source.level.current_level) + '\n' + '''----------------------------------------
 
 
-Max HP : {}
-Might : {}
-Vitality : {}
+Max HP : {0} + {1}
+Might : {2} + {3}
+Vitality : {4} + {5}
+
+Damages : {8}
 
 
-{} / {} until next level
+{6} / {7} until next level
 
 ----------------------------------------
 
-'''.format(self.source.fighter.max_hp, self.source.fighter.might,
-           self.source.fighter.vitality, self.source.level.current_xp, self.source.level.experience_to_next_level)
+'''.format(self.source.fighter.base_max_hp, (self.source.fighter.max_hp - self.source.fighter.base_max_hp),
+           self.source.fighter.base_might, (self.source.fighter.might - self.source.fighter.base_might),
+           self.source.fighter.base_vitality, (self.source.fighter.vitality - self.source.fighter.base_vitality),
+           self.source.level.current_xp, self.source.level.experience_to_next_level,
+           self.source.fighter.damage)
 
         if self.source.level.available_stat_points:
             self._options = ['level_up_screen']

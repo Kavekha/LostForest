@@ -2,6 +2,7 @@ import math
 import libtcodpy as libtcod
 from render_engine import RenderOrder
 from config.constants import ConstColors, ConstTexts
+from components.item import Item
 
 
 # TODO: Pas ouf de remonter comme ca aussi haut pour recuperer le game.
@@ -13,6 +14,7 @@ class Entity:
     def __init__(self, game, x, y, char, color, name, blocks=False,
                  fighter=None, ai=None, inventory=None,
                  item=None, stairs=None, level=None,
+                 equipment=None, equippable=None,
                  render_order=RenderOrder.CORPSE):
         # basics
         self.game = game
@@ -26,14 +28,22 @@ class Entity:
         self.round = game.round
 
         # components
-        component_list = [fighter, ai, inventory, item, stairs, level]
+        component_list = [fighter, ai, inventory, item, stairs, level, equipment, equippable]
         self.fighter = fighter
         self.ai = ai
         self.inventory = inventory
         self.item = item
         self.stairs = stairs
         self.level = level
+        self.equipment = equipment
+        self.equippable = equippable
         self.add_component(component_list)
+
+        # An equipable entity must be an item
+        if self.equippable and not self.item:
+            item = Item()
+            self.item = item
+            self.item.owner = self
 
         # fov # TODO : Ne devrait pas être pour les entités pures, plutot les Vivants.
         self.fov_radius = 5
