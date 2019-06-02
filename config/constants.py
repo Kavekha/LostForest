@@ -27,6 +27,8 @@ class ConstColors:
     INVENTORY_FULL = libtcod.yellow
     NOTHING_TO_PICK_UP = libtcod.yellow
     CANNOT_BE_USED = libtcod.orange
+    # Items
+    THROW_ITEM_COLOR = libtcod.orange
     # Health
     FULL_HEAL_ALREADY = libtcod.yellow
     WOUND_HEALED = libtcod.green
@@ -35,7 +37,8 @@ class ConstColors:
     UNEQUIP = libtcod.dark_yellow
     EQUIP = libtcod.yellow
     # Target
-    TARGET_MESS_COLOR = libtcod.yellow
+    TARGET_MESS_COLOR = libtcod.dark_yellow
+    TARGET_ERROR_COLOR = libtcod.yellow
 
 
 class ConstTexts:

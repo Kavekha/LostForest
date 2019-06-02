@@ -5,6 +5,25 @@ from config.constants import ConstColors, ConstTexts
 from components.item import Item
 
 
+class EntityType:
+    ENTITY = 0
+    FIGHTER = 1
+    ITEM = 2
+
+
+def is_entity_type(entity, entity_type):
+    if entity_type == EntityType.ENTITY:
+        if isinstance(entity, Entity):
+            return True
+    if entity_type == EntityType.FIGHTER:
+        if is_entity_type(entity, EntityType.ENTITY) and entity.fighter:
+            return True
+    if entity_type == EntityType.ITEM:
+        if is_entity_type(entity, EntityType.ENTITY) and entity.item:
+            return True
+    return False
+
+
 # TODO: Pas ouf de remonter comme ca aussi haut pour recuperer le game.
 # TODO: Pertinence du Game dans Entity
 class Entity:

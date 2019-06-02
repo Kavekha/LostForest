@@ -68,6 +68,9 @@ class Fighter:
         if self.might >= (damage * 2):
             damage *= 2
 
+        self.do_damage(target, damage, events)
+
+    def do_damage(self, target, damage, events):
         # get hit retourne les dmg modifiés par les effets se trouvant sur la Target.
         modified_damage = target.fighter.get_hit(self, damage, events)
 

@@ -1,5 +1,5 @@
 import libtcodpy as libtcod
-from effect_functions import heal, grease
+from effect_functions import heal, acide
 from components.equippable import EquipmentSlot
 from systems.target_selection import TargetType
 
@@ -14,13 +14,13 @@ def get_item_attributes(item):
             'power': 8,
             'target': TargetType.SELF
         },
-        'grease_potion': {
-            'name': 'Potion de graisse',
+        'acid_potion': {
+            'name': 'Potion d acide',
             'char': '!',
             'color': libtcod.violet,
-            'use_function': grease,
+            'use_function': acide,
             'power': 8,
-            'target': TargetType.OTHER
+            'target': TargetType.FIGHTING_ENTITY
         },
         'staff': {
             'name': 'Baton de voyageur',

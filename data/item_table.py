@@ -9,13 +9,13 @@ def get_item_table(map_type):
             'robe': 8
         },
         'forest_map': {
-            'healing_potion': 320,
+            'healing_potion': 32,
             'staff': 10,
             'bracelet': 5,
             'staff_force': 3,
             'talisman': 5,
             'robe': 8,
-            'grease_potion': 10
+            'acid_potion': 10
         },
         'old_forest': {
             'healing_potion': 34,
@@ -23,7 +23,8 @@ def get_item_table(map_type):
             'bracelet': 8,
             'staff_force': 5,
             'talisman': 8,
-            'robe': 6
+            'robe': 6,
+            'acid_potion': 12
         },
         'thorns': {
             'healing_potion': 40,
@@ -31,7 +32,8 @@ def get_item_table(map_type):
             'bracelet': 6,
             'staff_force': 10,
             'talisman': 6,
-            'robe': 9
+            'robe': 9,
+            'acid_potion': 14
         }
     }
     try:
