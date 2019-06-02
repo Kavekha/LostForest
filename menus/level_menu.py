@@ -16,11 +16,11 @@ class LevelUpMenu(Menu):
     def return_choice_result(self, string_choice):
         string_choice = string_choice.lower()
         if string_choice == 'might':
-            self.source.fighter.might += 1
+            self.source.fighter.base_might += 1
         elif string_choice == 'vitality':
-            self.source.fighter.vitality += 1
+            self.source.fighter.base_vitality += 1
         elif string_choice == 'hp':
-            self.source.fighter.max_hp += 5
+            self.source.fighter.base_max_hp += 5
             self.source.fighter.hp += 5
 
         self.source.level.available_stat_points -= 1

@@ -11,11 +11,14 @@ NEXT:
     INTERFACE:
         [ ] 250     Meilleure communication des actions possibles + boutons (ex: perso sur item : "(g) pick up {item}"
         [ ] 250     Afficher les objets et les personnages "en vue" avec description dans l'interface.
+        [ ] 100     Afficher items equipés dans menu Inventaire & Character?
+        [ ] 100     Afficher les caracts des items equipés.
 
     CONTROLES:
         [ ] 10     Pouvoir utiliser espace pour Stairs.
         [ ] 50      mouse : deplacements souris
         [ ] 100     Permettre de definir controles par le joueur.
+        [ ] 100     Quand inventaire reclamé via 'i', le menu est aussitot activé avec la touche 'i'. Idem Char screen, etc.
 
     INVENTORY:
         [ ] 100     use inventory : Nawak, tout se melange entre game pour l'usage, iventory pour le consume, etc.
@@ -61,14 +64,12 @@ NEXT:
         [ ] 100     Entities & co : Pourquoi mettre Game dedans? Comment eviter ca?
         [ ] 250     Inventory: use item : wrapper les fonctions effects par un item_use pour meilleur controle et garder les Effets plus neutres (utilisable par sort & etc).
         [ ] 50      render : solution degueu du reset game window pour artefacts map precedente.
-        [/] 100     Systeme de game_state : Avec nouveau systeme de Round, plus très pertinent. A corriger.
-        [/] 25     Monstres vraiment concernés par systeme de Round? => Non. Est-ce genant pour l'instant? Non.
         [ ] 50      map_is_in_fov testé dans enemy turn avant action et dans ai: take_turn. Doublon? Logique?
         [ ] 100     map.entities contient toutes les entités. Si on veut deplacer mob, on trouve des items. Si on veut recuperer des items, on passe par des entités.
         [ ] 250     Clean de systeme de State, diverses actions sur application depuis des systemes plus bas dans la hierarchie, etc.
         [ ] 100     L'intelligence de ce qui doit s'afficher repose sur RenderEngine, ce devrait etre App & Game qui lui disent quoi afficher.
-        [/] 100      Etat de la victoire : On revient dans le jeu en quittant le menu?
         [ ] 100     Faciliter l'ajout et la recuperation des monstres à creer. Numpy?
+        [ ] 100     Menu : Si _options avec des entités, et pas de display_options avec texte : crash. Cf inventory.
 
     TO LEARN:
         [ ]     Decorator pour entourer les fonctionnalités use_function des items. Le decorateur etait joué dés le main menu,
@@ -80,7 +81,7 @@ NEXT:
 
 
         # RELEASE 3 : Equipement, items basiques, repartition des monstres & items dans la map selon Facteur Danger.
-            [ ] Refacto, clean up.
+            [/] Refacto, clean up.
             [ ] Refonte usage des Items.
             [ ] Equiper et déséquiper des armes.
             [ ] Items basiques supplementaires.

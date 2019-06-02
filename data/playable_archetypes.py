@@ -19,7 +19,8 @@ class PlayerCompendium:
             'hp': 30,
             'might': 3,
             'vitality': 3,
-            'base_damage': (0, 2)
+            'base_damage': (0, 2),
+            'equipment': True
         }
     }
 
