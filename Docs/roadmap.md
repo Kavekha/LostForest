@@ -1,6 +1,6 @@
 NEXT:
     DONGEON:
-        [ ] 100     Ajouter des fonctions get_entities_from_map? Pour meilleur accès aux infos dans la map pour game?
+        [/] 100     Ajouter des fonctions get_entities_from_map? Pour meilleur accès aux infos dans la map pour game?
         [ ] 250     Tile personnalisée pour l'affichage : Char, couleurs selon la tile et non pas au niveau de la map.
         [ ] 250     'Salles' avec evenements-types & variantes.
         [ ] 50      monster_table pas utilisé dans les specs des maps de donjon.
@@ -11,7 +11,7 @@ NEXT:
     INTERFACE:
         [ ] 250     Meilleure communication des actions possibles + boutons (ex: perso sur item : "(g) pick up {item}"
         [ ] 250     Afficher les objets et les personnages "en vue" avec description dans l'interface.
-        [/] 100     Afficher items equipés dans menu Inventaire & Character?
+        [/] 100     Afficher items equipés dans menu Inventaire & bonus Character?
         [ ] 100     Afficher les caracts des items equipés.
         [ ] 100     Afficher les objets sous le personnage ou la target.
 
@@ -23,18 +23,19 @@ NEXT:
         [/] 10      Pouvoir utiliser espace.
         [ ] 50      mouse : deplacements souris
         [ ] 100     Permettre de definir controles par le joueur.
-        [ ] 100     FIX: Quand inventaire reclamé via 'i', le menu est aussitot activé avec la touche 'i'. Idem Char screen, etc.
+        [/] 100     FIX: Quand inventaire reclamé via 'i', le menu est aussitot activé avec la touche 'i'. Idem Char screen, etc.
 
     INVENTORY:
         [/] 100     use inventory : Nawak, tout se melange entre game pour l'usage, iventory pour le consume, etc.
 
-    MAKE_MAP:
+    MAP:
         [ ] 100    tofix : Map peut être hors index, en tout cas sans bord pour bloquer le passage
                       >(Genre : case non bloqué sur le bord : j'avance, crash car hors index).
                       > Probablement du à l'effet sur les corridors de 1 tile supp de large
-        [ ] 100    Rendre les salles moins carrés.
-        [ ] 50     Animation au changement de map.
-        [ ]100     Garder la salle de transition d'une map à l'autre, illustre mieux le fait qu'on soit dans la meme foret.
+        [ ] 100     Rendre les salles moins carrés.
+        [ ] 50      Animation au changement de map.
+        [ ] 100     Garder la salle de transition d'une map à l'autre, illustre mieux le fait qu'on soit dans la meme foret.
+        [ ] 250     Elements de map pouvant être detruits. Structure & resistance selon type Tuile. Attributs sur Tuile seulement une fois touché, sinon dans le type.
 
     LOOTS / MONSTRES:
         [ ] 250     Niveau de danger pour modifier un monstre de base selon le niveau du donjon.
@@ -49,9 +50,10 @@ NEXT:
         [/] 50      Drinkable : Potions
         [/] 50      Throwable : Acide,
         [ ] 50      Dropable : Graine, Piege
-        [ ] 50      Readable : Scrolls
+        [ ] 50      Readable : Scrolls, notes pour ambiance
         [ ] 100     Message selon l'usage : '{} lance {}', '{} boit {}'
         [ ] 250     Pouvoir faire un usage creatif des autres modes. Actuellement : Potion tjrs drink. Concept unique de "use"
+        [ ] 250     Items avec structure & resistance, pouvant être detruits.
 
     FIGHT:
         [/] 100     Items basiques de baston.
@@ -93,7 +95,7 @@ NEXT:
 
     REFACTOS
         [ ] 100     Entities & co : Pourquoi mettre Game dedans? Comment eviter ca?
-        [/] 100     Inventory: use item : wrapper les fonctions effects par un item_use pour meilleur controle et garder les Effets plus neutres (utilisable par sort & etc).
+        [/] 100     Inventory: use item : wrapper les fonctions effects par un item_use pour meilleur controle et garder les Effets plus neutres (utilisable par sort & etc)?
         [ ] 50      render : solution degueu du reset game window pour artefacts map precedente.
         [ ] 50      map_is_in_fov testé dans enemy turn avant action et dans ai: take_turn. Doublon? Logique?
         [ ] 100     map.entities contient toutes les entités. Si on veut deplacer mob, on trouve des items. Si on veut recuperer des items, on passe par des entités.
@@ -109,6 +111,7 @@ NEXT:
         [ ] 100     Mieux utiliser les return True / False dans les fonctions, pour dire au moins "j'ai fais ce que tu m'a demandé"
         [ ] 50      Refacto effect functions / inventory / items : le message "{} thrown at {}" est dans effet. Devrait etre ailleurs.
         [/] 50      Target Self devrait être dans le systeme de targeting, pas inventory.
+        [ ] 250     Fonctions de combat hors Fighter : rends Fighter plus clean, permets de les utiliser sur les items et map.
 
     TO LEARN:
         [ ]     Decorator pour entourer les fonctionnalités use_function des items. Le decorateur etait joué dés le main menu,

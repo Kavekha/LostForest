@@ -1,3 +1,10 @@
+v0.0.21
+    Le bord des maps est desormais indestructibles, empechant les incidents de hors map possibles avec crash.
+    Refacto : accès à certains parametres de game_map via spawner et autres.
+    Le passage vers le niveau suivant se trouve desormais dans la salle la plus eloignée.
+    Fix : Crash à l'usage d'un item avec target Self.
+    Fix : Les touches commandant un menu ne selectionne plus l'option associée à cette touche en même temps.
+
 v0.0.20
     Le ciblage se valide avec Space et retourne les entités fighter et items de la position selectionnée.
     Si cible corresponds au type attendu, la fonction à l'origine du ciblage est jouée.
