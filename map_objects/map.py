@@ -44,6 +44,9 @@ class GameMap:
     def add_player(self, player):
         self.entities.append(player)
 
+    def get_entities(self):
+        return self.entities
+
     def add_entity(self, entity):
         self.entities.append(entity)
 

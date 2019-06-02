@@ -102,19 +102,8 @@ class Inventory:
         elif item_component.use_function:
             # Target!
             target_type = item_component.target_type
-
-            if target_type == TargetType.SELF:
-                target = self.owner
-                item_use_results = item_component.use_function(self.owner, item_component.power, target)
-                sucess = self.resolve_use_results(item_use_results, item_entity, event_handler)
-                if sucess:
-                    self.action_take_round()
-                    return True  # Has been used
-                return False
-
-            else:
-                game = self.owner.game
-                game.activate_target_mode(item_component, target_type)
+            game = self.owner.game
+            game.activate_target_mode(item_component, target_type)
 
         else:
             raise NotImplementedError
@@ -126,12 +115,9 @@ class Inventory:
 
         if consume_item:
             self.remove_item(item_used_entity)
+            self.action_take_round()
             return True     # item used, please refresh Menu
         return False
-
-
-
-
 
     def pick_up(self):
         event_handler = self.owner.game.events

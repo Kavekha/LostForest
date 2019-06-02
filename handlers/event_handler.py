@@ -26,7 +26,6 @@ class EventHandler:
             victory = event.get('victory')      # True
             level_up = event.get('level_up')    # Entity
             quit_target_mode = event.get('quit_target_mode')    # True
-            function_to_play = event.get('function_to_play')    # function
 
             if not color:
                 color = ConstColors.NEUTRAL_INFO_COLOR
@@ -42,9 +41,6 @@ class EventHandler:
 
             if quit_target_mode:
                 self.game.quit_target_mode()
-
-            if function_to_play:
-                function_to_play()
 
         self.reset_event_list()
 
