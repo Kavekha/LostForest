@@ -11,8 +11,12 @@ NEXT:
     INTERFACE:
         [ ] 250     Meilleure communication des actions possibles + boutons (ex: perso sur item : "(g) pick up {item}"
         [ ] 250     Afficher les objets et les personnages "en vue" avec description dans l'interface.
-        [ ] 100     Afficher items equipés dans menu Inventaire & Character?
+        [/] 100     Afficher items equipés dans menu Inventaire & Character?
         [ ] 100     Afficher les caracts des items equipés.
+        [ ] 100     Afficher les objets sous le personnage ou la target.
+
+    TARGET SYSTEM:
+        [ ] 250     Differents critères de limitation de l entité Target, selon type : TILE only, CHAR, etc.
 
     CONTROLES:
         [ ] 10     Pouvoir utiliser espace pour Stairs.
@@ -34,8 +38,17 @@ NEXT:
     LOOTS / MONSTRES:
         [ ] 250     Niveau de danger pour modifier un monstre de base selon le niveau du donjon.
         [ ] 250     Table de mobs / items : poids dependant du niveau de danger.
-        [ ] 50      Nom de monstre vs nom de reference du monstre
+        [ ] 50      Nom de monstre vs nom de reference du monstre & idem pour items
         [ ] 50      Pack de monstres, thematique "monstre" de salles.
+        [ ] 100     Items & monstres uniques, ou avec une limite, pour eviter trop grand nombre d'armes en doublon.
+        [ ] 250     Creation d'items par morceaux selon region, chances de magique, budget magique a repartir, etc. affix / suffix and all that.
+        [ ] 100     Creation de monstre par morceaux selon region, etc. cf.items?
+
+    ITEMS :
+        [ ] 50      Drinkable : Potions
+        [ ] 50      Throwable : Acide,
+        [ ] 50      Dropable : Graine, Piege
+        [ ] 50      Readable : Scrolls
 
     FIGHT:
         [ ] 100     Items de baston.
@@ -49,7 +62,7 @@ NEXT:
 
     GAMEPLAY
         [ ] 100     Beat : Tour = 5 beats. Beat Quick, Normal, NoSlow, Fast, Normal.
-        [ ] 250     Equipement, items
+        [/] 250     Equipement, items
         [ ] 250     Throw, drop, Equip
         [ ] 250     IA de pack de mobs, interaction entre eux et partage infos.
         [ ] 50      Reflechir : Game Master pour diriger IA, gerer l'ambiance, les loots, etc?
@@ -59,6 +72,14 @@ NEXT:
     LOCALIZATION
         [ ] 250     Avoir un texte selon le choix de la langue. POC to do.
         [ ] 100     Gerer l'utf8 ou en tout cas ne pas supprimer les mots avec accent. Libtcod ne semble pas suppoorter UTF8.
+
+    IA / GAME MASTER
+        [ ] 250     Remplacer le for entity in entities dans Game turn par une IA globale qui gère les actions des entités.
+        [ ] 100     IA gère les entités via Commands. Dispose du systeme de Move astar etc.
+
+    ANIMATIONS
+        [ ] 100     Animation via Event handler / Listener. Si animations en attente, le game turn les fait tourner avant de rendre la main.
+        [ ] 100     Pouvoir interrompre l'animation ou l'acceler avec Escape.
 
     REFACTOS
         [ ] 100     Entities & co : Pourquoi mettre Game dedans? Comment eviter ca?
@@ -70,6 +91,11 @@ NEXT:
         [ ] 100     L'intelligence de ce qui doit s'afficher repose sur RenderEngine, ce devrait etre App & Game qui lui disent quoi afficher.
         [ ] 100     Faciliter l'ajout et la recuperation des monstres à creer. Numpy?
         [ ] 100     Menu : Si _options avec des entités, et pas de display_options avec texte : crash. Cf inventory.
+        [ ] 100     Creation d'items vs data items.
+        [ ] 50      Refacto Target : devrait etre associé au personnage? If link then command on linked entity?
+        [ ] 250     Listener pour gerer les communications avec Game, App, etc. Remplacerait le Game dans Entité.
+        [ ] 100     Refacto Target System. Pas souple du tout, specifique aux items.
+        [ ] 100     Mieux utiliser les return True / False dans les fonctions, pour dire au moins "j'ai fais ce que tu m'a demandé"
 
     TO LEARN:
         [ ]     Decorator pour entourer les fonctionnalités use_function des items. Le decorateur etait joué dés le main menu,
@@ -79,14 +105,14 @@ NEXT:
 
     OBJECTIFS:
 
-
         # RELEASE 3 : Equipement, items basiques, repartition des monstres & items dans la map selon Facteur Danger.
             [/] Refacto, clean up.
             [ ] Refonte usage des Items.
-            [ ] Equiper et déséquiper des armes.
-            [ ] Items basiques supplementaires.
+            [/] Equiper et déséquiper des armes.
+            [/] Items basiques supplementaires.
             [ ] Actions : Drop, Throw, Drink, Equip
             [ ] Repartition des monstres dans une map sur une base de Facteur Danger.
             [ ] Repartition des items dans une map sur une base Facteur Valeur.
+            [ ] Limite dans les types d'objet ou de monstres pour assurer variété et eviter doublon.
 
         # RELEASE 4 : Maps & generation, salles speciales, meilleures tables de mobs.

@@ -9,6 +9,7 @@ class RenderOrder(Enum):
     STAIRS = 2
     ITEM = 3
     ACTOR = 4
+    TARGET = 5
 
 
 class Render:

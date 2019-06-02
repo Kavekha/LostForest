@@ -47,6 +47,12 @@ class GameMap:
     def add_entity(self, entity):
         self.entities.append(entity)
 
+    def remove_entity(self, entity):
+        try:
+            self.entities.remove(entity)
+        except:
+            print('Entity {} not present in map.entities but removal requested.'.format(entity))
+
     def _initialize_tiles(self):
         tiles = [[Tile(True) for y in range(self.height)] for x in range(self.width)]
 
@@ -128,7 +134,7 @@ class GameMap:
                 num_rooms += 1
 
         stairs_component = Stairs(self.dungeon.current_floor + 1)
-        down_stairs = Entity(self.dungeon.game, center_last_room_x, center_last_room_y, '>', libtcod.white, 'Stairs',
+        down_stairs = Entity(self.dungeon.game, center_last_room_x, center_last_room_y, '>', libtcod.yellow, 'Stairs',
                              render_order=RenderOrder.STAIRS, stairs=stairs_component)
         self.entities.append(down_stairs)
 

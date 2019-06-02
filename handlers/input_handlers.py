@@ -49,12 +49,17 @@ class InputHandler:
             return 'button_i'
         elif key_char == 'c':
             return 'button_c'
+        elif key_char == 'd':
+            return 'button_d'
 
         if key.vk == libtcod.KEY_ESCAPE:
             return 'button_escape'
 
         if key.vk == libtcod.KEY_ENTER and key.lalt:
             return 'button_alt_enter'
+
+        if key.vk == libtcod.KEY_SPACE:
+            return 'button_space'
 
         return
 
@@ -77,6 +82,10 @@ class InputHandler:
             return 'show_inventory'
         elif key == 'button_c':
             return 'character_screen'
+        elif key == 'button_d':
+            return 'drop_menu'
+        elif key == 'button_space':
+            return 'validate_target'
 
         if key == 'button_alt_enter':
             return 'full_screen'
@@ -91,24 +100,38 @@ class InputHandler:
         else:
             cmd = cmd.strip().lower()
             if self.app.app_states == AppStates.GAME and not self.app.game.current_menu:
+                if not self.app.game.target_mode:
+                    obj = self.app.game.player
+                else:
+                    obj = self.app.game.target
+
+                # On char or Target
                 if cmd == 'move_up':
-                    self.user_command_controller.execute(MoveUpCommand(self.app.game.player))
+                    self.user_command_controller.execute(MoveUpCommand(obj))
+                # On char or Target
                 elif cmd == 'move_down':
-                    self.user_command_controller.execute(MoveDownCommand(self.app.game.player))
+                    self.user_command_controller.execute(MoveDownCommand(obj))
+                # On char or Target
                 elif cmd == 'move_left':
-                    self.user_command_controller.execute(MoveLeftCommand(self.app.game.player))
+                    self.user_command_controller.execute(MoveLeftCommand(obj))
+                # On char or Target
                 elif cmd == 'move_right':
-                    self.user_command_controller.execute(MoveRightCommand(self.app.game.player))
+                    self.user_command_controller.execute(MoveRightCommand(obj))
+                # On char or Target
                 elif cmd == 'wait':
-                    self.user_command_controller.execute(WaitCommand(self.app.game.player))
+                    self.user_command_controller.execute(WaitCommand(obj))
                 elif cmd == 'pick_up':
-                    self.user_command_controller.execute(PickUpCommand(self.app.game.player))
+                    self.user_command_controller.execute(PickUpCommand(obj))
                 elif cmd == 'take_stairs':
-                    self.user_command_controller.execute(TakeStairsCommand(self.app.game.player))
+                    self.user_command_controller.execute(TakeStairsCommand(obj))
                 elif cmd == 'show_inventory':
-                    self.user_command_controller.execute(ShowInventory(self.app.game.player.inventory))
+                    self.user_command_controller.execute(ShowInventory(obj))
                 elif cmd == 'character_screen':
-                    self.user_command_controller.execute(ShowCharacterScreen(self.app.game.player.level))
+                    self.user_command_controller.execute(ShowCharacterScreen(obj))
+                elif cmd == 'drop_menu':
+                    self.user_command_controller.execute(DropMenu(obj))
+                elif cmd == 'validate_target':
+                    self.user_command_controller.execute(ValidateTarget(obj))
 
             if cmd == 'exit_window':
                 self.user_command_controller.execute(ExitWindow(self.app))

@@ -1,10 +1,19 @@
+v0.0.19
+    Possibilité de dropper un item au sol, via DropMenu.
+    Si item équipé, il est déséquipé mais pas droppé.
+    Systeme de target: une entité '+' est créée et peut être déplacée pour choisir une cible.
+    Target limité à Fov du joueur.
+    Target limité aux items seulement. Contraintes sur la fonction utilisable.
+    TODO: Activer la selection de la cible
+    TODO: Consequence de l'usage de la cible pour l'objet à l'origine du ciblage.
+
 v0.0.18
     Des items peuvent être équipés.
     Les personnages peuvent avoir un equipement.
     Les armes ont leur propre weapon damage, qui remplace celle de base.
     Les objets équipés apparaissent dans le menu inventaire.
     Equipements divers ajoutés.
-
+    Stats de base et modifiées apparaissent dans la fiche du personnage.
 
 v0.0.17
     Clean des GameStates : ils ne sont plus necessaires.
