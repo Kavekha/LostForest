@@ -23,6 +23,7 @@ class ConstColors:
     NO_DAMAGE_ATTACK = libtcod.grey
     # collection
     ITEM_PICKED = libtcod.light_blue
+    ITEM_DROPED = libtcod.light_blue
     INVENTORY_FULL = libtcod.yellow
     NOTHING_TO_PICK_UP = libtcod.yellow
     CANNOT_BE_USED = libtcod.orange
@@ -33,6 +34,8 @@ class ConstColors:
     # Equipement
     UNEQUIP = libtcod.dark_yellow
     EQUIP = libtcod.yellow
+    # Target
+    TARGET_MESS_COLOR = libtcod.yellow
 
 
 class ConstTexts:
@@ -47,6 +50,8 @@ class ConstTexts:
     NOTHING_TO_PICK_UP = 'There is nothing here to pick up.'
     INVENTORY_EMPTY = 'inventory is empty'
     INVENTORY_HEADER = 'Press the key next to an item to use it, or Esc to cancel.\n'
+    DROP_INVENTORY_HEADER = 'Press the key next to an item to drop it, or Esc to cancel.\n'
+    DROP_ITEM = 'You drop {} on the floor.'
     # victory
     VICTORY_LAST_FLOOR_BASIC = 'OUT OF DANGER!! You escape the Cursed Forest!'
     # XP
@@ -64,4 +69,9 @@ class ConstTexts:
     EQUIPMENT_SLOT_OFF_HAND = 'Main Gauche'
     EQUIPMENT_SLOT_NECK = 'Cou'
     EQUIPMENT_SLOT_CHEST = 'Torse'
+    # Target
+    TARGET_MODE_ON = 'You are in target mode.'
+    TARGET_CONTROLS_EXPLAIN = 'Press SPACE to validate, ESC to quit this mode.'
+    TARGET_TYPE_INVALID = 'ERROR: Not valid target type.'
+
 

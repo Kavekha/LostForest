@@ -60,8 +60,12 @@ class App:
     def exit_window(self):
         # Menus in game
         if self.app_states == AppStates.GAME:
+            # v0.0.19
+            if self.game.target_mode:
+                self.game.quit_target_mode()
+
             # Si pas de menu, on propose de quitter
-            if not self.game.current_menu:
+            elif not self.game.current_menu:
                 self.game.current_menu = QuitMenu(self)
             # Si menu, avec back to main quand on exit
             elif self.game.current_menu.back_to_main:

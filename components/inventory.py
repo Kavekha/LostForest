@@ -1,5 +1,7 @@
 from config.constants import ConstColors, ConstTexts
-from menus.inventory_menu import InventoryMenu
+from menus.inventory_menu import InventoryMenu, DropMenu
+from components.equippable import get_equipment_in_slot
+from systems.target_selection import TargetType
 
 
 '''
@@ -18,6 +20,7 @@ Permets de centraliser les mecaniques generales d'usage d'items.
 5. inventory envoie a Events les messages à afficher.
 6. inventory consomme l'objet si necessaire.
 '''
+
 
 class Inventory:
     def __init__(self, capacity):
@@ -41,21 +44,47 @@ class Inventory:
     def action_take_round(self):
         self.owner.end_turn()
 
-    def show_inventory(self):
-        print('show inventory requested')
+    def show_inventory(self, action):
+        if action == 'use':
+            menu = self.create_inventory_menu()
+        elif action == 'drop':
+            menu = self.create_drop_menu()
+        else:
+            raise NotImplementedError
+
         game = self.owner.game
-        game.current_menu = self.create_inventory_menu()
+        game.current_menu = menu
+
+    def create_drop_menu(self):
+        drop_menu = DropMenu(self)
+        return drop_menu
 
     def create_inventory_menu(self):
         inventory_menu = InventoryMenu(self)
         return inventory_menu
 
-    def use(self, item_entity, **kwargs):
-        # Comment je communique les infos.
+    def drop(self, item_entity):
         event_handler = self.owner.game.events
-        # J'utilise la partie "item" de l'entité.
+        game_map = self.owner.game.dungeon.current_map
+
+        if item_entity.equippable and self.owner.equipment and item_entity == get_equipment_in_slot(
+                item_entity.equippable.slot, self.owner.equipment):
+            self.owner.equipment.toggle_equip(item_entity)
+        else:
+            item_entity.x, item_entity.y = self.owner.x, self.owner.y
+            game_map.add_entity(item_entity)
+            self.remove_item(item_entity)
+            event_handler.add_event({'message': ConstTexts.DROP_ITEM.format(item_entity.name),
+                                     'color': ConstColors.ITEM_DROPED})
+        return True     # please update menu
+
+    def use(self, item_entity):
+        event_handler = self.owner.game.events
         item_component = item_entity.item
-        equippable_component = item_entity.equippable
+        if item_entity.equippable:
+            equippable_component = item_entity.equippable
+        else:
+            equippable_component = None
 
         # Equipable item and can be equip by inventory owner
         if equippable_component and self.owner.equipment:
@@ -69,19 +98,40 @@ class Inventory:
                                      'color': ConstColors.CANNOT_BE_USED})
             return False    # Can t be use
 
+        # L item a une fonctionnalité.
+        elif item_component.use_function:
+            # Target!
+            target_type = item_component.target_type
+
+            if target_type == TargetType.SELF:
+                target = self.owner
+                item_use_results = item_component.use_function(self.owner, item_component.power, target)
+                sucess = self.resolve_use_results(item_use_results, item_entity, event_handler)
+                if sucess:
+                    self.action_take_round()
+                    return True  # Has been used
+                return False
+
+            else:
+                game = self.owner.game
+                game.activate_target_mode(item_component, target_type)
+
         else:
-            kwargs = {**item_component.function_kwargs, **kwargs}
-            # On recupere les messages de l'item pour les rendre à l utilisateur.
-            # On obtient aussi si l item doit être consommé. Pas dans l effet du coup.
-            item_use_result = item_component.use_function(self.owner, item_component.power, **kwargs)
-            consume_item = item_use_result.get('consume_item')
+            raise NotImplementedError
 
-            if consume_item:
-                self.remove_item(item_entity)
+    def resolve_use_results(self, item_use_results, item_used_entity, event_handler):
+        event_handler.add_event(item_use_results)
 
-            event_handler.add_event(item_use_result)
-            self.action_take_round()
-            return True     # Has been used
+        consume_item = item_use_results.get('consume_item')
+
+        if consume_item:
+            self.remove_item(item_used_entity)
+            return True     # item used, please refresh Menu
+        return False
+
+
+
+
 
     def pick_up(self):
         event_handler = self.owner.game.events

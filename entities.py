@@ -62,6 +62,7 @@ class Entity:
         self.round += 1
 
     def wait(self):
+        print('wait: {}, round {}'.format(self.name, self.round))
         self.end_turn()
 
     def pick_up(self):

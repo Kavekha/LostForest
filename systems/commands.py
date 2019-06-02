@@ -1,3 +1,6 @@
+from systems.target_selection import Target
+
+
 class CommandController:
     def __init__(self):
         self.history = []
@@ -31,15 +34,30 @@ class ExitWindow(Command):
 # LEVEL
 class ShowCharacterScreen(Command):
     def execute(self):
-        self._obj.show_character_screen()
+        if self._obj.level:
+            self._obj.level.show_character_screen()
 
+
+# TARGET
+class ValidateTarget(Command):
+    def execute(self):
+        if isinstance(self._obj, Target):
+            self._obj.validate_target()
 
 # INVENTORY
 class ShowInventory(Command):
     def execute(self):
-        self._obj.show_inventory()
+        if self._obj.inventory:
+            self._obj.inventory.show_inventory('use')
 
 
+class DropMenu(Command):
+    def execute(self):
+        if self._obj.inventory:
+            self._obj.inventory.show_inventory('drop')
+
+
+# CHARACTER
 class MoveUpCommand(Command):
     def execute(self):
         self._obj.try_to_move(0, -1)
@@ -67,7 +85,8 @@ class WaitCommand(Command):
 
 class PickUpCommand(Command):
     def execute(self):
-        self._obj.pick_up()
+        if self._obj.inventory:
+            self._obj.inventory.pick_up()
 
 
 class TakeStairsCommand(Command):

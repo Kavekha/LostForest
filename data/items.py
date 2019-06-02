@@ -1,23 +1,26 @@
 import libtcodpy as libtcod
-from effect_functions import heal
+from effect_functions import heal, grease
 from components.equippable import EquipmentSlot
+from systems.target_selection import TargetType
 
 
 def get_item_attributes(item):
     item_compendium = {
-        'healing potion': {
+        'healing_potion': {
             'name': 'Potion de soins',
             'char': '!',
             'color': libtcod.violet,
             'use_function': heal,
-            'power': 4
+            'power': 8,
+            'target': TargetType.SELF
         },
-        'greater healing potion': {
-            'name': 'Potion de soins superieurs',
+        'grease_potion': {
+            'name': 'Potion de graisse',
             'char': '!',
             'color': libtcod.violet,
-            'use_function': heal,
-            'power': 12
+            'use_function': grease,
+            'power': 8,
+            'target': TargetType.OTHER
         },
         'staff': {
             'name': 'Baton de voyageur',
