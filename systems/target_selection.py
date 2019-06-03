@@ -21,6 +21,8 @@ class Target(Entity):
         self.render_order = RenderOrder.TARGET
         self.target_type = target_type
 
+        self.game_map.add_entity(self)
+
         if self.target_type == TargetType.NONE:
             self.game.events.add_event({'message': ConstTexts.TARGET_TYPE_INVALID,
                                         'color': ConstColors.TARGET_MESS_COLOR})
@@ -29,8 +31,6 @@ class Target(Entity):
             # on lance directement l effet sur soit, sans selection possible.
             self.check_target_against_wanted_type({'entity_fighter': self.player})
         else:
-            # Je m'ajoute pour être visible.
-            self.game_map.add_entity(self)
             self.warning()
 
     def quit_target_mode(self):

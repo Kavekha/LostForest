@@ -9,23 +9,27 @@ class InputHandler:
         self.app = app
         self.user_command_controller = command_controller
 
-    def press(self, key):
-        # key comes from libtcod.
-        converted_key = self.convert_libtcod_to_key(key)
-        command_key = self.get_command_from_key(converted_key)
-        self.command_requested(command_key)
-
+    def get_current_menu(self):
         current_menu = None
-
         if self.app.game and self.app.game.current_menu:
             current_menu = self.app.game.current_menu
         elif self.app.current_menu:
             current_menu = self.app.current_menu
 
+        return current_menu
+
+    def press(self, key):
+        current_menu = self.get_current_menu()
+        # key comes from libtcod.
+        converted_key = self.convert_libtcod_to_key(key)
+        command_key = self.get_command_from_key(converted_key)
+
         if current_menu:
             index = key.c - ord('a')
             if index >= 0:
                 current_menu.receive_option_choice(index)
+
+        self.command_requested(command_key)
 
     def convert_libtcod_to_key(self, key):
         key_char = chr(key.c)

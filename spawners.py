@@ -14,6 +14,10 @@ class Spawner:
         self.monsters_table = get_monster_table(self.map_owner.map_type)
         self.items_table = get_item_table(self.map_owner.map_type)
 
+    # ADD & GET
+    def _get_rooms(self):
+        return self.map_owner.get_rooms()
+
     # table : [[nb_max, level],[nb_max, level + x]]
     # On donne le max, selon le niveau.
     # On retourne le bon nombre que l'on souhaite.
@@ -31,7 +35,8 @@ class Spawner:
             return True
 
     def spawn_entities(self):
-        for room in self.map_owner.rooms:
+        rooms = self._get_rooms()
+        for room in rooms:
             nb_monsters = randint(0, self.max_monsters_room)
 
             for mob in range(nb_monsters):
@@ -54,7 +59,8 @@ class Spawner:
         return None
 
     def spawn_items(self):
-        for room in self.map_owner.rooms:
+        rooms = self._get_rooms()
+        for room in rooms:
             nb_items = randint(0, self.max_items_room)
             for item in range(nb_items):
                 x = randint(room.x1 + 1, room.x2 - 1)
