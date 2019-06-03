@@ -1,6 +1,8 @@
 import libtcodpy as libtcod
 from components.fighter import Fighter
 from components.inventory import Inventory
+from components.equipment import Equipment
+from components.equippable import Equippable, EquipmentSlot
 from components.item import Item
 from utils.death_functions import kill_monster
 from data.monsters import get_base_monster_stats, get_monster_stats
@@ -36,6 +38,7 @@ def create_fighting_entity(game, entity_defname, x, y, player=False):
     entity_appearance = dict_stats.get('char', '?')
     entity_color = dict_stats.get('color', libtcod.red)
     inventory = dict_stats.get('inventory', False)
+    equipment = dict_stats.get('equipment', False)
     death_function = dict_stats.get('death_function', kill_monster)
     entity_base_dmg = dict_stats.get('base_damage', (0, 2))
     entity_hp = dict_stats.get('hp', 10)
@@ -51,6 +54,8 @@ def create_fighting_entity(game, entity_defname, x, y, player=False):
         entity_color = entity_stats.get('color')
     if entity_stats.get('inventory'):
         inventory = entity_stats.get('inventory')
+    if entity_stats.get('equipment'):
+        equipment = entity_stats.get('equipment')
     if entity_stats.get('death_function'):
         death_function = entity_stats.get('death_function', kill_monster)
     if entity_stats.get('base_damage'):
@@ -71,6 +76,11 @@ def create_fighting_entity(game, entity_defname, x, y, player=False):
     else:
         inventory_component = None
 
+    if equipment:
+        equipment_component = Equipment()
+    else:
+        equipment_component = None
+
     if player:
         level_component = Level()
     else:
@@ -81,6 +91,7 @@ def create_fighting_entity(game, entity_defname, x, y, player=False):
                     blocks=True,
                     fighter=fighter_component,
                     inventory=inventory_component,
+                    equipment=equipment_component,
                     ai=ai_component,
                     level=level_component,
                     render_order=RenderOrder.ACTOR)
@@ -109,15 +120,39 @@ def calculate_xp_value(fighter):
     return total_xp_value
 
 
-def create_entity_item(game, item_name, x, y, dict_attributes):
+def create_entity_item(game, item_defname, x, y, dict_attributes):
+    name = dict_attributes.get('name', '?')
     appearance = dict_attributes.get('char', '?')
     color = dict_attributes.get('color', libtcod.red)
     use_function = dict_attributes.get('use_function', None)
     power = dict_attributes.get('power', 0)
+    equippable = dict_attributes.get('equippable', False)
+    target = dict_attributes.get('target', None)
+    value = dict_attributes.get('value', 30)
 
-    item_component = Item(use_function=use_function, power=power)
+    if equippable:
+        equippable_slot = equippable.get('slot', EquipmentSlot.NONE)
+        equippable_weapon_dmg = equippable.get('weapon_damage', (0, 2))
+        equippable_dmg_bonus = equippable.get('damage_bonus', 0)
+        equippable_might_bonus = equippable.get('might_bonus', 0)
+        equippable_hp_bonus = equippable.get('hp_bonus', 0)
+        equippable_vitality_bonus = equippable.get('vitality_bonus', 0)
+
+        equippable_component = Equippable(equippable_slot,
+                                          weapon_damage=equippable_weapon_dmg,
+                                          damage_bonus=equippable_dmg_bonus,
+                                          might_bonus=equippable_might_bonus,
+                                          hp_bonus=equippable_hp_bonus,
+                                          vitality_bonus=equippable_vitality_bonus)
+    else:
+        equippable_component = None
+
+    item_component = Item(use_function=use_function, power=power, target_type=target, value=value)
     item = Entity(game, x, y,
-                  appearance, color, item_name,
+                  appearance, color, name,
                   item=item_component,
+                  equippable=equippable_component,
                   render_order=RenderOrder.ITEM)
+
+    print('created item is {}, and equipable is {} '.format(item.name, item.equippable))
     return item

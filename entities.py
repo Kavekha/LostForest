@@ -2,6 +2,26 @@ import math
 import libtcodpy as libtcod
 from render_engine import RenderOrder
 from config.constants import ConstColors, ConstTexts
+from components.item import Item
+
+
+class EntityType:
+    ENTITY = 0
+    FIGHTER = 1
+    ITEM = 2
+
+
+def is_entity_type(entity, entity_type):
+    if entity_type == EntityType.ENTITY:
+        if isinstance(entity, Entity):
+            return True
+    if entity_type == EntityType.FIGHTER:
+        if is_entity_type(entity, EntityType.ENTITY) and entity.fighter:
+            return True
+    if entity_type == EntityType.ITEM:
+        if is_entity_type(entity, EntityType.ENTITY) and entity.item:
+            return True
+    return False
 
 
 # TODO: Pas ouf de remonter comme ca aussi haut pour recuperer le game.
@@ -13,6 +33,7 @@ class Entity:
     def __init__(self, game, x, y, char, color, name, blocks=False,
                  fighter=None, ai=None, inventory=None,
                  item=None, stairs=None, level=None,
+                 equipment=None, equippable=None,
                  render_order=RenderOrder.CORPSE):
         # basics
         self.game = game
@@ -26,14 +47,22 @@ class Entity:
         self.round = game.round
 
         # components
-        component_list = [fighter, ai, inventory, item, stairs, level]
+        component_list = [fighter, ai, inventory, item, stairs, level, equipment, equippable]
         self.fighter = fighter
         self.ai = ai
         self.inventory = inventory
         self.item = item
         self.stairs = stairs
         self.level = level
+        self.equipment = equipment
+        self.equippable = equippable
         self.add_component(component_list)
+
+        # An equipable entity must be an item
+        if self.equippable and not self.item:
+            item = Item()
+            self.item = item
+            self.item.owner = self
 
         # fov # TODO : Ne devrait pas être pour les entités pures, plutot les Vivants.
         self.fov_radius = 5
@@ -52,6 +81,7 @@ class Entity:
         self.round += 1
 
     def wait(self):
+        print('wait: {}, round {}'.format(self.name, self.round))
         self.end_turn()
 
     def pick_up(self):
@@ -154,6 +184,7 @@ class Entity:
                 # Set self's coordinates to the next path tile
                 self.x = x
                 self.y = y
+                self.end_turn()
         else:
             # Keep the old move function as a backup so that if there are no paths
             # (for example another monster blocks a corridor)

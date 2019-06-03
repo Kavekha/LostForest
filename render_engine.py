@@ -1,5 +1,4 @@
 import libtcodpy as libtcod
-from states.game_states import GameStates
 from states.app_states import AppStates
 from enum import Enum
 from menus.menu import MenuType
@@ -10,6 +9,7 @@ class RenderOrder(Enum):
     STAIRS = 2
     ITEM = 3
     ACTOR = 4
+    TARGET = 5
 
 
 class Render:

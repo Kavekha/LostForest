@@ -1,12 +1,13 @@
 from data.create_entities import create_fighting_entity
 from config.config import get_game_config
 from utils.fov_functions import recompute_fov, discover_new_tiles
-from states.game_states import GameStates
 from handlers.event_handler import EventHandler
 from data.data_loaders import save_game
 from map_objects.dungeon import Dungeon
 from utils.fov_functions import initialize_fov
 import libtcodpy as libtcod
+# v0.0.19
+from systems.target_selection import Target
 
 
 class Game:
@@ -20,10 +21,11 @@ class Game:
         self.fov_recompute = True
         self.player = None
         self.dungeon = None
-        self.game_state = None
-        self.previous_game_state = GameStates.PLAYERS_TURN
         self.current_menu = None
         self.round = 1
+        # v0.0.19
+        self.target_mode = False
+        self.target = None
 
     def initialize(self):
         # recuperation de la config.
@@ -44,7 +46,20 @@ class Game:
         self.dungeon.initialize()
 
         self.full_recompute_fov()
-        self.game_state = GameStates.PLAYERS_TURN
+
+    # v0.0.19
+    def close_menu(self):
+        self.current_menu = None
+
+    def activate_target_mode(self, target_source, target_type):
+        self.close_menu()
+        self.target_mode = True
+        self.target = Target(self.player, self, target_source, target_type)
+
+    def quit_target_mode(self):
+        self.dungeon.current_map.remove_entity(self.target)
+        self.target = None
+        self.target_mode = False
 
     def recompute_fov(self):
         recompute_fov(self.dungeon.current_map.fov_map, self.player.x, self.player.y, self.player.fov_radius,
@@ -65,7 +80,10 @@ class Game:
 
     def game_turn(self):
         if self.player.round <= self.round:
-            self.player_turn()
+            if self.target_mode:
+                self.events.resolve_events()
+            else:
+                self.player_turn()
         else:
             self.enemy_turn()
             self.new_round()

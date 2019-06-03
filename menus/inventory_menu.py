@@ -1,12 +1,13 @@
 from menus.menu import Menu
 from config.constants import ConstTexts
+from components.equippable import slot_to_text, get_equipment_in_slot
 
 
 class InventoryMenu(Menu):
     def __init__(self, inventory):
         super().__init__(inventory)
         self.header = ConstTexts.INVENTORY_HEADER
-
+        self.forced_width = 40
         self.update_options()
 
     def update_options(self):
@@ -15,7 +16,15 @@ class InventoryMenu(Menu):
             self.display_options = []
             self._options = []
         else:
-            self.display_options = [item.name for item in self.source.items]
+            self.display_options = []
+            player = self.source.owner
+            for item in self.source.items:
+                if item.equippable and player.equipment and\
+                        item == get_equipment_in_slot(item.equippable.slot, player.equipment):
+                    self.display_options.append('{} [{}]'.format(item.name, slot_to_text(item.equippable.slot)))
+                else:
+                    self.display_options.append(item.name)
+
             self._options = [item for item in self.source.items]
 
     def return_choice_result(self, string_choice):

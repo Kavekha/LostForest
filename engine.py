@@ -5,6 +5,7 @@ from states.app_states import AppStates
 from systems.commands import CommandController
 from handlers.input_handlers import InputHandler
 from menus.main_menu import MainMenu
+from menus.quit_menu import QuitMenu
 
 
 class App:
@@ -57,13 +58,26 @@ class App:
                 break
 
     def exit_window(self):
+        # Menus in game
         if self.app_states == AppStates.GAME:
-            if self.game.current_menu:
-                self.game.current_menu = None
-            else:
+            # v0.0.19
+            if self.game.target_mode:
+                self.game.quit_target_mode()
+
+            # Si pas de menu, on propose de quitter
+            elif not self.game.current_menu:
+                self.game.current_menu = QuitMenu(self)
+            # Si menu, avec back to main quand on exit
+            elif self.game.current_menu.back_to_main:
                 self.app_states = AppStates.MAIN_MENU
                 self.current_menu = MainMenu(self)
+                self.game.current_menu = None
+            else:
+                # on quitte le menu actuel pour revenir au jeu
+                self.game.current_menu = None
+
         elif self.app_states == AppStates.MAIN_MENU:
+            # Je suis dans le main menu, je quitte l'appli
             if isinstance(self.current_menu, MainMenu):
                 self.quit_app = True
             else:

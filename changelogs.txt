@@ -1,3 +1,43 @@
+v0.0.22
+    Chaque Floor contient desormais un niveau de Danger et un niveau de Valeur.
+    Danger et Valeur limitent les spawns de monstres et d'items pour ne pas rendre les niveaux trop faciles ou durs.
+
+v0.0.21
+    Le bord des maps est desormais indestructibles, empechant les incidents de hors map possibles avec crash.
+    Refacto : accès à certains parametres de game_map via spawner et autres.
+    Le passage vers le niveau suivant se trouve desormais dans la salle la plus eloignée.
+    Fix : Crash à l'usage d'un item avec target Self.
+    Fix : Les touches commandant un menu ne selectionne plus l'option associée à cette touche en même temps.
+
+v0.0.20
+    Le ciblage se valide avec Space et retourne les entités fighter et items de la position selectionnée.
+    Si cible corresponds au type attendu, la fonction à l'origine du ciblage est jouée.
+    Refacto Inventory and Fighting pour rendre plus souples certaines methodes.
+    NOTE : targeting system très lié aux items de l'inventaire pour le moment.
+
+v0.0.19
+    Possibilité de dropper un item au sol, via DropMenu.
+    Si item équipé, il est déséquipé mais pas droppé.
+    Systeme de target: une entité '+' est créée et peut être déplacée pour choisir une cible.
+    Target limité à Fov du joueur.
+    Target limité aux items seulement. Contraintes sur la fonction utilisable.
+
+v0.0.18
+    Des items peuvent être équipés.
+    Les personnages peuvent avoir un equipement.
+    Les armes ont leur propre weapon damage, qui remplace celle de base.
+    Les objets équipés apparaissent dans le menu inventaire.
+    Equipements divers ajoutés.
+    Stats de base et modifiées apparaissent dans la fiche du personnage.
+
+v0.0.17
+    Clean des GameStates : ils ne sont plus necessaires.
+    Menu de validation pour quitter une partie en cours.
+    Victoire et QuitGame reconduisent au Main Menu.
+
+
+RELEASE 2 : "3 regions, some monsters, leveling and almost clean code."
+
 v0.0.16
     fix: Si reload, utilisation du stairs et menus possibles.
     leveling system : gain d'xp en tuant du mob.

@@ -1,6 +1,5 @@
 import libtcodpy as libtcod
 
-from states.game_states import GameStates
 from render_engine import RenderOrder
 from config.constants import ConstColors
 
@@ -20,7 +19,6 @@ def kill_player(player, attacker, events):
     become_corpse(player, npc_killed=False)
     events.add_event({'message': 'You died!',
                       'color': ConstColors.YOU_ARE_DEAD})
-    events.add_event({'change_state': GameStates.PLAYER_DEAD})
 
 
 def kill_monster(monster, attacker, events):

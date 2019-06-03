@@ -23,9 +23,9 @@ class EventHandler:
         for event in self.events:
             message = event.get('message')
             color = event.get('color')
-            change_state = event.get('change_state')
             victory = event.get('victory')      # True
             level_up = event.get('level_up')    # Entity
+            quit_target_mode = event.get('quit_target_mode')    # True
 
             if not color:
                 color = ConstColors.NEUTRAL_INFO_COLOR
@@ -33,14 +33,14 @@ class EventHandler:
             if message:
                 self.message_log.add_message(message, color)
 
-            if change_state:
-                self.game.game_state = change_state
-
             if victory:
                 self.game.current_menu = VictoryMenu()
 
             if level_up:
                 self.game.current_menu = LevelUpMenu(level_up)
+
+            if quit_target_mode:
+                self.game.quit_target_mode()
 
         self.reset_event_list()
 

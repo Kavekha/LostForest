@@ -14,18 +14,53 @@ ideal :
 class Fighter:
     def __init__(self, hp, might, vitality, death_function=kill_monster, xp_value=0, base_dmg=(0, 2)):
         self.owner = None
-        self.max_hp = hp
+        self.base_max_hp = hp
         self.hp = hp
         self.death_function = death_function
         self.xp_value = xp_value
 
-        self.might = might
-        self.vitality = vitality
+        self.base_might = might
+        self.base_vitality = vitality
         self.base_damage = base_dmg
+
+    @property
+    def might(self):
+        if self.owner and self.owner.equipment:
+            bonus = self.owner.equipment.might_bonus
+        else:
+            bonus = 0
+        return self.base_might + bonus
+
+    @property
+    def vitality(self):
+        if self.owner and self.owner.equipment:
+            bonus = self.owner.equipment.vitality_bonus
+        else:
+            bonus = 0
+        return self.base_vitality + bonus
+
+    @property
+    def damage(self):
+        damage = None
+        if self.owner and self.owner.equipment:
+            damage = self.owner.equipment.weapon_damage
+        if not damage:
+            damage = self.base_damage
+
+        return damage
+
+    @property
+    def max_hp(self):
+        if self.owner and self.owner.equipment:
+            bonus = self.owner.equipment.hp_bonus
+        else:
+            bonus = 0
+        return self.base_max_hp + bonus
 
     def attack(self, target, events):
         # target is entity, not entity.fighter # TODO: Choisir si on envoie du entity.fighter ou entity
-        min_dam, max_dam = self.base_damage
+        print('self damage is : ', self.damage)
+        min_dam, max_dam = self.damage
         base_damage = randint(min_dam, max_dam)
         might_bonus = randint(0, self.might)
         damage = might_bonus + base_damage
@@ -33,6 +68,9 @@ class Fighter:
         if self.might >= (damage * 2):
             damage *= 2
 
+        self.do_damage(target, damage, events)
+
+    def do_damage(self, target, damage, events):
         # get hit retourne les dmg modifiés par les effets se trouvant sur la Target.
         modified_damage = target.fighter.get_hit(self, damage, events)
 

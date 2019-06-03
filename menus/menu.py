@@ -16,17 +16,20 @@ class Menu:
         self._options = []
         self.display_options = None
         self.forced_width = None    # To force width in Render menu
+        self.back_to_main = False   # Si True : quitter ce menu rammene au MainScreen / APP (Victory / Death)
 
     @property
     def options(self):
         if self.display_options:
             return self.display_options
         else:
+            # TODO: attention, si pas du texte, ca crash.
             return self._options
 
     def receive_option_choice(self, choice):
+        print('menu: receiveoption : choice is ', choice)
         if choice >= len(self._options):
-            print('menu:option choice: no choice : option available : ', self.options)
+            print('menu:option choice: no choice : option available : ', self.display_options, self._options)
         else:
             string_choice = self._options[choice]
             self.return_choice_result(string_choice)

@@ -5,30 +5,29 @@ def get_monster_table(map_type):
             'living root': 3
         },
         'forest_map': {
-            'ougloth_weak': 10,
-            'ougloth': 10,
+            'ougloth_weak': 30,
+            'ougloth': 5,
             'living_root': 10,
-            'charencon': 1,
-            'gob_dog': 9,
+            'gob_dog': 10,
             'murderous_root': 10
         },
         'old_forest': {
-            'ougloth_weak': 7,
-            'ougloth': 13,
+            'ougloth_weak': 20,
+            'ougloth': 10,
             'ougloth_brute': 3,
-            'living_root': 7,
-            'charencon': 2,
-            'gob_dog': 9,
-            'murderous_root': 9
+            'living_root': 4,
+            'charencon': 1,
+            'gob_dog': 20,
+            'murderous_root': 20
         },
         'thorns': {
-            'ougloth_weak': 5,
-            'ougloth': 14,
+            'ougloth_weak': 14,
+            'ougloth': 20,
             'ougloth_brute': 6,
-            'living_root': 3,
-            'charencon': 3,
-            'gob_dog': 9,
-            'murderous_root': 10
+            'living_root': 2,
+            'charencon': 2,
+            'gob_dog': 14,
+            'murderous_root': 14
         }
     }
     try:
