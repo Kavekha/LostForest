@@ -14,6 +14,7 @@ NEXT:
         [/] 100     Afficher items equipés dans menu Inventaire & bonus Character?
         [ ] 100     Afficher les caracts des items equipés.
         [ ] 100     Afficher les objets sous le personnage ou la target.
+        [ ] 100     Les commandes necessaires devraient être indiquées (Exemple : "press g for pick up : item under me"
 
     TARGET SYSTEM:
         [/] 100     Differents critères de limitation de l entité Target, selon type : FIGHTER, ITEM, SELF.
@@ -29,7 +30,7 @@ NEXT:
         [/] 100     use inventory : Nawak, tout se melange entre game pour l'usage, iventory pour le consume, etc.
 
     MAP:
-        [ ] 100    tofix : Map peut être hors index, en tout cas sans bord pour bloquer le passage
+        [/] 100    tofix : Map peut être hors index, en tout cas sans bord pour bloquer le passage
                       >(Genre : case non bloqué sur le bord : j'avance, crash car hors index).
                       > Probablement du à l'effet sur les corridors de 1 tile supp de large
         [ ] 100     Rendre les salles moins carrés.
@@ -38,6 +39,7 @@ NEXT:
         [ ] 250     Elements de map pouvant être detruits. Structure & resistance selon type Tuile. Attributs sur Tuile seulement une fois touché, sinon dans le type.
 
     LOOTS / MONSTRES:
+        [/] 100     Niveau de danger & valeur pour contraindre ce qui spawne dans une map.
         [ ] 250     Niveau de danger pour modifier un monstre de base selon le niveau du donjon.
         [ ] 250     Table de mobs / items : poids dependant du niveau de danger.
         [ ] 50      Nom de monstre vs nom de reference du monstre & idem pour items
@@ -45,6 +47,9 @@ NEXT:
         [ ] 100     Items & monstres uniques, ou avec une limite, pour eviter trop grand nombre d'armes en doublon.
         [ ] 250     Creation d'items par morceaux selon region, chances de magique, budget magique a repartir, etc. affix / suffix and all that.
         [ ] 100     Creation de monstre par morceaux selon region, etc. cf.items?
+        [ ] 100     Monstres par MonsterClass, autre organisation.
+        [ ] 100     Avec DangerLevel, limite de mobs / salle & facon de spawner : Trop homogene, peu de surprises.
+        [ ] 50      Limite dans les types d'objet ou de monstres pour assurer variété et eviter doublon.
 
     ITEMS :
         [/] 50      Drinkable : Potions
@@ -101,7 +106,8 @@ NEXT:
         [ ] 100     map.entities contient toutes les entités. Si on veut deplacer mob, on trouve des items. Si on veut recuperer des items, on passe par des entités.
         [/] 100     Clean de systeme de State
         [ ] 250     Clean des diverses actions sur application depuis des systemes plus bas dans la hierarchie, etc.
-        [ ] 100     L'intelligence de ce qui doit s'afficher repose sur RenderEngine, ce devrait etre App & Game qui lui disent quoi afficher.
+        [ ] 250     L'intelligence de ce qui doit s'afficher repose sur RenderEngine, ce devrait etre App & Game qui lui disent quoi afficher.
+                        > Appli demande a Game ce qui doit etre affiché, puis demande a Render de le faire.
         [ ] 100     Faciliter l'ajout et la recuperation des monstres à creer. Numpy?
         [ ] 100     Menu : Si _options avec des entités, et pas de display_options avec texte : crash. Cf inventory.
         [ ] 100     Creation d'items vs data items.
@@ -112,24 +118,24 @@ NEXT:
         [ ] 50      Refacto effect functions / inventory / items : le message "{} thrown at {}" est dans effet. Devrait etre ailleurs.
         [/] 50      Target Self devrait être dans le systeme de targeting, pas inventory.
         [ ] 250     Fonctions de combat hors Fighter : rends Fighter plus clean, permets de les utiliser sur les items et map.
+        [ ] 50      Spawners pour une meilleure reparition methode et plus de souplesse entre monstres & items.
 
     TO LEARN:
-        [ ]     Decorator pour entourer les fonctionnalités use_function des items. Le decorateur etait joué dés le main menu,
-                    et empechait la save du coup oO.
         [ ]     Numpy pour creer des dictionnaires de monstres plus facilement.
 
 
     OBJECTIFS:
 
         # RELEASE 3 : Equipement, items basiques, repartition des monstres & items dans la map selon Facteur Danger.
+                > 1560
             [/] Refacto, clean up.
             [/] Items basiques supplementaires.
             [/] Equiper et déséquiper des armes.
             [/] DropMenu
             [/] Systeme de ciblage pour usage des items.
             [/] Actions automatiques : Throw, Drink, Equip
-            [ ] Repartition des monstres dans une map sur une base de Facteur Danger.
-            [ ] Repartition des items dans une map sur une base Facteur Valeur.
-            [ ] Limite dans les types d'objet ou de monstres pour assurer variété et eviter doublon.
+            [/] Repartition des monstres dans une map sur une base de Facteur Danger.
+            [/] Repartition des items dans une map sur une base Facteur Valeur.
+
 
         # RELEASE 4 : Maps & generation, salles speciales, meilleures tables de mobs.
