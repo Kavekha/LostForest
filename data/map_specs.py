@@ -14,6 +14,8 @@ def get_map_config():
             'max_monsters_per_room': [[1, 1], [2, 3], [3, 6], [4, 10]],
             #'monster_table': 'standard_table',
             'max_items_per_room': [[1, 1], [2, 4], [3, 8]],
+            'danger_level': [[40, 1], [60, 2], [80, 4], [100, 6], [120, 8], [140, 10]],
+            'value_level': [[30, 1], [40, 2], [50, 4], [55, 6], [60, 8], [70, 10]],
             'colors': {
                 'dark_wall': libtcod.Color(0, 0, 100),
                 'dark_ground': libtcod.Color(50, 50, 150),
@@ -30,6 +32,8 @@ def get_map_config():
             'max_monsters_per_room': [[1, 1], [3, 3], [4, 6], [5, 10]],
             #'monster_table': 'standard_table',
             'max_items_per_room': [[1, 1], [2, 3], [3, 7]],
+            'danger_level': [[40, 1], [60, 2], [80, 4], [100, 6], [120, 8], [140, 10]],
+            'value_level': [[30, 1], [40, 2], [50, 4], [55, 6], [60, 8], [70, 10]],
             'colors': {
                 'dark_wall': libtcod.Color(20, 50, 50),
                 'dark_ground': libtcod.Color(20, 100, 50),
@@ -46,6 +50,8 @@ def get_map_config():
             'max_monsters_per_room': [[1, 1], [3, 3], [4, 6], [5, 10]],
             #'monster_table': 'standard_table',
             'max_items_per_room': [[1, 1], [2, 3], [3, 7]],
+            'danger_level': [[40, 1], [60, 2], [80, 4], [100, 6], [120, 8], [140, 10]],
+            'value_level': [[30, 1], [40, 2], [50, 4], [55, 6], [60, 8], [70, 10]],
             'colors': {
                 'dark_wall': libtcod.Color(20, 40, 60),
                 'dark_ground': libtcod.Color(20, 90, 70),
@@ -62,6 +68,8 @@ def get_map_config():
             'max_monsters_per_room': [[1, 1], [3, 3], [4, 6], [5, 10]],
             #'monster_table': 'standard_table',
             'max_items_per_room': [[1, 1], [2, 3], [3, 7]],
+            'danger_level': [[40, 1], [60, 2], [80, 4], [100, 6], [120, 8], [140, 10]],
+            'value_level': [[30, 1], [40, 2], [50, 4], [55, 6], [60, 8], [70, 10]],
             'colors': {
                 'dark_wall': libtcod.Color(30, 30, 20),
                 'dark_ground': libtcod.Color(30, 45, 25),

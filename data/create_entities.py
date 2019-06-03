@@ -128,6 +128,7 @@ def create_entity_item(game, item_defname, x, y, dict_attributes):
     power = dict_attributes.get('power', 0)
     equippable = dict_attributes.get('equippable', False)
     target = dict_attributes.get('target', None)
+    value = dict_attributes.get('value', 30)
 
     if equippable:
         equippable_slot = equippable.get('slot', EquipmentSlot.NONE)
@@ -146,7 +147,7 @@ def create_entity_item(game, item_defname, x, y, dict_attributes):
     else:
         equippable_component = None
 
-    item_component = Item(use_function=use_function, power=power, target_type=target)
+    item_component = Item(use_function=use_function, power=power, target_type=target, value=value)
     item = Entity(game, x, y,
                   appearance, color, name,
                   item=item_component,

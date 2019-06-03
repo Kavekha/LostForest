@@ -12,7 +12,8 @@ def get_item_attributes(item):
             'color': libtcod.violet,
             'use_function': heal,
             'power': 8,
-            'target': TargetType.SELF
+            'target': TargetType.SELF,
+            'value': 10
         },
         'acid_potion': {
             'name': 'Potion d acide',
@@ -20,7 +21,8 @@ def get_item_attributes(item):
             'color': libtcod.violet,
             'use_function': acide,
             'power': 8,
-            'target': TargetType.FIGHTING_ENTITY
+            'target': TargetType.FIGHTING_ENTITY,
+            'value': 20
         },
         'staff': {
             'name': 'Baton de voyageur',
@@ -29,7 +31,8 @@ def get_item_attributes(item):
             'equippable': {
                 'slot': EquipmentSlot.MAIN_HAND,
                 'weapon_damage': (1, 4)
-            }
+            },
+            'value': 40
         },
         'staff_force': {
             'name': 'Baton de voyageur',
@@ -39,7 +42,8 @@ def get_item_attributes(item):
                 'slot': EquipmentSlot.MAIN_HAND,
                 'weapon_damage': (1, 4),
                 'damage_bonus': 1
-            }
+            },
+            'value': 60
         },
         'bracelet': {
             'name': 'Bracelet de force',
@@ -48,7 +52,8 @@ def get_item_attributes(item):
             'equippable': {
                 'slot': EquipmentSlot.OFF_HAND,
                 'might_bonus': 1
-            }
+            },
+            'value': 30
         },
         'talisman': {
             'name': 'Talisman de vie',
@@ -57,7 +62,8 @@ def get_item_attributes(item):
             'equippable': {
                 'slot': EquipmentSlot.NECK,
                 'hp_bonus': 5
-            }
+            },
+            'value': 30
         },
         'robe': {
             'name': 'Robe de vitalite',
@@ -66,7 +72,8 @@ def get_item_attributes(item):
             'equippable': {
                 'slot': EquipmentSlot.CHEST,
                 'vitality_bonus': 1
-            }
+            },
+            'value': 30
         }
     }
     try:

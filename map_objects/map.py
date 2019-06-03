@@ -31,6 +31,8 @@ class GameMap:
         # for spawner
         max_monsters_room_table = map_config[map_type]['max_monsters_per_room']
         max_items_room_table = map_config[map_type]['max_items_per_room']
+        danger_level = map_config[map_type]['danger_level']
+        value_level = map_config[map_type]['value_level']
 
         # On créé une map pleine, non utilisable sans sa generation.
         self.tiles = self._initialize_tiles()   # tiles = la vraie map
@@ -44,7 +46,7 @@ class GameMap:
         self._fighters = []
 
         # On genere un spawner, pour gerer le placement des mobs & items.
-        self.spawner = Spawner(self, max_monsters_room_table, max_items_room_table)
+        self.spawner = Spawner(self, max_monsters_room_table, max_items_room_table, danger_level, value_level)
 
     # ADD & GET.
     def add_player(self, player):

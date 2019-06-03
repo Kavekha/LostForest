@@ -1,3 +1,7 @@
+v0.0.22
+    Chaque Floor contient desormais un niveau de Danger et un niveau de Valeur.
+    Danger et Valeur limitent les spawns de monstres et d'items pour ne pas rendre les niveaux trop faciles ou durs.
+
 v0.0.21
     Le bord des maps est desormais indestructibles, empechant les incidents de hors map possibles avec crash.
     Refacto : accès à certains parametres de game_map via spawner et autres.
