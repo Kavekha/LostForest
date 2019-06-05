@@ -9,6 +9,8 @@ class TargetType:
     SELF = 1
     FIGHTING_ENTITY = 2
     ITEM_ENTITY = 3
+    OTHER_ENTITY = 4
+    TILE = 5
 
 
 class Target(Entity):
@@ -29,7 +31,8 @@ class Target(Entity):
             self.quit_target_mode()
         elif self.target_type == TargetType.SELF:
             # on lance directement l effet sur soit, sans selection possible.
-            self.check_target_against_wanted_type({'entity_fighter': self.player})
+            self.play_function_on_target({'requested': self.player, 'not_requested': [],
+                                          'tile': self.get_map_tile(self.x, self.y)})
         else:
             self.warning()
 
@@ -41,56 +44,75 @@ class Target(Entity):
         self.game.events.add_event({'message': ConstTexts.TARGET_CONTROLS_EXPLAIN,
                                     'color': ConstColors.TARGET_MESS_COLOR})
 
-    def get_info_from_tile(self):
-        print('target: get info')
-        results = {}
-        x, y = self.x, self.y
-        entities = self.game_map.get_entities()
-        print('my position is : ', x, y)
-        for entity in entities:
-            if entity != self:
-                if entity.x == x and entity.y == y:
-                    if is_entity_type(entity, EntityType.FIGHTER):
-                        print('it s a fighter')
-                        results['entity_fighter'] = entity
-                    elif is_entity_type(entity, EntityType.ITEM):
-                        print('it s an item')
-                        results['entity_item'] = entity
-        print('results is ', results)
-        return results
+    def get_map_entities(self):
+        return self.game_map.get_entities()
+
+    def get_map_tile(self, x, y):
+        return self.game_map.tiles[x][y]
 
     def validate_target(self):
-        results = self.get_info_from_tile()
-        self.check_target_against_wanted_type(results)
-
-    def check_target_against_wanted_type(self, results_dict):
-        if self.target_type in [TargetType.FIGHTING_ENTITY, TargetType.SELF]:
-            entity_fighter = results_dict.get('entity_fighter')
-            if entity_fighter:
-                self.play_function_on_target(entity_fighter)
-            else:
-                self.game.events.add_event({'message': 'You must select a fighting entity',
-                                            'color': ConstColors.TARGET_ERROR_COLOR})
-
-        elif self.target_type == TargetType.ITEM_ENTITY:
-            entity_item = results_dict.get('entity_item')
-            if entity_item:
-                self.play_function_on_target(entity_item)
-            else:
-                self.game.events.add_event({'message': 'You must select an item entity',
-                                            'color': ConstColors.TARGET_ERROR_COLOR})
-
-        else:
+        results, valid = self.get_info_from_tile()
+        # on envoie les resultats, meme si not valid, pour messages sympas & rigolos potentiels.
+        if results:
+            self.play_function_on_target(results)
+        if not valid:
             self.game.events.add_event({'message': 'Your target is of the wrong type',
                                         'color': ConstColors.TARGET_ERROR_COLOR})
+        self.quit_target_mode()
 
-    def play_function_on_target(self, target):
+    def play_function_on_target(self, dict_target):
         # TODO: item only, make it more generic
-        item_use_results = self.function_on_validate(self.player, self.target_source, target, self.game.events)
+        item_use_results = self.function_on_validate(self.player, self.target_source,
+                                                     dict_target, self.game.events)
         print('play function : target source is : ', self.target_source)
         self.player.inventory.resolve_use_results(item_use_results, self.target_source.owner, self.game.events)
 
         self.quit_target_mode()
+
+    def is_wanted_type(self, targeted_object_type):
+        if targeted_object_type == self.target_type:
+            return True
+        else:
+            return False
+
+    def get_info_from_tile(self):
+        results = {
+            'requested': None,
+            'not_requested': [],
+            'tile': None
+            }
+
+        x, y = self.x, self.y
+        entities = self.get_map_entities()
+        for entity in entities:
+            if entity.x == x and entity.y == y:
+                if entity != self:
+                    if is_entity_type(entity, EntityType.FIGHTER):
+                        if self.is_wanted_type(TargetType.FIGHTING_ENTITY):
+                            results['requested'] = entity
+                        else:
+                            results['not_requested'].append(entity)
+                    elif is_entity_type(entity, EntityType.ITEM):
+                        if self.is_wanted_type(TargetType.ITEM_ENTITY):
+                            results['requested'] = entity
+                        else:
+                            results['not_requested'].append(entity)
+                    else:
+                        if self.is_wanted_type(TargetType.OTHER_ENTITY):
+                            results['requested'] = entity
+                        else:
+                            results['not_requested'].append(entity)
+                else:
+                    if self.is_wanted_type(TargetType.SELF):
+                        results['requested'] = entity
+                    else:
+                        results['not_requested'].append(entity)
+        results['tile'] = self.get_map_tile(x, y)
+
+        requested = results.get('requested')
+        print('target result is : ', results)
+
+        return results, requested
 
     def wait(self):
         self.warning()

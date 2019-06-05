@@ -1,5 +1,5 @@
 from data.dungeon_specs import get_dungeon_config
-from map_objects.map import GameMap
+from map_objects.game_map import GameMap
 from config.constants import ConstColors, ConstTexts
 
 

@@ -7,10 +7,8 @@ from utils.random_functions import random_choice_from_dict
 
 
 class Spawner:
-    def __init__(self, game_map, max_monsters_room_table, max_items_room_table, danger_level, value_level):
+    def __init__(self, game_map, danger_level, value_level):
         self.map_owner = game_map
-        self.max_monsters_room = self.from_dungeon_level(max_monsters_room_table, game_map.dungeon.current_floor)
-        self.max_items_room = self.from_dungeon_level(max_items_room_table, game_map.dungeon.current_floor)
         self.monsters_table = get_monster_table(self.map_owner.map_type)
         self.items_table = get_item_table(self.map_owner.map_type)
         self.danger_level = self.from_dungeon_level(danger_level, game_map.dungeon.current_floor)
@@ -32,39 +30,55 @@ class Spawner:
                 nb_mobs_by_room.append(0)
                 nb_items_by_room.append(0)
             else:
-                nb_monsters = randint(0, self.max_monsters_room)
-                nb_items = randint(0, self.max_items_room)
+                nb_monsters = 50
+                nb_items = 50
                 nb_mobs_by_room.append(nb_monsters)
                 nb_items_by_room.append(nb_items)
 
         current_danger_level = 0
         current_item_value = 0
 
-        for i in range(len(rooms)):
-            if nb_mobs_by_room[i] > 0 and current_danger_level < self.danger_level:
-                x = randint(rooms[i].x1 + 1, rooms[i].x2 - 1)
-                y = randint(rooms[i].y1 + 1, rooms[i].y2 - 1)
+        count_mob = 0
+        while current_danger_level < self.danger_level and count_mob < 20:
+            print('mob : current danger {} / {}, count mob : {}'.format(current_danger_level, self.danger_level, count_mob))
+            for i in range(len(rooms)):
+                if nb_mobs_by_room[i] > 0 and current_danger_level < self.danger_level:
+                    rand = randint(0, 100)
+                    if rand < nb_mobs_by_room[i]:
+                        x = randint(rooms[i].x1 + 1, rooms[i].x2 - 1)
+                        y = randint(rooms[i].y1 + 1, rooms[i].y2 - 1)
 
-                if not any([entity for entity in self.map_owner.entities if entity.x == x and entity.y == y]):
-                    monster = self.spawn_monster(x, y)
-                    self.map_owner.add_entity(monster)
-                    current_danger_level += monster.fighter.xp_value
-                    nb_mobs_by_room[i] -= 1
+                        if not any([entity for entity in self.map_owner.entities if entity.x == x and entity.y == y]):
+                            monster = self.spawn_monster(x, y)
+                            self.map_owner.add_entity(monster)
+                            current_danger_level += monster.fighter.xp_value
+                        nb_mobs_by_room[i] -= 10
+                    else:
+                        nb_mobs_by_room[i] -= 5
+                count_mob += 1
 
+        count_item = 0
+        while current_item_value < self.value_level and count_item < 20:
+            print('item : current value {} / {}, count item : {}'.format(current_item_value, self.value_level, count_item))
             if nb_items_by_room[i] > 0 and current_item_value < self.value_level:
-                x = randint(rooms[i].x1 + 1, rooms[i].x2 - 1)
-                y = randint(rooms[i].y1 + 1, rooms[i].y2 - 1)
+                rand = randint(0, 100)
+                if rand < nb_items_by_room[i]:
+                    x = randint(rooms[i].x1 + 1, rooms[i].x2 - 1)
+                    y = randint(rooms[i].y1 + 1, rooms[i].y2 - 1)
 
-                if not any([entity for entity in self.map_owner.entities if entity.x == x and entity.y == y]):
-                    item = self.spawn_item(x, y)
-                    self.map_owner.add_entity(item)
-                    current_item_value += item.item.value
-                    nb_items_by_room[i] -= 1
+                    if not any([entity for entity in self.map_owner.entities if entity.x == x and entity.y == y]):
+                        item = self.spawn_item(x, y)
+                        self.map_owner.add_entity(item)
+                        current_item_value += item.item.value
+                    nb_items_by_room[i] -= 10
+                else:
+                    nb_items_by_room[i] -= 5
+            count_item += 1
 
-        print('END OF SPAWNING : danger lvl {}, monsters not spawner : {}'.format(current_danger_level,
-                                                                                  sum(nb_mobs_by_room)))
-        print('END OF SPAWNING : current value {}, items not spawner : {}'.format(current_item_value,
-                                                                                  sum(nb_items_by_room)))
+        print('END OF SPAWNING : danger lvl {} / {}, mob count : {}'.format(current_danger_level, self.danger_level,
+                                                                                  count_mob))
+        print('END OF SPAWNING : current value {} / {}, item count : {}'.format(current_item_value, self.value_level,
+                                                                                  count_item))
 
     # table : [[nb_max, level],[nb_max, level + x]]
     # On donne le max, selon le niveau.
@@ -82,21 +96,6 @@ class Spawner:
         else:
             return True
 
-    # OBSOLETE v0.0.22
-    def old_spawn_entities(self):
-        rooms = self._get_rooms()
-        for room in rooms:
-            nb_monsters = randint(0, self.max_monsters_room)
-
-            for mob in range(nb_monsters):
-                x = randint(room.x1 + 1, room.x2 - 1)
-                y = randint(room.y1 + 1, room.y2 - 1)
-
-                # ici on check si il existe deja des entités à cet endroit.
-                if not any([entity for entity in self.map_owner.entities if entity.x == x and entity.y == y]):
-                    monster = self.spawn_monster(x, y)
-                    self.map_owner.add_entity(monster)
-
     def spawn_monster(self, x, y):
         game = self.map_owner.dungeon.game
         monster_list = self.monsters_table
@@ -106,17 +105,6 @@ class Spawner:
                 monster = create_fighting_entity(game, monster_name, x, y)
                 return monster
         return None
-
-    def spawn_items(self):
-        rooms = self._get_rooms()
-        for room in rooms:
-            nb_items = randint(0, self.max_items_room)
-            for item in range(nb_items):
-                x = randint(room.x1 + 1, room.x2 - 1)
-                y = randint(room.y1 + 1, room.y2 - 1)
-                if not self.is_entity_there(x, y):
-                    item = self.spawn_item(x, y)
-                    self.map_owner.add_entity(item)
 
     def spawn_item(self, x, y):
         item_list = self.items_table
