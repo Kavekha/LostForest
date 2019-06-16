@@ -11,14 +11,14 @@ class EquipmentSlot(Enum):
 
 
 def get_equipment_in_slot(slot, entity_equipement):
-        if slot == EquipmentSlot.MAIN_HAND:
-            return entity_equipement.main_hand
-        elif slot == EquipmentSlot.OFF_HAND:
-            return entity_equipement.off_hand
-        elif slot == EquipmentSlot.NECK:
-            return entity_equipement.neck
-        elif slot == EquipmentSlot.CHEST:
-            return entity_equipement.chest
+    if slot == EquipmentSlot.MAIN_HAND:
+        return entity_equipement.main_hand
+    elif slot == EquipmentSlot.OFF_HAND:
+        return entity_equipement.off_hand
+    elif slot == EquipmentSlot.NECK:
+        return entity_equipement.neck
+    elif slot == EquipmentSlot.CHEST:
+        return entity_equipement.chest
 
 
 def slot_to_text(slot):
@@ -34,14 +34,18 @@ def slot_to_text(slot):
 
 
 class Equippable:
-    def __init__(self, slot,
-                 weapon_damage=(0, 2), damage_bonus=0,
-                 might_bonus=0, hp_bonus=0, vitality_bonus=0):
+    def __init__(
+        self,
+        slot,
+        weapon_damage=(0, 2),
+        damage_bonus=0,
+        might_bonus=0,
+        hp_bonus=0,
+        vitality_bonus=0,
+    ):
         self.slot = slot
         self.weapon_damage = weapon_damage
         self.damage_bonus = damage_bonus
         self.might_bonus = might_bonus
         self.hp_bonus = hp_bonus
         self.vitality_bonus = vitality_bonus
-
-

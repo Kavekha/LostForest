@@ -4,15 +4,15 @@ from config.constants import ConstColors, ConstTexts
 
 
 class Dungeon:
-    def __init__(self, game, name='dungeon'):
+    def __init__(self, game, name="dungeon"):
         self.game = game
         self.name = name
         self.current_floor = 1
         self.current_map = None
 
         config = get_dungeon_config(self.name)
-        self.max_floor = config['max_floor']
-        self.floors = config['floors']
+        self.max_floor = config["max_floor"]
+        self.floors = config["floors"]
 
     def initialize(self):
         self.generate_floor(self.get_floor_to_create())
@@ -26,7 +26,7 @@ class Dungeon:
             except:
                 current_floor -= 1
                 if current_floor == 0:
-                    map_to_create = 'standard_map'
+                    map_to_create = "standard_map"
         return map_to_create
 
     def generate_floor(self, map_to_create):
@@ -44,14 +44,17 @@ class Dungeon:
             self.game.reset_game_windows = True
 
             self.game.player.fighter.heal(self.game.player.fighter.max_hp // 2)
-            self.game.events.add_event({'message': ConstTexts.REST_AFTER_STAIRS,
-                                        'color': ConstColors.REST_AFTER_STAIRS_COLOR})
+            self.game.events.add_event(
+                {
+                    "message": ConstTexts.REST_AFTER_LANDMARK,
+                    "color": ConstColors.REST_AFTER_LANDMARK_COLOR,
+                }
+            )
         else:
-            self.game.events.add_event({'message': ConstTexts.VICTORY_LAST_FLOOR_BASIC,
-                                        'color': ConstColors.POSITIVE_INFO_COLOR})
-            self.game.events.add_event({'victory': True})
-
-
-
-
-
+            self.game.events.add_event(
+                {
+                    "message": ConstTexts.VICTORY_LAST_FLOOR_BASIC,
+                    "color": ConstColors.POSITIVE_INFO_COLOR,
+                }
+            )
+            self.game.events.add_event({"victory": True})

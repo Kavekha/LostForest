@@ -1,5 +1,5 @@
-import libtcodpy as libtcod
-from config.config import get_app_config
+import tcod as libtcod
+import app_config
 from render_engine import Render
 from states.app_states import AppStates
 from systems.commands import CommandController
@@ -10,19 +10,18 @@ from menus.quit_menu import QuitMenu
 
 class App:
     def __init__(self):
-        # app config
-        config = get_app_config()
-
         # input handler
         self.command_controller = CommandController()
         self.input_handler = InputHandler(self, self.command_controller)
 
         # render engine
-        screen_width = config['screen_width']
-        screen_height = config['screen_height']
-        bar_width = config['bar_width']
-        panel_height = config['panel_height']
-        self.render_engine = Render(screen_width, screen_height, bar_width, panel_height)
+        screen_width = app_config.SCREEN_WIDTH
+        screen_height = app_config.SCREEN_HEIGHT
+        bar_width = app_config.BAR_WIDTH
+        panel_height = app_config.PANEL_HEIGHT
+        self.render_engine = Render(
+            screen_width, screen_height, bar_width, panel_height
+        )
 
         self.app_states = None
         self.box_message = None
@@ -42,7 +41,9 @@ class App:
         # main loop
         while not libtcod.console_is_window_closed():
             # check key / mouse event
-            libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse)
+            libtcod.sys_check_for_event(
+                libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse
+            )
 
             self.render_engine.render_app(self, mouse)
 

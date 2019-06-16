@@ -52,6 +52,7 @@ NEXT:
         [ ] 50      Items correspondant aux nouveaux ciblages.
         [ ] 50      Usage par defaut des items.
         [ ] 100     Types d'items, regroupement par type et limite de type par map pour variété & eviter doublon.
+
     FIGHT:
         [ ] 250     Damage type : All reduced by Vitality. Acid, Fire, etc?
 
@@ -103,15 +104,19 @@ NEXT:
         [ ] 100     Refacto Target System. Pas souple du tout, specifique aux items.
         [ ] 100     Mieux utiliser les return True / False dans les fonctions, pour dire au moins "j'ai fais ce que tu m'a demandé"
         [ ] 50      Refacto effect functions / inventory / items : le message "{} thrown at {}" est dans effet. Devrait etre ailleurs.
-        [ ] 250     Fonctions de combat hors Fighter : rends Fighter plus clean, permets de les utiliser sur les items et map.
-        [ ] 50      Spawners pour une meilleure reparition methode et plus de souplesse entre monstres & items.
-        [ ] 50      Constants / config pour Appli.
+        [ ] 100     Fonctions de combat hors Fighter : rends Fighter plus clean, permets de les utiliser sur les items et map.
+        [/] 50      Spawners pour une meilleure reparition methode et plus de souplesse entre monstres & items.
+        [/] 50      Constants / config pour Appli.
         [ ] 25      Requirements
-        [ ] 50      Readme
-        [ ] 50      Fight : methodes hors component Fighter.
+        [/] 50      Readme
+        [/] 100     savegame.bak grossit très vite. Semble faire ramer. Supprimer la save avant de la reecrire.
 
     TO LEARN:
         [ ]     Numpy pour creer des dictionnaires de monstres plus facilement.
+
+
+    BUGS:
+        [/] 250     Probleme de save + crash. Nouvelle partie. Je meurs. Je charge la save : je suis en vie avec 1 pv. Je me deplace. Crash. Perte de la save. Why?
 
 
     OBJECTIFS:
@@ -119,7 +124,7 @@ NEXT:
         # RELEASE 4 : Apparence de map, salles, items & monstres uniques.!
 
             [/] Ciblage amelioré, plus d'informations.
-            [ ] Meilleur systeme de spawn & valeurs d'items / monstres.
+            [/] Meilleur systeme de spawn & valeurs d'items / monstres.
             [ ] Differentes couleurs de terrain sur la map, sans effet particulier.
             [ ] Salles-types :
                     Arbre Ancien, Arbre Mort,

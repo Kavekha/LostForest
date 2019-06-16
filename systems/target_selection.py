@@ -1,6 +1,6 @@
 from render_engine import RenderOrder
 from entities import Entity, EntityType, is_entity_type
-import libtcodpy as libtcod
+import tcod as libtcod
 from config.constants import ConstTexts, ConstColors
 
 
@@ -15,7 +15,7 @@ class TargetType:
 
 class Target(Entity):
     def __init__(self, player, game, target_source, target_type):
-        super().__init__(game, player.x, player.y, '+', libtcod.white, 'Target')
+        super().__init__(game, player.x, player.y, "+", libtcod.white, "Target")
         self.target_source = target_source
         self.function_on_validate = target_source.use_function
         self.player = player
@@ -26,23 +26,41 @@ class Target(Entity):
         self.game_map.add_entity(self)
 
         if self.target_type == TargetType.NONE:
-            self.game.events.add_event({'message': ConstTexts.TARGET_TYPE_INVALID,
-                                        'color': ConstColors.TARGET_MESS_COLOR})
+            self.game.events.add_event(
+                {
+                    "message": ConstTexts.TARGET_TYPE_INVALID,
+                    "color": ConstColors.TARGET_MESS_COLOR,
+                }
+            )
             self.quit_target_mode()
         elif self.target_type == TargetType.SELF:
             # on lance directement l effet sur soit, sans selection possible.
-            self.play_function_on_target({'requested': self.player, 'not_requested': [],
-                                          'tile': self.get_map_tile(self.x, self.y)})
+            self.play_function_on_target(
+                {
+                    "requested": self.player,
+                    "not_requested": [],
+                    "tile": self.get_map_tile(self.x, self.y),
+                }
+            )
         else:
             self.warning()
 
     def quit_target_mode(self):
-        self.game.events.add_event({'quit_target_mode': True})
+        self.game.events.add_event({"quit_target_mode": True})
 
     def warning(self):
-        self.game.events.add_event({'message': ConstTexts.TARGET_MODE_ON, 'color': ConstColors.TARGET_MESS_COLOR})
-        self.game.events.add_event({'message': ConstTexts.TARGET_CONTROLS_EXPLAIN,
-                                    'color': ConstColors.TARGET_MESS_COLOR})
+        self.game.events.add_event(
+            {
+                "message": ConstTexts.TARGET_MODE_ON,
+                "color": ConstColors.TARGET_MESS_COLOR,
+            }
+        )
+        self.game.events.add_event(
+            {
+                "message": ConstTexts.TARGET_CONTROLS_EXPLAIN,
+                "color": ConstColors.TARGET_MESS_COLOR,
+            }
+        )
 
     def get_map_entities(self):
         return self.game_map.get_entities()
@@ -56,16 +74,23 @@ class Target(Entity):
         if results:
             self.play_function_on_target(results)
         if not valid:
-            self.game.events.add_event({'message': 'Your target is of the wrong type',
-                                        'color': ConstColors.TARGET_ERROR_COLOR})
+            self.game.events.add_event(
+                {
+                    "message": "Your target is of the wrong type",
+                    "color": ConstColors.TARGET_ERROR_COLOR,
+                }
+            )
         self.quit_target_mode()
 
     def play_function_on_target(self, dict_target):
         # TODO: item only, make it more generic
-        item_use_results = self.function_on_validate(self.player, self.target_source,
-                                                     dict_target, self.game.events)
-        print('play function : target source is : ', self.target_source)
-        self.player.inventory.resolve_use_results(item_use_results, self.target_source.owner, self.game.events)
+        item_use_results = self.function_on_validate(
+            self.player, self.target_source, dict_target, self.game.events
+        )
+        print("play function : target source is : ", self.target_source)
+        self.player.inventory.resolve_use_results(
+            item_use_results, self.target_source.owner, self.game.events
+        )
 
         self.quit_target_mode()
 
@@ -76,11 +101,7 @@ class Target(Entity):
             return False
 
     def get_info_from_tile(self):
-        results = {
-            'requested': None,
-            'not_requested': [],
-            'tile': None
-            }
+        results = {"requested": None, "not_requested": [], "tile": None}
 
         x, y = self.x, self.y
         entities = self.get_map_entities()
@@ -89,28 +110,28 @@ class Target(Entity):
                 if entity != self:
                     if is_entity_type(entity, EntityType.FIGHTER):
                         if self.is_wanted_type(TargetType.FIGHTING_ENTITY):
-                            results['requested'] = entity
+                            results["requested"] = entity
                         else:
-                            results['not_requested'].append(entity)
+                            results["not_requested"].append(entity)
                     elif is_entity_type(entity, EntityType.ITEM):
                         if self.is_wanted_type(TargetType.ITEM_ENTITY):
-                            results['requested'] = entity
+                            results["requested"] = entity
                         else:
-                            results['not_requested'].append(entity)
+                            results["not_requested"].append(entity)
                     else:
                         if self.is_wanted_type(TargetType.OTHER_ENTITY):
-                            results['requested'] = entity
+                            results["requested"] = entity
                         else:
-                            results['not_requested'].append(entity)
+                            results["not_requested"].append(entity)
                 else:
                     if self.is_wanted_type(TargetType.SELF):
-                        results['requested'] = entity
+                        results["requested"] = entity
                     else:
-                        results['not_requested'].append(entity)
-        results['tile'] = self.get_map_tile(x, y)
+                        results["not_requested"].append(entity)
+        results["tile"] = self.get_map_tile(x, y)
 
-        requested = results.get('requested')
-        print('target result is : ', results)
+        requested = results.get("requested")
+        print("target result is : ", results)
 
         return results, requested
 

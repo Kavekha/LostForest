@@ -4,7 +4,7 @@ from components.equippable import get_equipment_in_slot
 from systems.target_selection import TargetType
 
 
-'''
+"""
 INVENTORY s'occupe de la gestion d'inventaire, la recuperation d'objets et leur utilisation.
 Permets de centraliser les mecaniques generales d'usage d'items.
 
@@ -19,7 +19,7 @@ Permets de centraliser les mecaniques generales d'usage d'items.
 4. inventory recupere les messages & le consume_item
 5. inventory envoie a Events les messages à afficher.
 6. inventory consomme l'objet si necessaire.
-'''
+"""
 
 
 class Inventory:
@@ -31,12 +31,21 @@ class Inventory:
     def add_item(self, item, event_handler=None):
         if len(self.items) >= self.capacity:
             if event_handler:
-                event_handler.add_event({'message': ConstTexts.INVENTORY_FULL, 'color': ConstColors.INVENTORY_FULL})
+                event_handler.add_event(
+                    {
+                        "message": ConstTexts.INVENTORY_FULL,
+                        "color": ConstColors.INVENTORY_FULL,
+                    }
+                )
             return False
         else:
             if event_handler:
-                event_handler.add_event({'message': 'You pick up the {0}!'.format(item.name),
-                                         'color': ConstColors.ITEM_PICKED})
+                event_handler.add_event(
+                    {
+                        "message": "You pick up the {0}!".format(item.name),
+                        "color": ConstColors.ITEM_PICKED,
+                    }
+                )
             self.owner.game.dungeon.current_map.entities.remove(item)
             self.items.append(item)
             return True
@@ -45,9 +54,9 @@ class Inventory:
         self.owner.end_turn()
 
     def show_inventory(self, action):
-        if action == 'use':
+        if action == "use":
             menu = self.create_inventory_menu()
-        elif action == 'drop':
+        elif action == "drop":
             menu = self.create_drop_menu()
         else:
             raise NotImplementedError
@@ -67,16 +76,24 @@ class Inventory:
         event_handler = self.owner.game.events
         game_map = self.owner.game.dungeon.current_map
 
-        if item_entity.equippable and self.owner.equipment and item_entity == get_equipment_in_slot(
-                item_entity.equippable.slot, self.owner.equipment):
+        if (
+            item_entity.equippable
+            and self.owner.equipment
+            and item_entity
+            == get_equipment_in_slot(item_entity.equippable.slot, self.owner.equipment)
+        ):
             self.owner.equipment.toggle_equip(item_entity)
         else:
             item_entity.x, item_entity.y = self.owner.x, self.owner.y
             game_map.add_entity(item_entity)
             self.remove_item(item_entity)
-            event_handler.add_event({'message': ConstTexts.DROP_ITEM.format(item_entity.name),
-                                     'color': ConstColors.ITEM_DROPED})
-        return True     # please update menu
+            event_handler.add_event(
+                {
+                    "message": ConstTexts.DROP_ITEM.format(item_entity.name),
+                    "color": ConstColors.ITEM_DROPED,
+                }
+            )
+        return True  # please update menu
 
     def use(self, item_entity):
         event_handler = self.owner.game.events
@@ -90,13 +107,17 @@ class Inventory:
         if equippable_component and self.owner.equipment:
             self.owner.equipment.toggle_equip(item_entity)
             self.action_take_round()
-            return True     # has been equipped
+            return True  # has been equipped
 
         # L item que j utilise n a pas de fonctionnalité.
         elif item_component.use_function is None:
-            event_handler.add_event({'message': 'The {0} cannot be used'.format(item_entity.name),
-                                     'color': ConstColors.CANNOT_BE_USED})
-            return False    # Can t be use
+            event_handler.add_event(
+                {
+                    "message": "The {0} cannot be used".format(item_entity.name),
+                    "color": ConstColors.CANNOT_BE_USED,
+                }
+            )
+            return False  # Can t be use
 
         # L item a une fonctionnalité.
         elif item_component.use_function:
@@ -111,12 +132,12 @@ class Inventory:
     def resolve_use_results(self, item_use_results, item_used_entity, event_handler):
         event_handler.add_event(item_use_results)
 
-        consume_item = item_use_results.get('consume_item')
+        consume_item = item_use_results.get("consume_item")
 
         if consume_item:
             self.remove_item(item_used_entity)
             self.action_take_round()
-            return True     # item used, please refresh Menu
+            return True  # item used, please refresh Menu
         return False
 
     def pick_up(self):
@@ -130,8 +151,13 @@ class Inventory:
                 else:
                     break
         else:
-            event_handler.add_event({'message': ConstTexts.NOTHING_TO_PICK_UP, 'color': ConstColors.NOTHING_TO_PICK_UP})
-        return False    # On indique que l action n a pas reussi.
+            event_handler.add_event(
+                {
+                    "message": ConstTexts.NOTHING_TO_PICK_UP,
+                    "color": ConstColors.NOTHING_TO_PICK_UP,
+                }
+            )
+        return False  # On indique que l action n a pas reussi.
 
     def remove_item(self, item):
         self.items.remove(item)

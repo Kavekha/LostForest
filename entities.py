@@ -1,5 +1,5 @@
 import math
-import libtcodpy as libtcod
+import tcod as libtcod
 from render_engine import RenderOrder
 from config.constants import ConstColors, ConstTexts
 from components.item import Item
@@ -30,11 +30,26 @@ class Entity:
     """
     A generic object to represent players, enemies, items, etc.
     """
-    def __init__(self, game, x, y, char, color, name, blocks=False,
-                 fighter=None, ai=None, inventory=None,
-                 item=None, stairs=None, level=None,
-                 equipment=None, equippable=None,
-                 render_order=RenderOrder.CORPSE):
+
+    def __init__(
+        self,
+        game,
+        x,
+        y,
+        char,
+        color,
+        name,
+        blocks=False,
+        fighter=None,
+        ai=None,
+        inventory=None,
+        item=None,
+        landmark=None,
+        level=None,
+        equipment=None,
+        equippable=None,
+        render_order=RenderOrder.CORPSE,
+    ):
         # basics
         self.game = game
         self.x = x
@@ -47,12 +62,21 @@ class Entity:
         self.round = game.round
 
         # components
-        component_list = [fighter, ai, inventory, item, stairs, level, equipment, equippable]
+        component_list = [
+            fighter,
+            ai,
+            inventory,
+            item,
+            landmark,
+            level,
+            equipment,
+            equippable,
+        ]
         self.fighter = fighter
         self.ai = ai
         self.inventory = inventory
         self.item = item
-        self.stairs = stairs
+        self.landmark = landmark
         self.level = level
         self.equipment = equipment
         self.equippable = equippable
@@ -81,27 +105,31 @@ class Entity:
         self.round += 1
 
     def wait(self):
-        print('wait: {}, round {}'.format(self.name, self.round))
+        print("wait: {}, round {}".format(self.name, self.round))
         self.end_turn()
 
     def pick_up(self):
         if self.inventory:
-            result = self.inventory.pick_up()   # True if success.
+            result = self.inventory.pick_up()  # True if success.
             if result:
                 self.end_turn()
 
-    def take_stairs(self):
+    def take_landmark(self):
         entities = self.game.dungeon.current_map.entities
 
         for entity in entities:
-            if entity.stairs and entity.x == self.x and entity.y == self.y:
+            if entity.landmark and entity.x == self.x and entity.y == self.y:
                 self.game.dungeon.next_floor()
                 self.game.full_recompute_fov()
                 self.end_turn()
                 break
         else:
-            self.game.events.add_event({'message': ConstTexts.NO_STAIRS_THERE,
-                                        'color': ConstColors.IMPORTANT_INFO_COLOR})
+            self.game.events.add_event(
+                {
+                    "message": ConstTexts.NO_LANDMARK_THERE,
+                    "color": ConstColors.IMPORTANT_INFO_COLOR,
+                }
+            )
 
     def move(self, dx, dy):
         # Move the entity by a given amount
@@ -119,8 +147,9 @@ class Entity:
         # s il n y a pas de tuile bloquante...
         if not self.game.dungeon.current_map.is_blocked(destination_x, destination_y):
             # y a t il des entités bloquantes?
-            blocking_entity_at_destination = get_blocking_entities_at_location(self.game.dungeon.current_map.entities,
-                                                                               destination_x, destination_y)
+            blocking_entity_at_destination = get_blocking_entities_at_location(
+                self.game.dungeon.current_map.entities, destination_x, destination_y
+            )
             if blocking_entity_at_destination:
                 self.interact_with_entity(blocking_entity_at_destination)
             else:
@@ -154,8 +183,13 @@ class Entity:
         # Scan the current map each turn and set all the walls as unwalkable
         for y1 in range(game_map.height):
             for x1 in range(game_map.width):
-                libtcod.map_set_properties(fov, x1, y1, not game_map.tiles[x1][y1].block_sight,
-                                           not game_map.tiles[x1][y1].blocked)
+                libtcod.map_set_properties(
+                    fov,
+                    x1,
+                    y1,
+                    not game_map.tiles[x1][y1].block_sight,
+                    not game_map.tiles[x1][y1].blocked,
+                )
 
         # Scan all the objects to see if there are objects that must be navigated around
         # Check also that the object isn't self or the target (so that the start and the end points are free)

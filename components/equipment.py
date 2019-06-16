@@ -85,14 +85,22 @@ class Equipment:
     def unequip_item(self, slot, entity_to_unequip):
         events = self.owner.game.events
         self.set_equipment_in_slot(slot, None)
-        events.add_event({'message': ConstTexts.UNEQUIP_ITEM.format(entity_to_unequip.name),
-                          'color': ConstColors.UNEQUIP})
+        events.add_event(
+            {
+                "message": ConstTexts.UNEQUIP_ITEM.format(entity_to_unequip.name),
+                "color": ConstColors.UNEQUIP,
+            }
+        )
 
     def equip_item(self, slot, entity_to_equip):
         events = self.owner.game.events
         self.set_equipment_in_slot(slot, entity_to_equip)
-        events.add_event({'message': ConstTexts.EQUIP_ITEM.format(entity_to_equip.name),
-                          'color': ConstColors.EQUIP})
+        events.add_event(
+            {
+                "message": ConstTexts.EQUIP_ITEM.format(entity_to_equip.name),
+                "color": ConstColors.EQUIP,
+            }
+        )
 
     def toggle_equip(self, equippable_entity):
         equippable_slot = equippable_entity.equippable.slot
