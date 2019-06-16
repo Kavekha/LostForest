@@ -22,7 +22,7 @@ def get_item_attributes(item):
             'use_function': acide,
             'power': 8,
             'target': TargetType.FIGHTING_ENTITY,
-            'value': 20
+            'value': 15
         },
         'staff': {
             'name': 'Baton de voyageur',
@@ -32,7 +32,7 @@ def get_item_attributes(item):
                 'slot': EquipmentSlot.MAIN_HAND,
                 'weapon_damage': (1, 4)
             },
-            'value': 40
+            'value': 30
         },
         'staff_force': {
             'name': 'Baton de voyageur',
@@ -53,7 +53,7 @@ def get_item_attributes(item):
                 'slot': EquipmentSlot.OFF_HAND,
                 'might_bonus': 1
             },
-            'value': 30
+            'value': 20
         },
         'talisman': {
             'name': 'Talisman de vie',
@@ -63,7 +63,7 @@ def get_item_attributes(item):
                 'slot': EquipmentSlot.NECK,
                 'hp_bonus': 5
             },
-            'value': 30
+            'value': 20
         },
         'robe': {
             'name': 'Robe de vitalite',
@@ -73,7 +73,7 @@ def get_item_attributes(item):
                 'slot': EquipmentSlot.CHEST,
                 'vitality_bonus': 1
             },
-            'value': 30
+            'value': 20
         }
     }
     try:

@@ -29,8 +29,6 @@ class GameMap:
         self.room_min_size = map_config[map_type]['room_min_size']
         self.max_rooms = map_config[map_type]['max_rooms']
         # for spawner
-        max_monsters_room_table = map_config[map_type]['max_monsters_per_room']
-        max_items_room_table = map_config[map_type]['max_items_per_room']
         danger_level = map_config[map_type]['danger_level']
         value_level = map_config[map_type]['value_level']
 
@@ -46,7 +44,7 @@ class GameMap:
         self._fighters = []
 
         # On genere un spawner, pour gerer le placement des mobs & items.
-        self.spawner = Spawner(self, max_monsters_room_table, max_items_room_table, danger_level, value_level)
+        self.spawner = Spawner(self, danger_level, value_level)
 
     # ADD & GET.
     def add_player(self, player):
@@ -83,7 +81,7 @@ class GameMap:
         try:
             self.entities.remove(entity)
         except:
-            raise IndexError
+            print('should have been removed, but there was no entity')
 
     def remove_item(self, item):
         if item.item:   # component Item
@@ -143,7 +141,6 @@ class GameMap:
         self.fov_map = initialize_fov(self)
         # On spawn les entités qui la peuplent.
         self.spawner.spawn_entities()
-        self.spawner.spawn_items()
 
     # La creation de la map basé sur le tutoriel Libtcod / Python.
     def _make_map_tutorial_method(self, player):
