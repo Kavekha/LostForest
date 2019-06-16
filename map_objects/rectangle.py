@@ -1,21 +1,86 @@
 class Rect:
-    def __init__(self, x, y, w, h):
-        self.x1 = x
-        self.y1 = y
-        self.x2 = x + w
-        self.y2 = y + h
-        self.r = int((w + h) / 4)
+    def __init__(self, x1, y1, x2, y2):
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+        self.char = 'x'
+        # self.sanity_check()
 
+    @property
+    def width(self):
+        return abs(self.x2 - self.x1)
+
+    @property
+    def height(self):
+        return abs(self.y2 - self.y1)
+
+    @property
     def center(self):
         center_x = int((self.x1 + self.x2) / 2)
         center_y = int((self.y1 + self.y2) / 2)
-        return (center_x, center_y)
+
+        return center_x, center_y
+
+    @property
+    def north(self):
+        return (self.x1 + self.x2) // 2, self.y1
+
+    @property
+    def south(self):
+        return (self.x1 + self.x2) // 2, self.y2
+
+    @property
+    def west(self):
+        return self.x1, (self.y1 + self.y2) // 2
+
+    @property
+    def east(self):
+        return self.x2, (self.y1 + self.y2) // 2
 
     def intersect(self, other):
-        # returns true if this rectangle intersects with another one
-        return (
-            self.x1 <= other.x2
-            and self.x2 >= other.x1
-            and self.y1 <= other.y2
-            and self.y2 >= other.y1
-        )
+        if self == other:
+            return False
+        return (self.x1 < other.x2 and self.x2 > other.x1 and
+                self.y1 < other.y2 and self.y2 > other.y1)
+
+    def new_position(self, x, y):
+        width = abs(self.x2 - self.x1)
+        height = abs(self.y2 - self.y1)
+        self.x1 = x
+        self.y1 = y
+        self.x2 = x + width
+        self.y2 = y + height
+        # self.sanity_check()
+
+    def position_relative_to_other_room_side(self, room, side='north'):
+        side = side.lower()
+        x, y = room.center
+        if side == 'north':
+            x, y = room.north
+            # y -= 1
+            y -= self.height
+            x -= self.width // 2
+        elif side == 'south':
+            x, y = room.south
+            # y += 1
+            x -= self.width // 2
+        elif side == 'west':
+            x, y = room.west
+            # x -= 1
+            x -= self.width
+            y -= self.height // 2
+        elif side == 'east':
+            x, y = room.east
+            # x += 1
+            y -= self.height // 2
+        self.new_position(x, y)
+
+    def sanity_check(self):
+        print('sanity before : ', self.x1, self.y1, self.x2, self.y2)
+        x1, y1, x2, y2 = self.x1, self.y1, self.x2, self.y2
+        self.x1 = min(x1, x2)
+        self.x2 = max(x1, x2)
+        self.y1 = min(y1, y2)
+        self.y2 = max(y1, y2)
+        print('sanity after: ', self.x1, self.y1, self.x2, self.y2)

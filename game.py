@@ -18,16 +18,20 @@ class Game:
 
     def __init__(self, app):
         self.app = app
+
         self.events = None
         self.fov_algorithm = None
         self.fov_recompute = True
+
         self.player = None
         self.dungeon = None
-        self.current_menu = None
         self.round = 1
-        # v0.0.19
+
         self.target_mode = False
         self.target = None
+
+        self.current_menu = None
+        self.reset_game_windows = False
 
     def initialize(self):
         # recuperation de la config.
@@ -38,10 +42,7 @@ class Game:
         # gestion du fov.
         self.fov_algorithm = game_config["fov_algorithm"]
         self.fov_recompute = True
-        self.reset_game_windows = (
-            False
-        )  # Pour contré les artefacts lors d'un changement d'etage.
-
+        self.reset_game_windows = False  # Pour contrer les artefacts lors d'un changement d'etage.
         # Creation du joueur.
         self.player = self.create_player()
 
@@ -61,7 +62,11 @@ class Game:
         self.target = Target(self.player, self, target_source, target_type)
 
     def quit_target_mode(self):
-        self.dungeon.current_map.remove_entity(self.target)
+        try:
+            self.dungeon.current_map.remove_entity(self.target)
+        except:
+            # si n existe pas, tant mieux.
+            pass
         self.target = None
         self.target_mode = False
 
@@ -103,7 +108,7 @@ class Game:
         self.save_game()
 
     def enemy_turn(self):
-        for entity in self.dungeon.current_map.entities:
+        for entity in self.dungeon.current_map.get_entities():
             if libtcod.map_is_in_fov(
                 self.dungeon.current_map.fov_map, entity.x, entity.y
             ):

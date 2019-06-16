@@ -32,24 +32,23 @@ class Entity:
     """
 
     def __init__(
-        self,
-        game,
-        x,
-        y,
-        char,
-        color,
-        name,
-        blocks=False,
-        fighter=None,
-        ai=None,
-        inventory=None,
-        item=None,
-        landmark=None,
-        level=None,
-        equipment=None,
-        equippable=None,
-        render_order=RenderOrder.CORPSE,
-    ):
+            self,
+            game,
+            x,
+            y,
+            char,
+            color,
+            name,
+            blocks=False,
+            fighter=None,
+            ai=None,
+            inventory=None,
+            item=None,
+            landmark=None,
+            level=None,
+            equipment=None,
+            equippable=None,
+            render_order=RenderOrder.CORPSE):
         # basics
         self.game = game
         self.x = x
@@ -115,7 +114,7 @@ class Entity:
                 self.end_turn()
 
     def take_landmark(self):
-        entities = self.game.dungeon.current_map.entities
+        entities = self.game.dungeon.current_map.get_entities()
 
         for entity in entities:
             if entity.landmark and entity.x == self.x and entity.y == self.y:
@@ -148,7 +147,7 @@ class Entity:
         if not self.game.dungeon.current_map.is_blocked(destination_x, destination_y):
             # y a t il des entités bloquantes?
             blocking_entity_at_destination = get_blocking_entities_at_location(
-                self.game.dungeon.current_map.entities, destination_x, destination_y
+                self.game.dungeon.current_map.get_entities(), destination_x, destination_y
             )
             if blocking_entity_at_destination:
                 self.interact_with_entity(blocking_entity_at_destination)
@@ -177,12 +176,13 @@ class Entity:
         return math.sqrt(dx ** 2 + dy ** 2)
 
     def move_astar(self, game_map, target):
+        width, height = game_map.get_map_sizes()
         # Create a FOV map that has the dimensions of the map
-        fov = libtcod.map_new(game_map.width, game_map.height)
+        fov = libtcod.map_new(width, height)
 
         # Scan the current map each turn and set all the walls as unwalkable
-        for y1 in range(game_map.height):
-            for x1 in range(game_map.width):
+        for y1 in range(height):
+            for x1 in range(width):
                 libtcod.map_set_properties(
                     fov,
                     x1,
@@ -194,7 +194,7 @@ class Entity:
         # Scan all the objects to see if there are objects that must be navigated around
         # Check also that the object isn't self or the target (so that the start and the end points are free)
         # The AI class handles the situation if self is next to the target so it will not use this A* function anyway
-        for entity in game_map.entities:
+        for entity in game_map.get_entities():
             if entity.blocks and entity != self and entity != target:
                 # Set the tile as a wall so it must be navigated around
                 libtcod.map_set_properties(fov, entity.x, entity.y, True, False)

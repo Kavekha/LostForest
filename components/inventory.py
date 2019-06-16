@@ -46,7 +46,7 @@ class Inventory:
                         "color": ConstColors.ITEM_PICKED,
                     }
                 )
-            self.owner.game.dungeon.current_map.entities.remove(item)
+            self.owner.game.dungeon.current_map.get_entities().remove(item)
             self.items.append(item)
             return True
 
@@ -142,7 +142,7 @@ class Inventory:
 
     def pick_up(self):
         event_handler = self.owner.game.events
-        entities = self.owner.game.dungeon.current_map.entities
+        entities = self.owner.game.dungeon.current_map.get_entities()
         for entity in entities:
             if entity.item and entity.x == self.owner.x and entity.y == self.owner.y:
                 action_resolution = self.add_item(entity, event_handler)

@@ -1,12 +1,5 @@
 class Tile:
-    def __init__(
-        self,
-        blocked,
-        dead_ground=False,
-        block_sight=None,
-        explored=False,
-        destructible=True,
-    ):
+    def __init__(self, blocked, block_sight=None, explored=False, destructible=True):
         self.destructible = destructible
         self.blocked = blocked
 
