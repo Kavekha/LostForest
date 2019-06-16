@@ -1,3 +1,17 @@
+v0.3.2
+    Le fichier de sauvegarde est ecrasé avant chaque save.
+    Retrait de l'historique de Commands, non utilisé pour le moment et consommateur.
+    Simplification du systeme de Spawning d'entités monstres. Retrait du systeme de Danger Level.
+    Changement de taille de Font.
+    KNOWN ISSUE: Plus d'items generés.
+
+v0.3.1
+    Ciblage envoie l'information de la cible pertinente demandée & les autres entitées possibles.
+    Meilleur equilibrage du systeme de spawning, retrait de la limite par room.
+
+
+PRE-RELEASE 0.3.0
+
 v0.0.22
     Chaque Floor contient desormais un niveau de Danger et un niveau de Valeur.
     Danger et Valeur limitent les spawns de monstres et d'items pour ne pas rendre les niveaux trop faciles ou durs.
@@ -36,7 +50,7 @@ v0.0.17
     Victoire et QuitGame reconduisent au Main Menu.
 
 
-RELEASE 2 : "3 regions, some monsters, leveling and almost clean code."
+PRE-RELEASE 0.2 : "3 regions, some monsters, leveling and almost clean code."
 
 v0.0.16
     fix: Si reload, utilisation du stairs et menus possibles.
@@ -85,6 +99,9 @@ v0.0.11 +950
     fix : je change d'etage, artefact sur la map de la map precedente.
     Constants utilisés pour une grande partie des textes.
     Meilleure responsabilité de l'inventory.
+
+
+PRE-RELEASE 0.1
 
 v0.0.10 +1200
     'Wait' turn.

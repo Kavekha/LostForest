@@ -1,9 +1,9 @@
-import libtcodpy as libtcod
+import tcod as libtcod
 
-'''
+"""
 to put in entity.ai.
 If an entity has it, then it is sentient.
-'''
+"""
 
 
 class Brain:

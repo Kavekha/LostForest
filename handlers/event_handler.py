@@ -4,10 +4,10 @@ from menus.victory_menu import VictoryMenu
 from menus.level_menu import LevelUpMenu
 
 
-''' 
+""" 
 Envoyer des messages.
 Faire changer l'etat du jeu.
-'''
+"""
 
 
 class EventHandler:
@@ -21,11 +21,11 @@ class EventHandler:
 
     def resolve_events(self):
         for event in self.events:
-            message = event.get('message')
-            color = event.get('color')
-            victory = event.get('victory')      # True
-            level_up = event.get('level_up')    # Entity
-            quit_target_mode = event.get('quit_target_mode')    # True
+            message = event.get("message")
+            color = event.get("color")
+            victory = event.get("victory")  # True
+            level_up = event.get("level_up")  # Entity
+            quit_target_mode = event.get("quit_target_mode")  # True
 
             if not color:
                 color = ConstColors.NEUTRAL_INFO_COLOR

@@ -2,11 +2,7 @@ from systems.target_selection import Target
 
 
 class CommandController:
-    def __init__(self):
-        self.history = []
-
     def execute(self, command):
-        self.history.append(command)
         command.execute()
 
 
@@ -44,17 +40,18 @@ class ValidateTarget(Command):
         if isinstance(self._obj, Target):
             self._obj.validate_target()
 
+
 # INVENTORY
 class ShowInventory(Command):
     def execute(self):
         if self._obj.inventory:
-            self._obj.inventory.show_inventory('use')
+            self._obj.inventory.show_inventory("use")
 
 
 class DropMenu(Command):
     def execute(self):
         if self._obj.inventory:
-            self._obj.inventory.show_inventory('drop')
+            self._obj.inventory.show_inventory("drop")
 
 
 # CHARACTER
@@ -89,6 +86,6 @@ class PickUpCommand(Command):
             self._obj.inventory.pick_up()
 
 
-class TakeStairsCommand(Command):
+class TakeLandmarkCommand(Command):
     def execute(self):
-        self._obj.take_stairs()
+        self._obj.take_landmark()

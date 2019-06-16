@@ -27,5 +27,3 @@ def random_choice_index(chances):
         choice += 1
     else:
         return choice
-
-

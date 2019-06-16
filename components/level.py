@@ -11,11 +11,17 @@ class Level:
 
     @property
     def experience_to_next_level(self):
-        return ConstLevel.LEVEL_UP_BASE + self.current_level * ConstLevel.LEVEL_UP_FACTOR
+        return (
+            ConstLevel.LEVEL_UP_BASE + self.current_level * ConstLevel.LEVEL_UP_FACTOR
+        )
 
     def add_xp(self, xp, events):
         self.current_xp += xp
-        print('gain xp : {}. Needed : {} / {}'.format(xp, self.current_xp, self.experience_to_next_level))
+        print(
+            "gain xp : {}. Needed : {} / {}".format(
+                xp, self.current_xp, self.experience_to_next_level
+            )
+        )
 
         self.check_level_up(events)
 
@@ -29,9 +35,13 @@ class Level:
 
     def leveled_up(self, events):
         self.available_stat_points += 1
-        events.add_event({'message': ConstTexts.LEVEL_UP.format(self.current_level),
-                          'color': ConstColors.POSITIVE_INFO_COLOR,
-                          'level_up': self.owner})
+        events.add_event(
+            {
+                "message": ConstTexts.LEVEL_UP.format(self.current_level),
+                "color": ConstColors.POSITIVE_INFO_COLOR,
+                "level_up": self.owner,
+            }
+        )
 
     def show_character_screen(self):
         game = self.owner.game

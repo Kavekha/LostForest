@@ -1,4 +1,5 @@
-import libtcodpy as libtcod
+import tcod as libtcod
+
 
 class Message:
     def __init__(self, text, color=libtcod.white):
