@@ -1,15 +1,42 @@
+import math
+from random import randint
+
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
+
 from data.map_specs import get_map_config
+
 from utils.fov_functions import initialize_fov
 from spawners import Spawner
 from components.landmark import Landmark
 from entities import Entity
 import tcod as libtcod
 from render_engine import RenderOrder
+from map_generators.jotaf_method import MapGeneratorJotaf
 
-import math
-from random import randint
+
+'''
+{    
+    'map_width': 80,
+    'map_height': 60,
+    'room_min_size': 3,
+    'room_max_size': 5,
+    'max_rooms': 30,
+    'max_placement_iterations': 20,
+    'max_iterations': 600,
+    'corridor_chances': 0,
+    'room_if_no_corridor': 0,
+    'any_room_may_be_previous': 0,
+    "min_mobs": [[10, 1], [11, 2], [13, 4], [15, 6], [17, 8], [20, 10]],
+    "max_mob_room": [[10, 1], [11, 2], [13, 4], [15, 6], [17, 8], [20, 10]],
+    "colors": {
+        "dark_wall": libtcod.Color(0, 0, 100),
+        "dark_ground": libtcod.Color(50, 50, 150),
+        "light_wall": libtcod.Color(130, 110, 50),
+        "light_ground": libtcod.Color(200, 180, 50),
+    }            
+}
+'''
 
 
 class GameMap:
@@ -21,39 +48,84 @@ class GameMap:
         # on recupere la configuration de la map, selon le type de map choisi par le jeu.
         self.map_type = map_type
         self.dungeon = dungeon
+        self.spawner = None
 
-        map_config = get_map_config()
-        self.colors = map_config[map_type]["colors"]
-        self.width = map_config[map_type]["width"]
-        self.height = map_config[map_type]["height"]
-        self.room_max_size = map_config[map_type]["room_max_size"]
-        self.room_min_size = map_config[map_type]["room_min_size"]
-        self.max_rooms = map_config[map_type]["max_rooms"]
-        # for spawner
-        min_mobs = map_config[map_type]["min_mobs"]
-        max_mob_room = map_config[map_type]["max_mob_room"]
-
-        # On créé une map pleine, non utilisable sans sa generation.
-        self.tiles = self._initialize_tiles()  # tiles = la vraie map
-        self._make_indestructible_barriers()  # Tiles indestructibles autour.
+        self.tiles = None
         self.fov_map = None
+        self.map_width = None
+        self.map_height = None
+        self.colors = None
 
-        self._rooms = []
-        self.entities = []
+        self._entities = []
         self._player = None
         self._items = []
         self._fighters = []
+        self._rooms = []
+        self._corridors = []
 
-        # On genere un spawner, pour gerer le placement des mobs & items.
-        self.spawner = Spawner(self, min_mobs, max_mob_room)
+    def generate_map(self):
+        # get config
+        map_config = get_map_config(self.map_type)
+        self.map_width, self.map_height = map_config.get('map_width'), map_config.get('map_height')
+        self.colors = map_config.get('colors')
+        # this is the MapGen, map_config is the **params. Return Rooms & corridors to create.
+        map_blueprint = self.get_map_blueprint(map_config)
+
+        # initialize map
+        self.tiles = self._initialize_tiles(self.map_width, self.map_height)
+        # Tiles indestructibles autour.
+        self._make_indestructible_barriers(self.map_width, self.map_height)
+        self.fov_map = None
+
+        # make map
+        self._make_map(map_blueprint)
+        self._player.x, self._player.y = self._rooms[0].center
+        self.fov_map = initialize_fov(self)
+
+        # create spawner and spawn word
+        self.spawner = Spawner(self, map_config.get('min_mobs', [[2, 1]]), map_config.get('max_mob_room', [[3, 1]]),
+                               map_config.get('min_items', [[0, 1]]), map_config.get('max_item_room', [[0, 1]]))
+        self.place_landmark()
+        self.spawner.spawn_entities()
+
+    def _make_map(self, map_blueprint):
+        rooms_to_create = map_blueprint.get('rooms')
+        corridors_to_create = map_blueprint.get('corridors')
+
+        for room in rooms_to_create:
+            self.add_room(room)
+            self.create_room(room)
+        for corridor in corridors_to_create:
+            self.add_corridor(corridor)
+            self.create_room(corridor)
+
+    def get_map_blueprint(self, map_config):
+        map_gen = map_config.get('map_algorithm', MapGeneratorJotaf)
+        map_gen = map_gen(**map_config)
+        map_gen.run()
+        results = map_gen.get_results()
+        return results
+
+    # MAP CREATION
+    def _initialize_tiles(self, map_width, map_height):
+        tiles = [[Tile(True) for y in range(map_height)] for x in range(map_width)]
+
+        for x in range(map_width):
+            for y in range(map_height):
+                pass
+
+        return tiles
 
     # ADD & GET.
+    def get_map_sizes(self):
+        return self.map_width, self.map_height
+
     def add_player(self, player):
-        self.entities.append(player)
+        self._entities.append(player)
         self._player = player
 
     def add_entity(self, entity):
-        self.entities.append(entity)
+        self._entities.append(entity)
 
     def add_item(self, entity_item):
         self._items.append(entity_item)
@@ -66,8 +138,11 @@ class GameMap:
     def add_room(self, room):
         self._rooms.append(room)
 
+    def add_corridor(self, corridor):
+        self._corridors.append(corridor)
+
     def get_entities(self):
-        return self.entities
+        return self._entities
 
     def get_items(self):
         return self._items
@@ -79,66 +154,23 @@ class GameMap:
         return self._rooms
 
     def remove_entity(self, entity):
-        try:
-            self.entities.remove(entity)
-        except:
-            print("should have been removed, but there was no entity")
+        if entity:
+            self._entities.remove(entity)
 
     def remove_item(self, item):
-        if item.item:  # component Item
-            try:
-                self._items.remove(item)
-                self.remove_entity(item)
-            except:
-                raise IndexError
-        else:
-            raise AssertionError
+        print('remove item from map - obsolete')
 
     def remove_fighter(self, fighter):
-        if fighter.fighter:
-            try:
-                self._fighters.remove(fighter)
-                self.remove_entity(fighter)
-            except:
-                raise IndexError
-        else:
-            raise AssertionError
+        print('remove fighter from map - obsolete')
 
-    # MAP CREATION
-    def _initialize_tiles(self):
-        tiles = [[Tile(True) for y in range(self.height)] for x in range(self.width)]
-
-        for x in range(self.width):
-            for y in range(self.height):
-                pass
-
-        return tiles
-
-    def generate_special_rooms(self):
-        print("generate special room")
-        room = self.get_rooms()[1]
-
-        # go through the tiles in the rectangle and make them passable
-        for x in range(room.x1 + 1, room.x2):
-            for y in range(room.y1 + 1, room.y2):
-                if self.tiles[x][y].destructible:
-                    self.tiles[x][y].dead_ground = True
-                    print("dead ground generated")
-                else:
-                    print(
-                        "tile {},{} is indestructible : {}".format(
-                            x, y, self.tiles[x][y].destructible
-                        )
-                    )
-
-    def _make_indestructible_barriers(self):
-        for y in range(0, self.height):
+    def _make_indestructible_barriers(self, map_width, map_height):
+        for y in range(0, map_height):
             self.tiles[0][y].destructible = False
-            self.tiles[self.width - 1][y].destructible = False
+            self.tiles[map_width - 1][y].destructible = False
 
-        for x in range(0, self.width):
+        for x in range(0, map_width):
             self.tiles[x][0].destructible = False
-            self.tiles[x][self.height - 1].destructible = False
+            self.tiles[x][map_height - 1].destructible = False
 
     def is_blocked(self, x, y):
         if self.tiles[x][y].blocked:
@@ -149,85 +181,6 @@ class GameMap:
         if self.tiles[x][y].destructible:
             return False
         return True
-
-    # On genere la map. # TODO : Pouvoir choisir la methode, selon que ce soit caverne, donj, etc.
-    def generate_map(self, player):
-        # La map en elle meme.
-        self._make_map_tutorial_method(player)
-        self.place_landmark()
-        # On genere les special rooms.
-        self.generate_special_rooms()
-        # Ce qui est visible ou non du joueur.
-        self.fov_map = initialize_fov(self)
-        # On spawn les entités qui la peuplent.
-        self.spawner.spawn_entities()
-
-    # La creation de la map basé sur le tutoriel Libtcod / Python.
-    def _make_map_tutorial_method(self, player):
-        rooms = []
-        num_rooms = 0
-
-        """
-        center_last_room_x = None
-        center_last_room_y = None
-        """
-
-        for r in range(self.max_rooms):
-            # random width and height
-            w = randint(self.room_min_size, self.room_max_size)
-            h = randint(self.room_min_size, self.room_max_size)
-            # random position without going out of the boundaries of the map
-            x = randint(0, self.width - w - 1)
-            y = randint(0, self.height - h - 1)
-
-            # "Rect" class makes rectangles easier to work with
-            new_room = Rect(x, y, w, h)
-
-            # run through the other rooms and see if they intersect with this one
-            for other_room in rooms:
-                if new_room.intersect(other_room):
-                    break
-            else:
-                # this means there are no intersections, so this room is valid
-
-                # "paint" it to the map's tiles
-                self.create_room(new_room)
-
-                # center coordinates of new room, will be useful later
-                (new_x, new_y) = new_room.center()
-                """
-                # we want to know the last created room for the landmark.
-                center_last_room_x = new_x
-                center_last_room_y = new_y
-                """
-
-                if num_rooms == 0:
-                    # this is the first room, where the player starts at
-                    player.x = new_x
-                    player.y = new_y
-                else:
-                    # all rooms after the first:
-                    # connect it to the previous room with a tunnel
-
-                    # center coordinates of previous room
-                    (prev_x, prev_y) = rooms[num_rooms - 1].center()
-
-                    # flip a coin (random number that is either 0 or 1)
-                    if randint(0, 1) == 1:
-                        # first move horizontally, then vertically
-                        self.create_h_tunnel(prev_x, new_x, prev_y)
-                        self.create_v_tunnel(prev_y, new_y, new_x)
-                    else:
-                        # first move vertically, then horizontally
-                        self.create_v_tunnel(prev_y, new_y, prev_x)
-                        self.create_h_tunnel(prev_x, new_x, new_y)
-
-                # finally, append the new room to the list
-                rooms.append(new_room)
-                num_rooms += 1
-
-        for room in rooms:
-            self.add_room(room)
 
     def place_landmark(self):
         player_room = self.get_rooms()[0]
@@ -243,7 +196,7 @@ class GameMap:
             else:
                 continue
 
-        center_room_x, center_room_y = farest_room.center()
+        center_room_x, center_room_y = farest_room.center
 
         landmark_component = Landmark(self.dungeon.current_floor + 1)
         landmark = Entity(
@@ -256,63 +209,22 @@ class GameMap:
             render_order=RenderOrder.LANDMARK,
             landmark=landmark_component,
         )
-        self.entities.append(landmark)
+        self.add_entity(landmark)
 
     # exist also in Entities
     def distance_room_to_room(self, room, other):
-        dx1, dy1 = room.center()
-        dx2, dy2 = other.center()
+        dx1, dy1 = room.center
+        dx2, dy2 = other.center
 
         dx = dx1 - dx2
         dy = dy1 - dy2
 
         return math.sqrt(dx ** 2 + dy ** 2)
 
-    # creation d une salle. # TODO: Aujourd'hui, forcement un Rectangle. Personnalisable à faire?
     def create_room(self, room):
         # go through the tiles in the rectangle and make them passable
-        for x in range(room.x1 + 1, room.x2):
-            for y in range(room.y1 + 1, room.y2):
+        for y in range(room.y1, room.y2):
+            for x in range(room.x1, room.x2):
                 if self.tiles[x][y].destructible:
                     self.tiles[x][y].blocked = False
                     self.tiles[x][y].block_sight = False
-                else:
-                    print(
-                        "tile {},{} is indestructible : {}".format(
-                            x, y, self.tiles[x][y].destructible
-                        )
-                    )
-
-    # tunnel horizontal, partant d'un point x1 vers un point x2, en restant sur l'horizon y
-    # legere variété pour ne pas avoir un couloir de 1 tuile.   # TODO : rendre configurable, avec %
-    def create_h_tunnel(self, x1, x2, y):
-        rand = 0
-        for x in range(min(x1, x2), max(x1, x2) + 1):
-            rand += randint(-1, 1)
-            if rand > 3:
-                rand = 3
-            elif rand < -3:
-                rand = -3
-            for i in range(min(0, rand), max(0, rand) + 1):
-                if self.tiles[x][y + i].destructible:
-                    self.tiles[x][y + i].blocked = False
-                    self.tiles[x][y + i].block_sight = False
-                else:
-                    print("self tile is indestructible")
-
-    # tunnel vertical, partant de y1 vers y2, en restant sur vertical x.
-    # legere variété pour ne pas avoir un couloir de 1 tuile.   # TODO : rendre configurable, avec %
-    def create_v_tunnel(self, y1, y2, x):
-        rand = 0
-        for y in range(min(y1, y2), max(y1, y2) + 1):
-            rand += randint(-1, 1)
-            if rand > 3:
-                rand = 3
-            elif rand < -3:
-                rand = -3
-            for i in range(min(0, rand), max(0, rand) + 1):
-                if self.tiles[x + i][y].destructible:
-                    self.tiles[x + i][y].blocked = False
-                    self.tiles[x + i][y].block_sight = False
-                else:
-                    print("self tile is indestructible")

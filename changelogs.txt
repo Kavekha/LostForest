@@ -1,3 +1,13 @@
+v0.3.4
+    Landmark et monstres apparaissent de nouveau sur la carte.
+    Items de nouveau placés sur la carte.
+
+v0.3.3
+    Integration du map generator, avec algorithme Brogue-like et Jotaf.
+    KNOWN ISSUE : Plus de spawn, items ou monstres :-]
+    KNOWN ISSUE : Crash de l algorithme Jotaf.
+    KNOWN ISSUE : Creation de corridors dans Jotaf completement cassé.
+
 v0.3.2
     Le fichier de sauvegarde est ecrasé avant chaque save.
     Retrait de l'historique de Commands, non utilisé pour le moment et consommateur.

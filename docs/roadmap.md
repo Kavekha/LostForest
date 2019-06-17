@@ -3,6 +3,7 @@ NEXT:
         [ ] 250     Tile personnalisée pour l'affichage : Char, couleurs selon la tile et non pas au niveau de la map.
         [ ] 250     'Salles' avec evenements-types & variantes.
         [ ] 50      monster_table pas utilisé dans les specs des maps de donjon.
+        [/] 250     Algorithme Brogue-like
 
     SAVES:
         [ ] 10      save & load : config Appli.
@@ -110,6 +111,8 @@ NEXT:
         [ ] 25      Requirements
         [/] 50      Readme
         [/] 100     savegame.bak grossit très vite. Semble faire ramer. Supprimer la save avant de la reecrire.
+        [ ] 250     80x40 map = 3200 tiles. Faire une tuile de chaque etat et se referer à ces tuiles plutot. Defaut : une tuile pour toutes les cellules.
+        [ ] 100     Spawner devrait recevoir un **parametre, et non pas elements par elements.
 
     TO LEARN:
         [ ]     Numpy pour creer des dictionnaires de monstres plus facilement.
@@ -117,6 +120,7 @@ NEXT:
 
     BUGS:
         [/] 250     Probleme de save + crash. Nouvelle partie. Je meurs. Je charge la save : je suis en vie avec 1 pv. Je me deplace. Crash. Perte de la save. Why?
+        [ ] 100     Crash au reload d'une save apres victory screen. Plus de dungeon value.
 
 
     OBJECTIFS:
@@ -125,6 +129,7 @@ NEXT:
 
             [/] Ciblage amelioré, plus d'informations.
             [/] Meilleur systeme de spawn & valeurs d'items / monstres.
+            [/] Nouvel algorithme de creation de map.
             [ ] Differentes couleurs de terrain sur la map, sans effet particulier.
             [ ] Salles-types :
                     Arbre Ancien, Arbre Mort,

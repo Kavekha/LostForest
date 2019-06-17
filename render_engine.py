@@ -205,7 +205,7 @@ class Render:
 
         game.fov_recompute = False
         libtcod.console_flush()
-        self._clear_all(game.dungeon.current_map.entities)
+        self._clear_all(game.dungeon.current_map.get_entities())
 
     def _render_interface(self, game):
         self._render_bar(
@@ -249,7 +249,7 @@ class Render:
 
         names = [
             entity.name
-            for entity in game.dungeon.current_map.entities
+            for entity in game.dungeon.current_map.get_entities()
             if entity.x == x
             and entity.y == y
             and libtcod.map_is_in_fov(
@@ -297,8 +297,9 @@ class Render:
 
     def _render_map(self, game):
         game_map = game.dungeon.current_map
-        for y in range(game_map.height):
-            for x in range(game_map.width):
+        width, height = game_map.get_map_sizes()
+        for y in range(height):
+            for x in range(width):
                 visible = libtcod.map_is_in_fov(game_map.fov_map, x, y)
                 wall = game_map.tiles[x][y].block_sight
                 if visible:
@@ -339,7 +340,7 @@ class Render:
     def _render_entities(self, game):
         game_map = game.dungeon.current_map
         entities_in_render_order = sorted(
-            game_map.entities, key=lambda x: x.render_order.value
+            game_map.get_entities(), key=lambda x: x.render_order.value
         )
         for entity in entities_in_render_order:
             self._draw_entity(entity, game_map)

@@ -32,7 +32,7 @@ class Dungeon:
     def generate_floor(self, map_to_create):
         self.current_map = GameMap(self, map_to_create)
         self.current_map.add_player(self.game.player)
-        self.current_map.generate_map(self.game.player)
+        self.current_map.generate_map()
 
     def next_floor(self):
         new_floor = self.current_floor + 1
