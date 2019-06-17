@@ -1,3 +1,5 @@
+import tcod as libtcod
+
 from data.create_entities import create_fighting_entity
 from app_config import get_game_config
 from utils.fov_functions import recompute_fov, discover_new_tiles
@@ -5,7 +7,7 @@ from handlers.event_handler import EventHandler
 from data.data_loaders import save_game
 from map_objects.dungeon import Dungeon
 from utils.fov_functions import initialize_fov
-import tcod as libtcod
+
 
 # v0.0.19
 from systems.target_selection import Target
@@ -19,19 +21,23 @@ class Game:
     def __init__(self, app):
         self.app = app
 
-        self.events = None
+        # Fov options
         self.fov_algorithm = None
         self.fov_recompute = True
 
-        self.player = None
+        # services
+        self.events = None
         self.dungeon = None
-        self.round = 1
 
+        # menus / hacks
+        self.current_menu = None
+        self.reset_game_windows = False  # Pour contrer les artefacts lors d'un changement d'etage.
+
+        self.player = None
         self.target_mode = False
         self.target = None
 
-        self.current_menu = None
-        self.reset_game_windows = False
+        self.round = 1
 
     def initialize(self):
         # recuperation de la config.
@@ -41,8 +47,7 @@ class Game:
 
         # gestion du fov.
         self.fov_algorithm = game_config["fov_algorithm"]
-        self.fov_recompute = True
-        self.reset_game_windows = False  # Pour contrer les artefacts lors d'un changement d'etage.
+
         # Creation du joueur.
         self.player = self.create_player()
 
@@ -52,7 +57,6 @@ class Game:
 
         self.full_recompute_fov()
 
-    # v0.0.19
     def close_menu(self):
         self.current_menu = None
 

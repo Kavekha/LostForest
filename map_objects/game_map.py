@@ -1,18 +1,15 @@
-import math
-from random import randint
+import tcod as libtcod
 
-from map_objects.tile import Tile
-from map_objects.rectangle import Rect
+import math
 
 from data.map_specs import get_map_config
-
 from utils.fov_functions import initialize_fov
 from spawners import Spawner
 from components.landmark import Landmark
 from entities import Entity
-import tcod as libtcod
 from render_engine import RenderOrder
-from map_generators.jotaf_method import MapGeneratorJotaf
+from map_generators.make_map import make_map
+from map_generators.map_gen_consts import *
 
 
 '''
@@ -66,19 +63,17 @@ class GameMap:
     def generate_map(self):
         # get config
         map_config = get_map_config(self.map_type)
-        self.map_width, self.map_height = map_config.get('map_width'), map_config.get('map_height')
+
+        self.map_width = map_config.get('map_width', MAP_WIDTH)
+        self.map_height = map_config.get('map_height', MAP_HEIGHT)
+
         self.colors = map_config.get('colors')
-        # this is the MapGen, map_config is the **params. Return Rooms & corridors to create.
-        map_blueprint = self.get_map_blueprint(map_config)
 
-        # initialize map
-        self.tiles = self._initialize_tiles(self.map_width, self.map_height)
-        # Tiles indestructibles autour.
-        self._make_indestructible_barriers(self.map_width, self.map_height)
-        self.fov_map = None
+        map_elements = make_map(map_config)
+        self.tiles = map_elements.get('tiles', False)
+        self._rooms = map_elements.get('rooms', False)
+        self._corridors = map_elements.get('corridors')
 
-        # make map
-        self._make_map(map_blueprint)
         self._player.x, self._player.y = self._rooms[0].center
         self.fov_map = initialize_fov(self)
 
@@ -87,34 +82,6 @@ class GameMap:
                                map_config.get('min_items', [[0, 1]]), map_config.get('max_item_room', [[0, 1]]))
         self.place_landmark()
         self.spawner.spawn_entities()
-
-    def _make_map(self, map_blueprint):
-        rooms_to_create = map_blueprint.get('rooms')
-        corridors_to_create = map_blueprint.get('corridors')
-
-        for room in rooms_to_create:
-            self.add_room(room)
-            self.create_room(room)
-        for corridor in corridors_to_create:
-            self.add_corridor(corridor)
-            self.create_room(corridor)
-
-    def get_map_blueprint(self, map_config):
-        map_gen = map_config.get('map_algorithm', MapGeneratorJotaf)
-        map_gen = map_gen(**map_config)
-        map_gen.run()
-        results = map_gen.get_results()
-        return results
-
-    # MAP CREATION
-    def _initialize_tiles(self, map_width, map_height):
-        tiles = [[Tile(True) for y in range(map_height)] for x in range(map_width)]
-
-        for x in range(map_width):
-            for y in range(map_height):
-                pass
-
-        return tiles
 
     # ADD & GET.
     def get_map_sizes(self):
@@ -162,15 +129,6 @@ class GameMap:
 
     def remove_fighter(self, fighter):
         print('remove fighter from map - obsolete')
-
-    def _make_indestructible_barriers(self, map_width, map_height):
-        for y in range(0, map_height):
-            self.tiles[0][y].destructible = False
-            self.tiles[map_width - 1][y].destructible = False
-
-        for x in range(0, map_width):
-            self.tiles[x][0].destructible = False
-            self.tiles[x][map_height - 1].destructible = False
 
     def is_blocked(self, x, y):
         if self.tiles[x][y].blocked:
@@ -220,11 +178,3 @@ class GameMap:
         dy = dy1 - dy2
 
         return math.sqrt(dx ** 2 + dy ** 2)
-
-    def create_room(self, room):
-        # go through the tiles in the rectangle and make them passable
-        for y in range(room.y1, room.y2):
-            for x in range(room.x1, room.x2):
-                if self.tiles[x][y].destructible:
-                    self.tiles[x][y].blocked = False
-                    self.tiles[x][y].block_sight = False

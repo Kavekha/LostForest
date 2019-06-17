@@ -1,3 +1,7 @@
+v0.3.5
+    refacto: suppression de relicats de menus.
+    refacto: Contenu de la map créé par make_map(). GameMap gère desormais la map et uniquement la map.
+
 v0.3.4
     Landmark et monstres apparaissent de nouveau sur la carte.
     Items de nouveau placés sur la carte.

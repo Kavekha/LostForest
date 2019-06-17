@@ -1,23 +1,7 @@
 from random import randint
 
 from map_objects.rectangle import Rect
-
-
-MAP_WIDTH = 80
-MAP_HEIGHT = 60
-
-ROOM_MIN_S_W = 7
-ROOM_MAX_S_W = 11
-ROOM_MIN_S_H = 3
-ROOM_MAX_S_H = 5
-
-MAX_ROOMS = 30
-MAX_PLACEMENT_ITERATIONS = 20
-MAX_ITERATIONS = 600
-
-CORRIDOR_CHANCES = 0
-ROOM_IF_NO_CORRIDOR = 0
-ANY_ROOM_MAY_BE_PREVIOUS = 0
+from map_generators.map_gen_consts import *
 
 
 class MapGenBase:
