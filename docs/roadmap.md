@@ -113,6 +113,8 @@ NEXT:
         [/] 100     savegame.bak grossit très vite. Semble faire ramer. Supprimer la save avant de la reecrire.
         [ ] 250     80x40 map = 3200 tiles. Faire une tuile de chaque etat et se referer à ces tuiles plutot. Defaut : une tuile pour toutes les cellules.
         [ ] 100     Spawner devrait recevoir un **parametre, et non pas elements par elements.
+        [/] 250     Creation de la map a part, Game Map ne gère que la map pendant le jeu, pas sa creation.
+        [ ] 50      Room devrait etre un vrai objet, et Rect juste un outil de creation.
 
     TO LEARN:
         [ ]     Numpy pour creer des dictionnaires de monstres plus facilement.
@@ -130,24 +132,27 @@ NEXT:
             [/] Ciblage amelioré, plus d'informations.
             [/] Meilleur systeme de spawn & valeurs d'items / monstres.
             [/] Nouvel algorithme de creation de map.
-            [ ] Differentes couleurs de terrain sur la map, sans effet particulier.
-            [ ] Salles-types :
-                    Arbre Ancien, Arbre Mort,
-                    Jardin naturel, jardin abandonné, Foret vivante,
-                    Campement voyageur, ruines,
-                    Preuves de souffrance.
-            [ ] Items, mobs, etc.
+            [ ] Clairières speciales & machines pour les peupler.
+            [ ] Proto-quete.
+            [ ] Items, mobs, etc. Meilleure data representation.
+            [ ] Monstres & items uniques.
 
 
         # RELEASE 5 :
-            Lore, souffrances de la Foret, evenements associés.
-            Textes d'ambiance, animations basiques.
-            Vocabulaire : Stairs devient Borne Magique, disparition du concept de floor, etc.
+            [ ] Refacto : Render recoit ce qu'il doit afficher.
+            [ ] Evenements liés à la Foret, progression de la Souffrance.
+            [ ] Textes d'ambiance, paroles de mobs, descriptions variées.
+            [ ] Quelques décors ou autres elements pour diffuser le Lore.
+            [ ] Meilleure flow de la progression du jeu (Maps plus grandes, branching, etc)
+            [ ] Vocabulaire : Stairs devient Borne Magique, disparition du concept de floor, etc.
+            [ ] Images liées à l'univers du jeu.
+
 
         # RELEASE 6
-            Score, multi-saves, nom du personnage.
-            Interface, tutoriel ou meilleures indications.
-            Equilibrage basique.
-            Localisation
-            Py2game.
-            Refactos diverses.
+            [ ] Score
+            [ ] multi-saves, nom du personnage.
+            [ ] Interface, tutoriel ou meilleures indications.
+            [ ] Equilibrage basique, enrichissement systeme de combat.
+            [ ] Localisation
+            [ ] Refactos diverses.
+            [ ] Py2game ou Nuitka (?) : exe pour windoz.

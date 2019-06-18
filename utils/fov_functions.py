@@ -27,4 +27,5 @@ def discover_new_tiles(game_map):
         for x in range(width):
             visible = libtcod.map_is_in_fov(game_map.fov_map, x, y)
             if visible:
-                game_map.tiles[x][y].explored = True
+                game_map.tiles[x][y].discovered(x, y)
+                # game_map.tiles[x][y].explored = True

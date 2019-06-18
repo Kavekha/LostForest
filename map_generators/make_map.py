@@ -1,7 +1,7 @@
 from map_generators.jotaf_method import MapGeneratorJotaf
 from map_generators.map_gen_consts import *
 
-from map_objects.tile import Tile
+from map_objects.tile import Terrain
 
 
 def make_map(map_config):
@@ -42,8 +42,7 @@ def create_room(tiles, room):
     for y in range(room.y1, room.y2):
         for x in range(room.x1, room.x2):
             if is_destructible(tiles, x, y):
-                tiles[x][y].blocked = False
-                tiles[x][y].block_sight = False
+                tiles[x][y] = Terrain.GROUND
 
 
 def is_destructible(tiles, x, y):
@@ -62,14 +61,15 @@ def get_map_blueprint(map_config):
 
 def make_indestructible_barriers(tiles, map_width, map_height):
         for y in range(0, map_height):
-            tiles[0][y].destructible = False
-            tiles[map_width - 1][y].destructible = False
+            tiles[0][y] = Terrain.INDESTRUCTIBLE_NATURAL_WALL
+            tiles[map_width - 1][y] = Terrain.INDESTRUCTIBLE_NATURAL_WALL
 
         for x in range(0, map_width):
-            tiles[x][0].destructible = False
-            tiles[x][map_height - 1].destructible = False
+            tiles[x][0] = Terrain.INDESTRUCTIBLE_NATURAL_WALL
+            tiles[x][map_height - 1] = Terrain.INDESTRUCTIBLE_NATURAL_WALL
 
 
 def initialize_tiles(map_width, map_height):
-        tiles = [[Tile(True) for y in range(map_height)] for x in range(map_width)]
+        tiles = [[Terrain.NATURAL_WALL for y in range(map_height)] for x in range(map_width)]
         return tiles
+

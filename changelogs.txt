@@ -1,3 +1,6 @@
+v0.3.6
+    Optimisation map : flyweight : une tuile par terrain, utilisé en reference dans chaque tuile.
+
 v0.3.5
     refacto: suppression de relicats de menus.
     refacto: Contenu de la map créé par make_map(). GameMap gère desormais la map et uniquement la map.

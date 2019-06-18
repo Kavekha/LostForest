@@ -1,7 +1,10 @@
 import tcod as libtcod
-from states.app_states import AppStates
+
 from enum import Enum
+
+from states.app_states import AppStates
 from menus.menu import MenuType
+from map_objects.tile import Terrain
 
 
 class RenderOrder(Enum):
@@ -301,9 +304,9 @@ class Render:
         for y in range(height):
             for x in range(width):
                 visible = libtcod.map_is_in_fov(game_map.fov_map, x, y)
-                wall = game_map.tiles[x][y].block_sight
+                current_tile = game_map.tiles[x][y]
                 if visible:
-                    if wall:
+                    if current_tile in (Terrain.NATURAL_WALL, Terrain.INDESTRUCTIBLE_NATURAL_WALL):
                         libtcod.console_set_char_background(
                             self.game_window,
                             x,
@@ -311,7 +314,7 @@ class Render:
                             game_map.colors.get("light_wall"),
                             libtcod.BKGND_SET,
                         )
-                    else:
+                    elif current_tile == Terrain.GROUND:
                         libtcod.console_set_char_background(
                             self.game_window,
                             x,
@@ -319,8 +322,8 @@ class Render:
                             game_map.colors.get("light_ground"),
                             libtcod.BKGND_SET,
                         )
-                elif game_map.tiles[x][y].explored:
-                    if wall:
+                elif current_tile.has_been_explored(x, y):
+                    if current_tile in (Terrain.NATURAL_WALL, Terrain.INDESTRUCTIBLE_NATURAL_WALL):
                         libtcod.console_set_char_background(
                             self.game_window,
                             x,
@@ -328,7 +331,7 @@ class Render:
                             game_map.colors.get("dark_wall"),
                             libtcod.BKGND_SET,
                         )
-                    else:
+                    elif current_tile == Terrain.GROUND:
                         libtcod.console_set_char_background(
                             self.game_window,
                             x,
