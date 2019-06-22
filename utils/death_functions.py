@@ -1,7 +1,7 @@
 import tcod as libtcod
 
 from render_engine import RenderOrder
-from config.constants import ConstColors
+from config import color_config
 
 
 def become_corpse(entity, npc_killed=True):
@@ -17,14 +17,14 @@ def become_corpse(entity, npc_killed=True):
 
 def kill_player(player, attacker, events):
     become_corpse(player, npc_killed=False)
-    events.add_event({"message": "You died!", "color": ConstColors.YOU_ARE_DEAD})
+    events.add_event({"message": "You died!", "color": color_config.YOU_ARE_DEAD})
 
 
 def kill_monster(monster, attacker, events):
     events.add_event(
         {
             "message": "{0} is dead!".format(monster.name.capitalize()),
-            "color": ConstColors.HOSTILE_KILLED,
+            "color": color_config.HOSTILE_KILLED,
         }
     )
     become_corpse(monster)

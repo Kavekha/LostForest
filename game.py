@@ -1,7 +1,7 @@
 import tcod as libtcod
 
-from data.create_entities import create_fighting_entity
-from app_config import get_game_config
+from config import app_config
+from create_entities import create_fighting_entity
 from utils.fov_functions import recompute_fov, discover_new_tiles
 from handlers.event_handler import EventHandler
 from data.data_loaders import save_game
@@ -9,7 +9,6 @@ from map_objects.dungeon import Dungeon
 from utils.fov_functions import initialize_fov
 
 
-# v0.0.19
 from systems.target_selection import Target
 
 
@@ -41,12 +40,12 @@ class Game:
 
     def initialize(self):
         # recuperation de la config.
-        game_config = get_game_config()
+        # game_config = get_game_config()
 
         self.events = EventHandler(self)
 
         # gestion du fov.
-        self.fov_algorithm = game_config["fov_algorithm"]
+        self.fov_algorithm = app_config.FOV_ALGORITHM
 
         # Creation du joueur.
         self.player = self.create_player()

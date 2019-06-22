@@ -1,5 +1,5 @@
 import tcod as libtcod
-from effect_functions import heal, acide
+from utils.effect_functions import heal, acide
 from components.equippable import EquipmentSlot
 from systems.target_selection import TargetType
 

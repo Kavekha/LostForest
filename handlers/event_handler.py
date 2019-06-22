@@ -1,4 +1,4 @@
-from config.constants import ConstColors
+from config import color_config
 from game_messages import MessageLog
 from menus.victory_menu import VictoryMenu
 from menus.level_menu import LevelUpMenu
@@ -28,7 +28,7 @@ class EventHandler:
             quit_target_mode = event.get("quit_target_mode")  # True
 
             if not color:
-                color = ConstColors.NEUTRAL_INFO_COLOR
+                color = color_config.NEUTRAL_INFO_COLOR
 
             if message:
                 self.message_log.add_message(message, color)

@@ -1,6 +1,6 @@
 import tcod as libtcod
 
-import app_config
+from config import app_config
 from render_engine import Render
 from states.app_states import AppStates
 from systems.commands import CommandController

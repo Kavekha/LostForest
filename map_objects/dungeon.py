@@ -1,6 +1,7 @@
 from data.dungeon_specs import get_dungeon_config
 from map_objects.game_map import GameMap
-from config.constants import ConstColors, ConstTexts
+from config.constants import ConstTexts
+from config import color_config
 
 
 class Dungeon:
@@ -47,14 +48,14 @@ class Dungeon:
             self.game.events.add_event(
                 {
                     "message": ConstTexts.REST_AFTER_LANDMARK,
-                    "color": ConstColors.REST_AFTER_LANDMARK_COLOR,
+                    "color": color_config.REST_AFTER_LANDMARK_COLOR,
                 }
             )
         else:
             self.game.events.add_event(
                 {
                     "message": ConstTexts.VICTORY_LAST_FLOOR_BASIC,
-                    "color": ConstColors.POSITIVE_INFO_COLOR,
+                    "color": color_config.POSITIVE_INFO_COLOR,
                 }
             )
             self.game.events.add_event({"victory": True})
