@@ -59,6 +59,7 @@ class GameMap:
         self._fighters = []
         self._rooms = []
         self._corridors = []
+        self._terrain = {}
 
     def generate_map(self):
         # get config
@@ -73,6 +74,7 @@ class GameMap:
         self.tiles = map_elements.get('tiles', False)
         self._rooms = map_elements.get('rooms', False)
         self._corridors = map_elements.get('corridors')
+        self._terrain = map_elements.get('terrain')
 
         self._player.x, self._player.y = self._rooms[0].center
         self.fov_map = initialize_fov(self)
@@ -86,6 +88,9 @@ class GameMap:
     # ADD & GET.
     def get_map_sizes(self):
         return self.map_width, self.map_height
+
+    def get_terrain(self):
+        return self._terrain
 
     def add_player(self, player):
         self._entities.append(player)
@@ -131,6 +136,7 @@ class GameMap:
         print('remove fighter from map - obsolete')
 
     def is_blocked(self, x, y):
+        print(f'is blocked : tile is {self.tiles[x][y].name}')
         if self.tiles[x][y].blocked:
             return True
         return False
@@ -140,15 +146,24 @@ class GameMap:
             return False
         return True
 
+    def get_tile(self, x, y):
+        return self.tiles[x][y]
+
+    def tile_explored(self, x, y):
+        current_tile = self.get_tile(x, y)
+        if not current_tile.explored:
+            self.tiles[x][y] = self.get_terrain().get(current_tile.name + '_explored')
+
     def place_landmark(self):
         player_room = self.get_rooms()[0]
+
         farest_room = None
         farest_distance = 0
+
         for room in self.get_rooms():
             if room != player_room:
                 distance = self.distance_room_to_room(player_room, room)
                 if distance >= farest_distance:
-                    print("farest distance : {} - room {}".format(distance, room))
                     farest_distance = distance
                     farest_room = room
             else:

@@ -1,3 +1,6 @@
+v0.3.7
+    FIX : flyweight correction & refacto. Fonctionne correctement maintenant.
+
 v0.3.6
     Optimisation map : flyweight : une tuile par terrain, utilisé en reference dans chaque tuile.
 
