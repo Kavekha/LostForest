@@ -144,18 +144,22 @@ def create_entity_item(game, item_defname, x, y, dict_attributes):
     if equippable:
         equippable_slot = equippable.get("slot", EquipmentSlot.NONE)
         equippable_weapon_dmg = equippable.get("weapon_damage", (0, 2))
-        equippable_dmg_bonus = equippable.get("damage_bonus", 0)
+        equippable_dmg_bonus = equippable.get("physical_power_bonus", 0)
         equippable_might_bonus = equippable.get("might_bonus", 0)
         equippable_hp_bonus = equippable.get("hp_bonus", 0)
         equippable_vitality_bonus = equippable.get("vitality_bonus", 0)
+        equippable_dexterity_bonus = equippable.get('dexterity_bonus', 0)
+        equippable_armor_bonus = equippable.get('armor_bonus', 0)
 
         equippable_component = Equippable(
             equippable_slot,
             weapon_damage=equippable_weapon_dmg,
-            damage_bonus=equippable_dmg_bonus,
+            physical_power_bonus=equippable_dmg_bonus,
             might_bonus=equippable_might_bonus,
             hp_bonus=equippable_hp_bonus,
             vitality_bonus=equippable_vitality_bonus,
+            dexterity_bonus=equippable_dexterity_bonus,
+            armor_bonus=equippable_armor_bonus
         )
     else:
         equippable_component = None

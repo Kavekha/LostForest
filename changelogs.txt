@@ -1,3 +1,12 @@
+v0.4.1
+    Ajout Dexterité, Armor, Puissance physique, resistance physique.
+    Chances de toucher.
+    Nouvelles formules de degats et de reduction des dommages subits.
+    TODO: Maj de la fenetre de perso.
+
+
+PRE-RELEASE 0.4 : Map algorithm and Localization.
+
 v0.3.11
     Language dans Main Menu.
     Traductions supplementaires pour combat, morts et menus.
@@ -45,7 +54,7 @@ v0.3.1
     Meilleur equilibrage du systeme de spawning, retrait de la limite par room.
 
 
-PRE-RELEASE 0.3.0
+PRE-RELEASE 0.3.0 : Equipement, menus et ciblage.
 
 v0.0.22
     Chaque Floor contient desormais un niveau de Danger et un niveau de Valeur.

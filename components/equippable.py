@@ -38,14 +38,18 @@ class Equippable:
         self,
         slot,
         weapon_damage=(0, 2),
-        damage_bonus=0,
+        physical_power_bonus=0,
         might_bonus=0,
         hp_bonus=0,
         vitality_bonus=0,
+        dexterity_bonus=0,
+        armor_bonus=0
     ):
         self.slot = slot
         self.weapon_damage = weapon_damage
-        self.damage_bonus = damage_bonus
+        self.physical_power_bonus = physical_power_bonus
         self.might_bonus = might_bonus
         self.hp_bonus = hp_bonus
         self.vitality_bonus = vitality_bonus
+        self.dexterity_bonus = dexterity_bonus
+        self.armor_bonus = armor_bonus

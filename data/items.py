@@ -38,7 +38,7 @@ def get_item_attributes(item):
             "equippable": {
                 "slot": EquipmentSlot.MAIN_HAND,
                 "weapon_damage": (1, 4),
-                "damage_bonus": 1,
+                "physical_power_bonus": 1,
             },
             "value": 60,
         },
