@@ -58,6 +58,12 @@ class App:
             if self.quit_app:
                 break
 
+    def open_menu(self, menu):
+        self.current_menu = None
+        self.render_engine.render_app(self, None)
+        self.current_menu = menu
+
+
     def exit_window(self):
         # Menus in game
         if self.app_states == AppStates.GAME:

@@ -46,6 +46,17 @@ class Texts:
             raise NotImplementedError
 
     @staticmethod
+    def get_available_languages():
+        return Texts.available_languages
+
+    @staticmethod
+    def set_language(language):
+        if language in list(Texts.get_available_languages()):
+            Texts.chosen_language = language
+        else:
+            print('Language not available')
+
+    @staticmethod
     def get_text(key):
         try:
             return Texts.trad_dict.get(key).get(Texts.chosen_language)

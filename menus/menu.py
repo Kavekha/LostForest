@@ -25,7 +25,6 @@ class Menu:
         if self.display_options:
             return self.display_options
         else:
-            # TODO: attention, si pas du texte, ca crash.
             return self._options
 
     def receive_option_choice(self, choice):

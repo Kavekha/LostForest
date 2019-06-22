@@ -2,6 +2,7 @@ from random import randint
 
 from config import color_config
 from utils.death_functions import kill_monster
+from systems.localization import Texts
 
 
 """
@@ -85,7 +86,7 @@ class Fighter:
         if modified_damage <= 0:
             events.add_event(
                 {
-                    "message": "{0} attacks {1} but does no damage.".format(
+                    "message": Texts.get_text('CHAR_ATTACKS_OTHER_NO_DAMAGE').format(
                         self.owner.name.capitalize(), target.name
                     ),
                     "color": color_config.NO_DAMAGE_ATTACK,
@@ -94,7 +95,7 @@ class Fighter:
         else:
             events.add_event(
                 {
-                    "message": "{0} attacks {1} for {2} hit points.".format(
+                    "message": Texts.get_text('CHAR_ATTACKS_OTHER_WITH_DAMAGE').format(
                         self.owner.name.capitalize(), target.name, str(modified_damage)
                     ),
                     "color": color_config.DAMAGING_ATTACK,

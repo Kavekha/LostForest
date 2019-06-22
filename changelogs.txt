@@ -1,3 +1,8 @@
+v0.3.11
+    Language dans Main Menu.
+    Traductions supplementaires pour combat, morts et menus.
+    Known issue: On garde affiché les options du Main menu derriere, "quitter" apparait.
+
 v0.3.10
     Premiere iteration de trad.
 

@@ -41,5 +41,20 @@ TARGET_TYPE_INVALID;Ce n est pas une cible valide.;Not a valid target.
 CHAR_DRINKS_SOMETHING;{} boit {}.;{} drinks a {}.
 CHAR_THROW_SOMETHING_AT_SOMEONE;{} lance {} sur {}!;{} throw a {} at {}
 
+MAIN_MENU_NEW_GAME;Nouvelle partie;New game
+MAIN_MENU_LOAD_GAME;Reprendre une partie;Load game
+MAIN_MENU_LANGUAGES;Langages;Languages
+MAIN_MENU_QUIT;Quitter;Quit
+
+MENU_CHOOSE_LANGUAGE;Choisissez votre langue;Choose your language
+
+CHAR_ATTACKS_OTHER_NO_DAMAGE;{0} attaque {1} mais ne fait aucun dommage.;{0} attacks {1} but does no damage.
+CHAR_ATTACKS_OTHER_WITH_DAMAGE;{0} attaque {1} et inflige {2} dommages!;{0} attacks {1} for {2} hit points.
+
+REMAINS_OF_SOMEONE;Restes de ;Remains of 
+YOU_DIED;Vous etes mort.; You died.
+CHAR_IS_DEAD;{0} meurt!;{0} is dead!
+
+
 
 
