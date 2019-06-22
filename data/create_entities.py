@@ -11,7 +11,7 @@ from entities import Entity
 from render_engine import RenderOrder
 from components.ai import BasicMonster, Brainless
 from components.level import Level
-from config.constants import ConstLevel
+from config import game_config
 
 
 def get_brain(brain):
@@ -118,11 +118,11 @@ def calculate_xp_value(fighter):
         return 0
 
     min_dmg, max_dmg = fighter.base_damage
-    damage_value = min_dmg + max_dmg * ConstLevel.BASE_DAMAGE_XP_VALUE
-    might_value = fighter.might * ConstLevel.MIGHT_XP_VALUE
-    vitality_value = fighter.vitality * ConstLevel.VITALITY_XP_VALUE
+    damage_value = min_dmg + max_dmg * game_config.BASE_DAMAGE_XP_VALUE
+    might_value = fighter.might * game_config.MIGHT_XP_VALUE
+    vitality_value = fighter.vitality * game_config.VITALITY_XP_VALUE
 
-    hp_value = fighter.max_hp * ConstLevel.HP_XP_VALUE
+    hp_value = fighter.max_hp * game_config.HP_XP_VALUE
 
     total_xp_value = might_value * vitality_value * hp_value * damage_value
     total_xp_value = int(total_xp_value)

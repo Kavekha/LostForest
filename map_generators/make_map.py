@@ -1,5 +1,5 @@
 from map_generators.jotaf_method import MapGeneratorJotaf
-from map_generators.map_gen_consts import *
+from config.map_gen_config import *
 
 from map_objects.tile import Tile
 

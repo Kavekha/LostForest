@@ -1,27 +1,36 @@
 from random import randint
 
 from map_objects.rectangle import Rect
-from map_generators.map_gen_consts import *
+from config import map_gen_config
 
 
 class MapGenBase:
     def __init__(self, **map_params):
-        print('MAP GEN BASE init!')
-        self.map_width = map_params.get('map_width', MAP_WIDTH)
-        self.map_height = map_params.get('map_height', MAP_HEIGHT)
+        self.map_width = map_params.get('map_width', map_gen_config.MAP_WIDTH)
+        self.map_height = map_params.get('map_height', map_gen_config.MAP_HEIGHT)
 
-        self.room_min_s_w = map_params.get('room_min_s_w', map_params.get('room_min_size', ROOM_MIN_S_W))
-        self.room_max_s_w = map_params.get('room_max_s_w', map_params.get('room_max_size', ROOM_MAX_S_W))
-        self.room_min_s_h = map_params.get('room_min_s_h', map_params.get('room_min_size', ROOM_MIN_S_H))
-        self.room_max_s_h = map_params.get('room_max_s_h', map_params.get('room_max_size', ROOM_MAX_S_H))
+        self.room_min_s_w = map_params.get('room_min_s_w',
+                                           map_params.get('room_min_size', map_gen_config.ROOM_MIN_S_W))
+        self.room_max_s_w = map_params.get('room_max_s_w',
+                                           map_params.get('room_max_size', map_gen_config.ROOM_MAX_S_W))
+        self.room_min_s_h = map_params.get('room_min_s_h',
+                                           map_params.get('room_min_size', map_gen_config.ROOM_MIN_S_H))
+        self.room_max_s_h = map_params.get('room_max_s_h',
+                                           map_params.get('room_max_size', map_gen_config.ROOM_MAX_S_H))
 
-        self.max_rooms = map_params.get('max_rooms', MAX_ROOMS)
-        self.max_placement_iterations = map_params.get('max_placement_iterations', MAX_PLACEMENT_ITERATIONS)
-        self.max_iterations = map_params.get('max_iterations', MAX_ITERATIONS)
+        self.max_rooms = map_params.get('max_rooms',
+                                        map_gen_config.MAX_ROOMS)
+        self.max_placement_iterations = map_params.get('max_placement_iterations',
+                                                       map_gen_config.MAX_PLACEMENT_ITERATIONS)
+        self.max_iterations = map_params.get('max_iterations',
+                                             map_gen_config.MAX_ITERATIONS)
 
-        self.corridor_chances = map_params.get('corridor_chances', CORRIDOR_CHANCES)
-        self.room_if_no_corridor = map_params.get('room_if_no_corridor', ROOM_IF_NO_CORRIDOR)
-        self.any_room_may_be_previous = map_params.get('any_room_may_be_previous', ANY_ROOM_MAY_BE_PREVIOUS)
+        self.corridor_chances = map_params.get('corridor_chances',
+                                               map_gen_config.CORRIDOR_CHANCES)
+        self.room_if_no_corridor = map_params.get('room_if_no_corridor',
+                                                  map_gen_config.ROOM_IF_NO_CORRIDOR)
+        self.any_room_may_be_previous = map_params.get('any_room_may_be_previous',
+                                                       map_gen_config.ANY_ROOM_MAY_BE_PREVIOUS)
 
         self.rooms = []
         self.corridors = []

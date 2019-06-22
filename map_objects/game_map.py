@@ -9,7 +9,7 @@ from components.landmark import Landmark
 from entities import Entity
 from render_engine import RenderOrder
 from map_generators.make_map import make_map
-from map_generators.map_gen_consts import *
+from config import map_gen_config
 
 
 '''
@@ -65,8 +65,8 @@ class GameMap:
         # get config
         map_config = get_map_config(self.map_type)
 
-        self.map_width = map_config.get('map_width', MAP_WIDTH)
-        self.map_height = map_config.get('map_height', MAP_HEIGHT)
+        self.map_width = map_config.get('map_width', map_gen_config.MAP_WIDTH)
+        self.map_height = map_config.get('map_height', map_gen_config.MAP_HEIGHT)
 
         self.colors = map_config.get('colors')
 
