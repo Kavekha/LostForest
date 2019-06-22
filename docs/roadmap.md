@@ -145,23 +145,28 @@ NEXT:
 
     OBJECTIFS:
 
-        # RELEASE 4 : Apparence de map, salles, items & monstres uniques.!
+        # RELEASE 0.4 : Localization & Creation de Map. (+1800)
 
             [/] Ciblage amelioré, plus d'informations.
             [/] Meilleur systeme de spawn & valeurs d'items / monstres.
             [/] Nouvel algorithme de creation de map.
             [/] Refacto Constants
             [/] Localization, no menu.
+            [/] Choix de langue dans le menu.
+
+        # RELEASE 0.5 : Systeme de combat & Ergos
+            [ ] enrichissement systeme de combat.
             [ ] Egos items, base.
             [ ] Meilleure data representation pour items & mobs.
             [ ] Monstres & items uniques : gestion.
 
-
-        # RELEASE 5
+        # RELEASE 0.6 : Apparence.
             [ ] Images du jeu.
             [ ] Score
             [ ] multi-saves, nom du personnage.
             [ ] Interface, tutoriel ou meilleures indications?
-            [ ] Equilibrage basique, enrichissement systeme de combat.
-            [ ] Refactos diverses.
             [ ] Py2game ou Nuitka (?) : exe pour windoz.
+
+        # RELEASE 0.7 :
+            [ ] Bearlib!
+
