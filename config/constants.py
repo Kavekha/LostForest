@@ -1,6 +1,8 @@
+from systems.localization import Texts
+
 class ConstTexts:
     # travel
-    NO_LANDMARK_THERE = "There is no path out of here."
+    NO_LANDMARK_THERE = Texts.get_text('NO_LANDMARK_THERE') # "There is no path out of here."
     REST_AFTER_LANDMARK = "You take a moment to rest, and recover your strength."
     # health
     FULL_HEAL_ALREADY = "You are already at full health"
