@@ -1,6 +1,7 @@
-from config.constants import ConstColors
-from utils.death_functions import kill_monster
 from random import randint
+
+from config import color_config
+from utils.death_functions import kill_monster
 
 
 """
@@ -67,7 +68,6 @@ class Fighter:
 
     def attack(self, target, events):
         # target is entity, not entity.fighter # TODO: Choisir si on envoie du entity.fighter ou entity
-        print("self damage is : ", self.damage)
         min_dam, max_dam = self.damage
         base_damage = randint(min_dam, max_dam)
         might_bonus = randint(0, self.might)
@@ -88,7 +88,7 @@ class Fighter:
                     "message": "{0} attacks {1} but does no damage.".format(
                         self.owner.name.capitalize(), target.name
                     ),
-                    "color": ConstColors.NO_DAMAGE_ATTACK,
+                    "color": color_config.NO_DAMAGE_ATTACK,
                 }
             )
         else:
@@ -97,7 +97,7 @@ class Fighter:
                     "message": "{0} attacks {1} for {2} hit points.".format(
                         self.owner.name.capitalize(), target.name, str(modified_damage)
                     ),
-                    "color": ConstColors.DAMAGING_ATTACK,
+                    "color": color_config.DAMAGING_ATTACK,
                 }
             )
 

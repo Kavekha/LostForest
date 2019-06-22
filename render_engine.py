@@ -1,6 +1,8 @@
 import tcod as libtcod
-from states.app_states import AppStates
+
 from enum import Enum
+
+from states.app_states import AppStates
 from menus.menu import MenuType
 
 
@@ -297,13 +299,18 @@ class Render:
 
     def _render_map(self, game):
         game_map = game.dungeon.current_map
+        terrain = game_map.get_terrain()
         width, height = game_map.get_map_sizes()
         for y in range(height):
             for x in range(width):
                 visible = libtcod.map_is_in_fov(game_map.fov_map, x, y)
-                wall = game_map.tiles[x][y].block_sight
+                current_tile = game_map.tiles[x][y]
                 if visible:
-                    if wall:
+                    if current_tile in (terrain.get('wall'),
+                                        terrain.get('wall_explored'),
+                                        terrain.get('indestructible_wall'),
+                                        terrain.get('indestructible_wall_explored')
+                                        ):
                         libtcod.console_set_char_background(
                             self.game_window,
                             x,
@@ -311,7 +318,9 @@ class Render:
                             game_map.colors.get("light_wall"),
                             libtcod.BKGND_SET,
                         )
-                    else:
+                    elif current_tile in (terrain.get('ground'),
+                                          terrain.get('ground_explored')
+                                          ):
                         libtcod.console_set_char_background(
                             self.game_window,
                             x,
@@ -319,8 +328,12 @@ class Render:
                             game_map.colors.get("light_ground"),
                             libtcod.BKGND_SET,
                         )
-                elif game_map.tiles[x][y].explored:
-                    if wall:
+                elif current_tile.explored:
+                    if current_tile in (terrain.get('wall'),
+                                        terrain.get('wall_explored'),
+                                        terrain.get('indestructible_wall'),
+                                        terrain.get('indestructible_wall_explored')
+                                        ):
                         libtcod.console_set_char_background(
                             self.game_window,
                             x,
@@ -328,7 +341,9 @@ class Render:
                             game_map.colors.get("dark_wall"),
                             libtcod.BKGND_SET,
                         )
-                    else:
+                    elif current_tile in (terrain.get('ground'),
+                                          terrain.get('ground_explored')
+                                          ):
                         libtcod.console_set_char_background(
                             self.game_window,
                             x,
@@ -346,13 +361,10 @@ class Render:
             self._draw_entity(entity, game_map)
 
     def _draw_entity(self, entity, game_map):
-        if libtcod.map_is_in_fov(game_map.fov_map, entity.x, entity.y) or (
-            entity.landmark and game_map.tiles[entity.x][entity.y].explored
-        ):
+        if libtcod.map_is_in_fov(game_map.fov_map, entity.x, entity.y) or \
+                (entity.landmark and game_map.tiles[entity.x][entity.y].explored):
             libtcod.console_set_default_foreground(self.game_window, entity.color)
-            libtcod.console_put_char(
-                self.game_window, entity.x, entity.y, entity.char, libtcod.BKGND_NONE
-            )
+            libtcod.console_put_char(self.game_window, entity.x, entity.y, entity.char, libtcod.BKGND_NONE)
 
     def _clear_all(self, entities):
         for entity in entities:

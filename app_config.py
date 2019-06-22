@@ -1,4 +1,4 @@
-VERSION = "0.3.1"
+VERSION = "0.3.6"
 SCREEN_WIDTH = 80
 SCREEN_HEIGHT = 50
 BAR_WIDTH = 20
@@ -7,7 +7,7 @@ PANEL_HEIGHT = 7
 
 def get_app_config():
     configuration = {
-        "version": "0.3.1",
+        "version": "0.3.6",
         "screen_width": 80,
         "screen_height": 50,
         "bar_width": 20,

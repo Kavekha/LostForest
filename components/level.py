@@ -1,4 +1,5 @@
-from config.constants import ConstLevel, ConstTexts, ConstColors
+from config import game_config, color_config
+from config.constants import ConstTexts
 from menus.character_menu import CharacterMenu
 
 
@@ -12,7 +13,7 @@ class Level:
     @property
     def experience_to_next_level(self):
         return (
-            ConstLevel.LEVEL_UP_BASE + self.current_level * ConstLevel.LEVEL_UP_FACTOR
+            game_config.LEVEL_UP_BASE + self.current_level * game_config.LEVEL_UP_FACTOR
         )
 
     def add_xp(self, xp, events):
@@ -38,7 +39,7 @@ class Level:
         events.add_event(
             {
                 "message": ConstTexts.LEVEL_UP.format(self.current_level),
-                "color": ConstColors.POSITIVE_INFO_COLOR,
+                "color": color_config.POSITIVE_INFO_COLOR,
                 "level_up": self.owner,
             }
         )

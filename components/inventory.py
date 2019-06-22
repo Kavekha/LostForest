@@ -1,7 +1,7 @@
-from config.constants import ConstColors, ConstTexts
+from config import color_config
+from config.constants import ConstTexts
 from menus.inventory_menu import InventoryMenu, DropMenu
 from components.equippable import get_equipment_in_slot
-from systems.target_selection import TargetType
 
 
 """
@@ -34,7 +34,7 @@ class Inventory:
                 event_handler.add_event(
                     {
                         "message": ConstTexts.INVENTORY_FULL,
-                        "color": ConstColors.INVENTORY_FULL,
+                        "color": color_config.INVENTORY_FULL,
                     }
                 )
             return False
@@ -43,7 +43,7 @@ class Inventory:
                 event_handler.add_event(
                     {
                         "message": "You pick up the {0}!".format(item.name),
-                        "color": ConstColors.ITEM_PICKED,
+                        "color": color_config.ITEM_PICKED,
                     }
                 )
             self.owner.game.dungeon.current_map.get_entities().remove(item)
@@ -90,7 +90,7 @@ class Inventory:
             event_handler.add_event(
                 {
                     "message": ConstTexts.DROP_ITEM.format(item_entity.name),
-                    "color": ConstColors.ITEM_DROPED,
+                    "color": color_config.ITEM_DROPED,
                 }
             )
         return True  # please update menu
@@ -114,7 +114,7 @@ class Inventory:
             event_handler.add_event(
                 {
                     "message": "The {0} cannot be used".format(item_entity.name),
-                    "color": ConstColors.CANNOT_BE_USED,
+                    "color": color_config.CANNOT_BE_USED,
                 }
             )
             return False  # Can t be use
@@ -154,7 +154,7 @@ class Inventory:
             event_handler.add_event(
                 {
                     "message": ConstTexts.NOTHING_TO_PICK_UP,
-                    "color": ConstColors.NOTHING_TO_PICK_UP,
+                    "color": color_config.NOTHING_TO_PICK_UP,
                 }
             )
         return False  # On indique que l action n a pas reussi.

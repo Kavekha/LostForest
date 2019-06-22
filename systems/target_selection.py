@@ -1,7 +1,9 @@
+import tcod as libtcod
+
 from render_engine import RenderOrder
 from entities import Entity, EntityType, is_entity_type
-import tcod as libtcod
-from config.constants import ConstTexts, ConstColors
+from config.constants import ConstTexts
+from config import color_config
 
 
 class TargetType:
@@ -29,7 +31,7 @@ class Target(Entity):
             self.game.events.add_event(
                 {
                     "message": ConstTexts.TARGET_TYPE_INVALID,
-                    "color": ConstColors.TARGET_MESS_COLOR,
+                    "color": color_config.TARGET_MESS_COLOR,
                 }
             )
             self.quit_target_mode()
@@ -52,13 +54,13 @@ class Target(Entity):
         self.game.events.add_event(
             {
                 "message": ConstTexts.TARGET_MODE_ON,
-                "color": ConstColors.TARGET_MESS_COLOR,
+                "color": color_config.TARGET_MESS_COLOR,
             }
         )
         self.game.events.add_event(
             {
                 "message": ConstTexts.TARGET_CONTROLS_EXPLAIN,
-                "color": ConstColors.TARGET_MESS_COLOR,
+                "color": color_config.TARGET_MESS_COLOR,
             }
         )
 
@@ -77,7 +79,7 @@ class Target(Entity):
             self.game.events.add_event(
                 {
                     "message": "Your target is of the wrong type",
-                    "color": ConstColors.TARGET_ERROR_COLOR,
+                    "color": color_config.TARGET_ERROR_COLOR,
                 }
             )
         self.quit_target_mode()

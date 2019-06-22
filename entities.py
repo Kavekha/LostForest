@@ -1,7 +1,10 @@
-import math
 import tcod as libtcod
+
+import math
+
 from render_engine import RenderOrder
-from config.constants import ConstColors, ConstTexts
+from config.constants import ConstTexts
+from config import color_config
 from components.item import Item
 
 
@@ -126,7 +129,7 @@ class Entity:
             self.game.events.add_event(
                 {
                     "message": ConstTexts.NO_LANDMARK_THERE,
-                    "color": ConstColors.IMPORTANT_INFO_COLOR,
+                    "color": color_config.IMPORTANT_INFO_COLOR,
                 }
             )
 

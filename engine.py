@@ -1,5 +1,6 @@
 import tcod as libtcod
-import app_config
+
+from config import app_config
 from render_engine import Render
 from states.app_states import AppStates
 from systems.commands import CommandController
@@ -24,7 +25,6 @@ class App:
         )
 
         self.app_states = None
-        self.box_message = None
         self.current_menu = None
         self.quit_app = False
 
@@ -61,7 +61,6 @@ class App:
     def exit_window(self):
         # Menus in game
         if self.app_states == AppStates.GAME:
-            # v0.0.19
             if self.game.target_mode:
                 self.game.quit_target_mode()
 
@@ -72,10 +71,10 @@ class App:
             elif self.game.current_menu.back_to_main:
                 self.app_states = AppStates.MAIN_MENU
                 self.current_menu = MainMenu(self)
-                self.game.current_menu = None
+                self.game.close_menu()
             else:
                 # on quitte le menu actuel pour revenir au jeu
-                self.game.current_menu = None
+                self.game.close_menu()
 
         elif self.app_states == AppStates.MAIN_MENU:
             # Je suis dans le main menu, je quitte l'appli

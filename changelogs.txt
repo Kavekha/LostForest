@@ -1,3 +1,20 @@
+v0.3.9
+    Localisation implementée : Texts.get_text(key).
+
+v0.3.8
+    Refacto sauvegarde et load depuis le main menu.
+    Constants au lieu de config / class. Reste les textes.
+
+v0.3.7
+    FIX : flyweight correction & refacto. Fonctionne correctement maintenant.
+
+v0.3.6
+    Optimisation map : flyweight : une tuile par terrain, utilisé en reference dans chaque tuile.
+
+v0.3.5
+    refacto: suppression de relicats de menus.
+    refacto: Contenu de la map créé par make_map(). GameMap gère desormais la map et uniquement la map.
+
 v0.3.4
     Landmark et monstres apparaissent de nouveau sur la carte.
     Items de nouveau placés sur la carte.

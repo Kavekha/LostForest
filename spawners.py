@@ -1,5 +1,5 @@
 from random import randint
-from data.create_entities import create_entity_item, create_fighting_entity
+from create_entities import create_entity_item, create_fighting_entity
 from data.monster_table import get_monster_table
 from data.item_table import get_item_table
 from data.items import get_item_attributes
@@ -19,7 +19,7 @@ class Spawner:
         self.max_item_room = self.from_dungeon_level(max_item_room, game_map.dungeon.current_floor)
 
     # ADD & GET
-    def _get_rooms(self):
+    def get_rooms(self):
         return self.map_owner.get_rooms()
 
     def spawn_entities(self):
@@ -30,7 +30,7 @@ class Spawner:
         min_items = self.min_items
         max_item_room = self.max_item_room
 
-        rooms = self._get_rooms()
+        rooms = self.get_rooms()
         start_room = rooms[0]
 
         item_by_room = [0 for i in range(len(rooms) - 1)]
@@ -67,7 +67,7 @@ class Spawner:
         min_mobs = self.min_mobs
         max_mob_room = self.max_mob_room
 
-        rooms = self._get_rooms()
+        rooms = self.get_rooms()
         start_room = rooms[0]
 
         monster_by_room = [0 for i in range(len(rooms) - 1)]
