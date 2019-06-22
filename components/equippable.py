@@ -1,5 +1,5 @@
 from enum import Enum
-from config.constants import ConstTexts
+from systems.localization import Texts
 
 
 class EquipmentSlot(Enum):
@@ -23,14 +23,14 @@ def get_equipment_in_slot(slot, entity_equipement):
 
 def slot_to_text(slot):
     if slot == EquipmentSlot.MAIN_HAND:
-        return ConstTexts.EQUIPMENT_SLOT_MAIN_HAND
+        return Texts.get_text('EQUIPMENT_SLOT_MAIN_HAND')
     elif slot == EquipmentSlot.OFF_HAND:
-        return ConstTexts.EQUIPMENT_SLOT_OFF_HAND
+        return Texts.get_text('EQUIPMENT_SLOT_OFF_HAND')
     elif slot == EquipmentSlot.NECK:
-        return ConstTexts.EQUIPMENT_SLOT_NECK
+        return Texts.get_text('EQUIPMENT_SLOT_NECK')
     elif slot == EquipmentSlot.CHEST:
-        return ConstTexts.EQUIPMENT_SLOT_CHEST
-    return ConstTexts.EQUIPMENT_SLOT_NONE
+        return Texts.get_text('EQUIPMENT_SLOT_CHEST')
+    return Texts.get_text('EQUIPMENT_SLOT_NONE')
 
 
 class Equippable:

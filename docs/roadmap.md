@@ -79,8 +79,11 @@ NEXT:
         [ ] 250     Confirmation si action dangereuse que le joueur ne voudrait sans doute pas : Acide sur soit par exemple.
 
     LOCALIZATION
-        [ ] 250     Avoir un texte selon le choix de la langue. POC to do.
+        [ ] 250     Pouvoir choisir la langue du jeu.
         [ ] 100     Gerer l'utf8 ou en tout cas ne pas supprimer les mots avec accent. Libtcod ne semble pas suppoorter UTF8.
+        [/] 250     Avoir plusieurs langues disponibles, et les afficher.
+        [ ] 250     Traduction dans les menus
+        [ ] 250     Traduction des items et monstres.
 
     IA / GAME MASTER
         [ ] 250     Remplacer le for entity in entities dans Game turn par une IA globale qui gère les actions des entités.
@@ -118,6 +121,7 @@ NEXT:
         [ ] 100     Gestion erreurs diverses. Notées en TODO.
         [ ] 500     Refacto : passer en Entité Composant System ECS
         [ ] 50      Rassembler les Enums au meme endroit.
+        [ ] 250     Refacto menus : Retirer les doublements, les hacks, mieux gerer les textes.
 
         # Dirty fixes
         [ ] 50      render : solution degueu du reset game window pour artefacts map precedente.
@@ -131,9 +135,11 @@ NEXT:
         [ ] 100     Menu : Si _options avec des entités, et pas de display_options avec texte : crash. Cf inventory.
         [/] 250     Probleme de save + crash. Nouvelle partie. Je meurs. Je charge la save : je suis en vie avec 1 pv. Je me deplace. Crash. Perte de la save. Why?
         [ ] 100     Crash au reload d'une save apres victory screen. Plus de dungeon value.
+        [ ] 100     Retours à la ligne non pris en compte avec Texts.get_text
 
         # POC
         [ ] 500     Passage / POC sur bearlib terminal.
+        [/] 100     Localization.
 
 
 
@@ -145,7 +151,7 @@ NEXT:
             [/] Meilleur systeme de spawn & valeurs d'items / monstres.
             [/] Nouvel algorithme de creation de map.
             [/] Refacto Constants
-            [ ] Localization, no menu.
+            [/] Localization, no menu.
             [ ] Egos items, base.
             [ ] Meilleure data representation pour items & mobs.
             [ ] Monstres & items uniques : gestion.

@@ -1,5 +1,5 @@
 from menus.menu import Menu
-from config.constants import ConstTexts
+from systems.localization import Texts
 
 
 class LevelUpMenu(Menu):
@@ -9,7 +9,7 @@ class LevelUpMenu(Menu):
             self.update_options()
 
     def update_options(self):
-        self.header = ConstTexts.LEVEL_UP_MENU_HEADER.format(
+        self.header = Texts.get_text('LEVEL_UP_MENU_HEADER').format(
             self.source.level.available_stat_points
         )
         self.display_options = []

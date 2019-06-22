@@ -1,8 +1,7 @@
 import tcod as libtcod
+
 from game import Game
-from states.app_states import AppStates
-from data.data_loaders import load_game
-from utils.fov_functions import initialize_fov
+from data.data_loaders import load_game, refresh_at_load
 from menus.menu import MenuType, Menu
 
 
@@ -25,25 +24,14 @@ class MainMenu(Menu):
                 self.source.quit_app = True
 
         if string_choice == "new game":
-            self.source.render_engine.reset_render_windows()
             self.source.game = Game(self.source)
             self.source.game.initialize()
-            self.source.app_states = AppStates.GAME
-            self.source.current_menu = None
+            refresh_at_load(self.source)
 
         elif string_choice == "load game":
             try:
                 self.source.game = load_game("savegame")
-                # This is needed so the map & chars are fully rendered.
-                self.source.game.dungeon.current_map.fov_map = initialize_fov(
-                    self.source.game.dungeon.current_map
-                )
-                self.source.game.full_recompute_fov()
-                self.source.game.app = self.source  # On associe Game à App.
-                self.source.app_states = AppStates.GAME
-                self.source.reset_game_windows = True
-                self.source.render_engine.reset_render_windows()
-                self.source.current_menu = None
+                refresh_at_load(self.source)
             except FileNotFoundError:
                 self.source.current_menu = ErrorBox()
 

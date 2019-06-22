@@ -1,6 +1,6 @@
 from data.dungeon_specs import get_dungeon_config
 from map_objects.game_map import GameMap
-from config.constants import ConstTexts
+from systems.localization import Texts
 from config import color_config
 
 
@@ -47,15 +47,9 @@ class Dungeon:
             self.game.player.fighter.heal(self.game.player.fighter.max_hp // 2)
             self.game.events.add_event(
                 {
-                    "message": ConstTexts.REST_AFTER_LANDMARK,
+                    "message": Texts.get_text('REST_AFTER_LANDMARK'),
                     "color": color_config.REST_AFTER_LANDMARK_COLOR,
                 }
             )
         else:
-            self.game.events.add_event(
-                {
-                    "message": ConstTexts.VICTORY_LAST_FLOOR_BASIC,
-                    "color": color_config.POSITIVE_INFO_COLOR,
-                }
-            )
             self.game.events.add_event({"victory": True})

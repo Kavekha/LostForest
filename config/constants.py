@@ -1,5 +1,6 @@
 from systems.localization import Texts
 
+'''
 class ConstTexts:
     # travel
     NO_LANDMARK_THERE = Texts.get_text('NO_LANDMARK_THERE') # "There is no path out of here."
@@ -37,3 +38,4 @@ class ConstTexts:
     TARGET_MODE_ON = "You are in target mode."
     TARGET_CONTROLS_EXPLAIN = "Press SPACE to validate, ESC to quit this mode."
     TARGET_TYPE_INVALID = "ERROR: Not valid target type."
+    '''

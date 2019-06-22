@@ -1,5 +1,5 @@
 from config import color_config
-from config.constants import ConstTexts
+from systems.localization import Texts
 from menus.inventory_menu import InventoryMenu, DropMenu
 from components.equippable import get_equipment_in_slot
 
@@ -33,7 +33,7 @@ class Inventory:
             if event_handler:
                 event_handler.add_event(
                     {
-                        "message": ConstTexts.INVENTORY_FULL,
+                        "message": Texts.get_text('INVENTORY_FULL'),
                         "color": color_config.INVENTORY_FULL,
                     }
                 )
@@ -42,7 +42,7 @@ class Inventory:
             if event_handler:
                 event_handler.add_event(
                     {
-                        "message": "You pick up the {0}!".format(item.name),
+                        "message": Texts.get_text('PICK_UP_ITEM').format(item.name),
                         "color": color_config.ITEM_PICKED,
                     }
                 )
@@ -89,7 +89,7 @@ class Inventory:
             self.remove_item(item_entity)
             event_handler.add_event(
                 {
-                    "message": ConstTexts.DROP_ITEM.format(item_entity.name),
+                    "message": Texts.get_text('DROP_ITEM').format(item_entity.name),
                     "color": color_config.ITEM_DROPED,
                 }
             )
@@ -113,7 +113,7 @@ class Inventory:
         elif item_component.use_function is None:
             event_handler.add_event(
                 {
-                    "message": "The {0} cannot be used".format(item_entity.name),
+                    "message": Texts.get_text('CANNOT_USE_ITEM').format(item_entity.name),
                     "color": color_config.CANNOT_BE_USED,
                 }
             )
@@ -153,7 +153,7 @@ class Inventory:
         else:
             event_handler.add_event(
                 {
-                    "message": ConstTexts.NOTHING_TO_PICK_UP,
+                    "message": Texts.get_text('NOTHING_TO_PICK_UP'),
                     "color": color_config.NOTHING_TO_PICK_UP,
                 }
             )

@@ -23,7 +23,7 @@ class Texts:
     trad_dict = {}
     chosen_language = ''
 
-    def __init__(self, language=''):
+    def __init__(self, language='francais'):
         Texts.available_languages, Texts.trad_dict = Texts.set_language_and_trad_dict_from_csv(
             app_config.LOCALIZATION_DIRECTORY + 'localization.csv'
         )

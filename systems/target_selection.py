@@ -2,7 +2,7 @@ import tcod as libtcod
 
 from render_engine import RenderOrder
 from entities import Entity, EntityType, is_entity_type
-from config.constants import ConstTexts
+from systems.localization import Texts
 from config import color_config
 
 
@@ -30,7 +30,7 @@ class Target(Entity):
         if self.target_type == TargetType.NONE:
             self.game.events.add_event(
                 {
-                    "message": ConstTexts.TARGET_TYPE_INVALID,
+                    "message": Texts.get_text('TARGET_TYPE_INVALID'),
                     "color": color_config.TARGET_MESS_COLOR,
                 }
             )
@@ -53,13 +53,13 @@ class Target(Entity):
     def warning(self):
         self.game.events.add_event(
             {
-                "message": ConstTexts.TARGET_MODE_ON,
+                "message": Texts.get_text('TARGET_MODE_ON'),
                 "color": color_config.TARGET_MESS_COLOR,
             }
         )
         self.game.events.add_event(
             {
-                "message": ConstTexts.TARGET_CONTROLS_EXPLAIN,
+                "message": Texts.get_text('TARGET_CONTROLS_EXPLAIN'),
                 "color": color_config.TARGET_MESS_COLOR,
             }
         )
@@ -78,7 +78,7 @@ class Target(Entity):
         if not valid:
             self.game.events.add_event(
                 {
-                    "message": "Your target is of the wrong type",
+                    "message": Texts.get_text('TARGET_TYPE_INVALID'),
                     "color": color_config.TARGET_ERROR_COLOR,
                 }
             )
@@ -89,7 +89,6 @@ class Target(Entity):
         item_use_results = self.function_on_validate(
             self.player, self.target_source, dict_target, self.game.events
         )
-        print("play function : target source is : ", self.target_source)
         self.player.inventory.resolve_use_results(
             item_use_results, self.target_source.owner, self.game.events
         )
@@ -133,7 +132,6 @@ class Target(Entity):
         results["tile"] = self.get_map_tile(x, y)
 
         requested = results.get("requested")
-        print("target result is : ", results)
 
         return results, requested
 

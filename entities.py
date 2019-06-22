@@ -3,7 +3,7 @@ import tcod as libtcod
 import math
 
 from render_engine import RenderOrder
-from config.constants import ConstTexts
+from systems.localization import Texts
 from config import color_config
 from components.item import Item
 
@@ -107,7 +107,6 @@ class Entity:
         self.round += 1
 
     def wait(self):
-        print("wait: {}, round {}".format(self.name, self.round))
         self.end_turn()
 
     def pick_up(self):
@@ -128,7 +127,7 @@ class Entity:
         else:
             self.game.events.add_event(
                 {
-                    "message": ConstTexts.NO_LANDMARK_THERE,
+                    "message": Texts.get_text('NO_LANDMARK_THERE'),
                     "color": color_config.IMPORTANT_INFO_COLOR,
                 }
             )

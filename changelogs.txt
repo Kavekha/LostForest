@@ -1,3 +1,6 @@
+v0.3.10
+    Premiere iteration de trad.
+
 v0.3.9
     Localisation implementée : Texts.get_text(key).
 

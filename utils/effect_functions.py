@@ -1,5 +1,6 @@
-from config.constants import ConstTexts
+from systems.localization import Texts
 from config import color_config
+
 from random import randint
 
 
@@ -30,13 +31,13 @@ def heal(user, source_of_effect, dict_results, events):
     if target.fighter.hp == target.fighter.max_hp:
         return {
             "consume_item": False,
-            "message": ConstTexts.FULL_HEAL_ALREADY,
+            "message": Texts.get_text('FULL_HEAL_ALREADY'),
             "color": color_config.FULL_HEAL_ALREADY,
         }
     else:
         events.add_event(
             {
-                "message": "{} drinks a {}".format(
+                "message": Texts.get_text('CHAR_DRINKS_SOMETHING').format(
                     target.name, source_of_effect.owner.name
                 ),
                 "color": color_config.THROW_ITEM_COLOR,
@@ -45,7 +46,7 @@ def heal(user, source_of_effect, dict_results, events):
         target.fighter.heal(power)
         return {
             "consume_item": True,
-            "message": ConstTexts.WOUND_HEALED,
+            "message": Texts.get_text('WOUND_HEALED'),
             "color": color_config.WOUND_HEALED,
         }
 
@@ -61,7 +62,7 @@ def acide(user, source_of_effect, dict_results, events):
     if target and target.fighter and user.fighter:
         events.add_event(
             {
-                "message": "{} throw a {} at {}".format(
+                "message": Texts.get_text('CHAR_THROW_SOMETHING_AT_SOMEONE').format(
                     user.name, source_of_effect.owner.name, target.name
                 ),
                 "color": color_config.THROW_ITEM_COLOR,
