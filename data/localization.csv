@@ -50,6 +50,7 @@ MENU_CHOOSE_LANGUAGE;Choisissez votre langue;Choose your language
 
 CHAR_ATTACKS_OTHER_NO_DAMAGE;{0} attaque {1} mais ne fait aucun dommage.;{0} attacks {1} but does no damage.
 CHAR_ATTACKS_OTHER_WITH_DAMAGE;{0} attaque {1} et inflige {2} dommages!;{0} attacks {1} for {2} hit points.
+CHAR_ATTACKS_OTHER_MISS;{0} rate {1} !;{0} misses {1}!
 
 REMAINS_OF_SOMEONE;Restes de ;Remains of 
 YOU_DIED;Vous etes mort.; You died.

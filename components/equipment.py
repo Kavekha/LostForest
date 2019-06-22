@@ -34,12 +34,12 @@ class Equipment:
         return weapon_damage
 
     @property
-    def damage_bonus(self):
+    def physical_power_bonus(self):
         bonus = 0
 
         for equipment in [self.main_hand, self.off_hand, self.neck, self.chest]:
             if equipment and equipment.equippable:
-                bonus += equipment.equippable.damage_bonus
+                bonus += equipment.equippable.physical_power_bonus
 
         return bonus
 
@@ -70,6 +70,26 @@ class Equipment:
         for equipment in [self.main_hand, self.off_hand, self.neck, self.chest]:
             if equipment and equipment.equippable:
                 bonus += equipment.equippable.vitality_bonus
+
+        return bonus
+
+    @property
+    def dexterity_bonus(self):
+        bonus = 0
+
+        for equipment in [self.main_hand, self.off_hand, self.neck, self.chest]:
+            if equipment and equipment.equippable:
+                bonus += equipment.equippable.dexterity_bonus
+
+        return bonus
+
+    @property
+    def armor_bonus(self):
+        bonus = 0
+
+        for equipment in [self.main_hand, self.off_hand, self.neck, self.chest]:
+            if equipment and equipment.equippable:
+                bonus += equipment.equippable.armor_bonus
 
         return bonus
 
