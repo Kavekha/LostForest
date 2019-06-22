@@ -1,5 +1,5 @@
 from config import game_config, color_config
-from config.constants import ConstTexts
+from systems.localization import Texts
 from menus.character_menu import CharacterMenu
 
 
@@ -18,12 +18,6 @@ class Level:
 
     def add_xp(self, xp, events):
         self.current_xp += xp
-        print(
-            "gain xp : {}. Needed : {} / {}".format(
-                xp, self.current_xp, self.experience_to_next_level
-            )
-        )
-
         self.check_level_up(events)
 
     def check_level_up(self, events):
@@ -38,7 +32,7 @@ class Level:
         self.available_stat_points += 1
         events.add_event(
             {
-                "message": ConstTexts.LEVEL_UP.format(self.current_level),
+                "message": Texts.get_text('LEVEL_UP').format(self.current_level),
                 "color": color_config.POSITIVE_INFO_COLOR,
                 "level_up": self.owner,
             }

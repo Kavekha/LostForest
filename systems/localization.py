@@ -23,7 +23,7 @@ class Texts:
     trad_dict = {}
     chosen_language = ''
 
-    def __init__(self, language=''):
+    def __init__(self, language='francais'):
         Texts.available_languages, Texts.trad_dict = Texts.set_language_and_trad_dict_from_csv(
             app_config.LOCALIZATION_DIRECTORY + 'localization.csv'
         )
@@ -44,6 +44,17 @@ class Texts:
             return languages[0]
         else:
             raise NotImplementedError
+
+    @staticmethod
+    def get_available_languages():
+        return Texts.available_languages
+
+    @staticmethod
+    def set_language(language):
+        if language in list(Texts.get_available_languages()):
+            Texts.chosen_language = language
+        else:
+            print('Language not available')
 
     @staticmethod
     def get_text(key):

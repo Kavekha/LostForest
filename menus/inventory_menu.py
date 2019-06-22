@@ -1,19 +1,19 @@
 from menus.menu import Menu
-from config.constants import ConstTexts
+from systems.localization import Texts
 from components.equippable import slot_to_text, get_equipment_in_slot
 
 
 class InventoryMenu(Menu):
     def __init__(self, inventory):
         super().__init__(inventory)
-        self.header = ConstTexts.INVENTORY_HEADER
+        self.header = Texts.get_text('INVENTORY_HEADER')
         self.forced_width = 40
         self.update_options()
 
     def update_options(self):
         if len(self.source.items) == 0:
             self.header = (
-                ConstTexts.INVENTORY_HEADER + "\n" + ConstTexts.INVENTORY_EMPTY
+                    Texts.get_text('INVENTORY_HEADER') + "\n" + Texts.get_text('INVENTORY_EMPTY')
             )
             self.display_options = []
             self._options = []
@@ -45,7 +45,7 @@ class InventoryMenu(Menu):
 class DropMenu(InventoryMenu):
     def __init__(self, inventory):
         super().__init__(inventory)
-        self.header = ConstTexts.INVENTORY_HEADER
+        self.header = Texts.get_text('INVENTORY_HEADER')
         self.forced_width = 40
         self.update_options()
 

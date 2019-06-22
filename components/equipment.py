@@ -1,5 +1,5 @@
 from components.equippable import EquipmentSlot, get_equipment_in_slot
-from config.constants import ConstTexts
+from systems.localization import Texts
 from config import color_config
 
 
@@ -88,7 +88,7 @@ class Equipment:
         self.set_equipment_in_slot(slot, None)
         events.add_event(
             {
-                "message": ConstTexts.UNEQUIP_ITEM.format(entity_to_unequip.name),
+                "message": Texts.get_text('UNEQUIP_ITEM').format(entity_to_unequip.name),
                 "color": color_config.UNEQUIP,
             }
         )
@@ -98,7 +98,7 @@ class Equipment:
         self.set_equipment_in_slot(slot, entity_to_equip)
         events.add_event(
             {
-                "message": ConstTexts.EQUIP_ITEM.format(entity_to_equip.name),
+                "message": Texts.get_text('EQUIP_ITEM').format(entity_to_equip.name),
                 "color": color_config.EQUIP,
             }
         )

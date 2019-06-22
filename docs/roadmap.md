@@ -79,8 +79,11 @@ NEXT:
         [ ] 250     Confirmation si action dangereuse que le joueur ne voudrait sans doute pas : Acide sur soit par exemple.
 
     LOCALIZATION
-        [ ] 250     Avoir un texte selon le choix de la langue. POC to do.
+        [ ] 250     Pouvoir choisir la langue du jeu.
         [ ] 100     Gerer l'utf8 ou en tout cas ne pas supprimer les mots avec accent. Libtcod ne semble pas suppoorter UTF8.
+        [/] 250     Avoir plusieurs langues disponibles, et les afficher.
+        [ ] 250     Traduction dans les menus
+        [ ] 250     Traduction des items et monstres.
 
     IA / GAME MASTER
         [ ] 250     Remplacer le for entity in entities dans Game turn par une IA globale qui gère les actions des entités.
@@ -118,6 +121,7 @@ NEXT:
         [ ] 100     Gestion erreurs diverses. Notées en TODO.
         [ ] 500     Refacto : passer en Entité Composant System ECS
         [ ] 50      Rassembler les Enums au meme endroit.
+        [ ] 250     Refacto menus : Retirer les doublements, les hacks, mieux gerer les textes.
 
         # Dirty fixes
         [ ] 50      render : solution degueu du reset game window pour artefacts map precedente.
@@ -131,31 +135,38 @@ NEXT:
         [ ] 100     Menu : Si _options avec des entités, et pas de display_options avec texte : crash. Cf inventory.
         [/] 250     Probleme de save + crash. Nouvelle partie. Je meurs. Je charge la save : je suis en vie avec 1 pv. Je me deplace. Crash. Perte de la save. Why?
         [ ] 100     Crash au reload d'une save apres victory screen. Plus de dungeon value.
+        [ ] 100     Retours à la ligne non pris en compte avec Texts.get_text
 
         # POC
         [ ] 500     Passage / POC sur bearlib terminal.
+        [/] 100     Localization.
 
 
 
     OBJECTIFS:
 
-        # RELEASE 4 : Apparence de map, salles, items & monstres uniques.!
+        # RELEASE 0.4 : Localization & Creation de Map. (+1800)
 
             [/] Ciblage amelioré, plus d'informations.
             [/] Meilleur systeme de spawn & valeurs d'items / monstres.
             [/] Nouvel algorithme de creation de map.
             [/] Refacto Constants
-            [ ] Localization, no menu.
+            [/] Localization, no menu.
+            [/] Choix de langue dans le menu.
+
+        # RELEASE 0.5 : Systeme de combat & Ergos
+            [ ] enrichissement systeme de combat.
             [ ] Egos items, base.
             [ ] Meilleure data representation pour items & mobs.
             [ ] Monstres & items uniques : gestion.
 
-
-        # RELEASE 5
+        # RELEASE 0.6 : Apparence.
             [ ] Images du jeu.
             [ ] Score
             [ ] multi-saves, nom du personnage.
             [ ] Interface, tutoriel ou meilleures indications?
-            [ ] Equilibrage basique, enrichissement systeme de combat.
-            [ ] Refactos diverses.
             [ ] Py2game ou Nuitka (?) : exe pour windoz.
+
+        # RELEASE 0.7 :
+            [ ] Bearlib!
+

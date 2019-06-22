@@ -1,3 +1,60 @@
-key;francais;
-NO_LANDMARK_THERE;There is no path out of here.;
-REST_AFTER_LANDMARK;You take a moment to rest, and recover your strength.;
+key;francais;english
+YES_ANSWER;OUI;YES
+NO_ANSWER;NON;NO
+
+NO_LANDMARK_THERE;Il n y a pas de chemin ici.;There is no path out of here.
+REST_AFTER_LANDMARK;Vous prenez un peu de repos et retrouvez du courage.;You take a moment to rest, and recover your strength.
+
+FULL_HEAL_ALREADY;Vous etes deja en bonne sante.;You are already at full health
+WOUND_HEALED;Vos blessures vont mieux!;Your wounds start to feel better!
+
+INVENTORY_FULL;Votre inventaire est plein.;You cannot carry any more, your inventory is full
+NOTHING_TO_PICK_UP;Il n y a rien a ramasser ici.;There is nothing here to pick up.
+INVENTORY_EMPTY;Inventaire vide;Inventory is empty
+INVENTORY_HEADER;Appuyez sur la touche associe a l objet a utiliser. ESC pour annuler. \n;Press the key next to an item to use it, or Esc to cancel.
+DROP_INVENTORY_HEADER;"(
+        ""Appuyer sur la touche a cote de l objet a jeter. ESC pour annuler.\n""
+    )";"(
+        ""Press the key next to an item to drop it, or Esc to cancel.\n""
+    )"
+DROP_ITEM;Vous lachez {} sur le sol.;You drop {} on the floor.
+PICK_UP_ITEM;Vous ramassez {}.;You pick up the {}.
+CANNOT_USE_ITEM: {} est inutilisable.; The {} cannot be used.
+
+LEVEL_UP;Vous avez atteint le niveau {}! Vous vous sentez puissant.;You reach level {} ! You feel powerfull.
+LEVEL_UP_MENU_HEADER;Selectionnez la stat a ameliorer. \n Disponible: {};Choose which stat you want to increase. \n Available : {}.
+
+QUIT_GAME_MENU_HEADER;Voulez vous quitter?;Do you want to quit?
+
+UNEQUIP_ITEM;Vous desequipez {}.;You dequipped {}.
+EQUIP_ITEM;Vous equipez {}.;You equipped {}
+EQUIPMENT_SLOT_NONE;Inconnu;Unknown
+EQUIPMENT_SLOT_MAIN_HAND;Main Droite;Right hand
+EQUIPMENT_SLOT_OFF_HAND;Main Gauche;Left hand
+EQUIPMENT_SLOT_NECK;Cou;Neck
+EQUIPMENT_SLOT_CHEST;Torse;Chest
+
+TARGET_MODE_ON;Choisissez une cible.;You are in target mode.
+TARGET_CONTROLS_EXPLAIN;Utilisez ESPACE pour valider. ESC pour quitter ce mode.;Press SPACE to validate, ESC to quit this mode.
+TARGET_TYPE_INVALID;Ce n est pas une cible valide.;Not a valid target.
+
+CHAR_DRINKS_SOMETHING;{} boit {}.;{} drinks a {}.
+CHAR_THROW_SOMETHING_AT_SOMEONE;{} lance {} sur {}!;{} throw a {} at {}
+
+MAIN_MENU_NEW_GAME;Nouvelle partie;New game
+MAIN_MENU_LOAD_GAME;Reprendre une partie;Load game
+MAIN_MENU_LANGUAGES;Langages;Languages
+MAIN_MENU_QUIT;Quitter;Quit
+
+MENU_CHOOSE_LANGUAGE;Choisissez votre langue;Choose your language
+
+CHAR_ATTACKS_OTHER_NO_DAMAGE;{0} attaque {1} mais ne fait aucun dommage.;{0} attacks {1} but does no damage.
+CHAR_ATTACKS_OTHER_WITH_DAMAGE;{0} attaque {1} et inflige {2} dommages!;{0} attacks {1} for {2} hit points.
+
+REMAINS_OF_SOMEONE;Restes de ;Remains of 
+YOU_DIED;Vous etes mort.; You died.
+CHAR_IS_DEAD;{0} meurt!;{0} is dead!
+
+
+
+
