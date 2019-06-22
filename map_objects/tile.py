@@ -1,5 +1,6 @@
 class Tile:
-    def __init__(self, blocked, block_sight=None, explored=False, destructible=True):
+    def __init__(self, name, blocked, block_sight=None, destructible=False, explored=False):
+        self.name = name
         self.destructible = destructible
         self.blocked = blocked
 
@@ -8,3 +9,11 @@ class Tile:
 
         self.block_sight = block_sight
         self.explored = explored
+
+        self._immutable = True
+
+    def __setattr__(self, name, value):
+        if getattr(self, '_immutable', False):
+            raise RuntimeError('This object is immutable')
+        else:
+            super().__setattr__(name, value)

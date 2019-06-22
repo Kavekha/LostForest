@@ -124,7 +124,6 @@ class Game:
 
     def player_turn(self):
         self.fov_recompute = True
-
         self.events.resolve_events()
         if self.fov_recompute:
             self.recompute_fov()

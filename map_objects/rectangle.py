@@ -4,8 +4,7 @@ class Rect:
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
-        self.char = 'x'
-        # self.sanity_check()
+        self.char = ' '
 
     @property
     def width(self):
@@ -51,7 +50,6 @@ class Rect:
         self.y1 = y
         self.x2 = x + width
         self.y2 = y + height
-        # self.sanity_check()
 
     def position_relative_to_other_room_side(self, room, side='north'):
         side = side.lower()
@@ -76,11 +74,9 @@ class Rect:
             y -= self.height // 2
         self.new_position(x, y)
 
-    def sanity_check(self):
-        print('sanity before : ', self.x1, self.y1, self.x2, self.y2)
-        x1, y1, x2, y2 = self.x1, self.y1, self.x2, self.y2
-        self.x1 = min(x1, x2)
-        self.x2 = max(x1, x2)
-        self.y1 = min(y1, y2)
-        self.y2 = max(y1, y2)
-        print('sanity after: ', self.x1, self.y1, self.x2, self.y2)
+    def add_special(self, special):
+        # 'entry_room'
+        self.special_room[special] = True
+
+    def get_special(self):
+        return self.special_room
