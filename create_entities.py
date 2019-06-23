@@ -5,15 +5,13 @@ from components.inventory import Inventory
 from components.equipment import Equipment
 from components.equippable import Equippable, EquipmentSlot
 from components.item import Item
-from utils.death_functions import kill_monster
-# from data.monsters import get_base_monster_stats, get_monster_stats
-from data.playable_archetypes import get_player_stats, get_base_player_stats
 from entities import Entity
 from render_engine import RenderOrder
 from components.ai import BasicMonster, Brainless
 from components.level import Level
 from config import game_config
 from data_loaders.compendium import Compendium
+from utils.death_functions import kill_player
 
 
 def get_brain(brain):
@@ -25,108 +23,84 @@ def get_brain(brain):
         return None
 
 
+def create_entity(game, base_stats, entity_stats):
+    name = entity_stats.get('name', base_stats.get('name', game_config.DEFAULT_CREATURE_NAME))
+    appearance = entity_stats.get('char', base_stats.get('char', game_config.DEFAULT_CREATURE_APPEARANCE))
+    color = entity_stats.get('color', base_stats.get('color', game_config.DEFAULT_CREATURE_COLOR))
+
+    entity = Entity(game, 0, 0,
+                    appearance, color, name,
+                    blocks=True, render_order=RenderOrder.ACTOR)
+
+    return entity
+
+
+def create_fighter_component(base_stats, entity_stats):
+    hp = entity_stats.get('hp', base_stats.get('hp', game_config.DEFAULT_FIGHTER_HP))
+    might = entity_stats.get('might', base_stats.get('might', game_config.DEFAULT_FIGHTER_MIGHT))
+    dexterity = entity_stats.get('dexterity', base_stats.get('dexterity', game_config.DEFAULT_FIGHTER_DEXTERITY))
+    vitality = entity_stats.get('vitality', base_stats.get('vitality', game_config.DEFAULT_FIGHTER_VITALITY))
+    death_function = entity_stats.get('death_function', base_stats.get('death_function', game_config.DEFAULT_FIGHTER_DEATH_FUNCTION))
+    base_dmg_min = entity_stats.get('base_damage_min', base_stats.get('base_damage_min', game_config.DEFAULT_FIGHTER_BASE_DMG_MIN))
+    base_dmg_max = entity_stats.get('base_damage_max', base_stats.get('base_damage_max', game_config.DEFAULT_FIGHTER_BASE_DMG_MAX))
+
+    fighter_component = Fighter(hp=int(hp), might=int(might), dexterity=int(dexterity), vitality=int(vitality),
+                                death_function=death_function,
+                                base_dmg=(int(base_dmg_min), int(base_dmg_max)))
+
+    return fighter_component
+
+
+def create_ai_component(base_stats, entity_stats):
+    brain = entity_stats.get('brain', base_stats.get('brain', game_config.DEFAULT_CREATURE_BRAIN))
+    ai_component = get_brain(brain)
+
+    return ai_component
+
+
 def create_fighting_entity(game, entity_defname, x, y, player=False):
-    if not player:
-        entity_stats = Compendium.get_monster(entity_defname)  # get_monster_stats(entity_defname)
-    else:
-        entity_stats = get_player_stats(entity_defname)
+    # we get the entity stats from the defname
+    entity_stats = Compendium.get_monster(entity_defname)
 
-    if not entity_stats and not player:
-        entity_stats = Compendium.get_base_monster(entity_defname)
-        base = entity_defname
-    else:
+    # we get the base of the creature
+    if entity_stats:
         base = entity_stats.get("base")
-
-    if not player:
-        dict_stats = Compendium.get_base_monster(base)  # get_base_monster_stats(base)
     else:
-        dict_stats = get_base_player_stats(base)
+        entity_stats = {}
+        base = entity_defname
 
-    entity_name = dict_stats.get("name", "Unknown")
-    entity_appearance = dict_stats.get("char", "?")
-    entity_color = dict_stats.get("color", libtcod.red)
-    inventory = dict_stats.get("inventory", False)
-    equipment = dict_stats.get("equipment", False)
-    death_function = dict_stats.get("death_function", kill_monster)
-    entity_base_dmg_min = int(dict_stats.get("base_damage_min", 0))
-    entity_base_dmg_max = int(dict_stats.get("base_damage_max", 2))
-    entity_hp = int(dict_stats.get("hp", 10))
-    entity_might = int(dict_stats.get("might", 3))
-    entity_dexterity = int(dict_stats.get("dexterity", 3))
-    entity_vitality = int(dict_stats.get("vitality", 3))
-    ai_component = get_brain(dict_stats.get("brain", None))
-    # print(f'ai component for {entity_defname} is {ai_component} and get brain was {get')
+    base_stats = Compendium.get_base_monster(base)
 
-    if entity_stats.get("name"):
-        entity_name = entity_stats.get("name")
-    if entity_stats.get("char"):
-        entity_appearance = entity_stats.get("char")
-    if entity_stats.get("color"):
-        entity_color = entity_stats.get("color")
-    if entity_stats.get("inventory"):
-        inventory = entity_stats.get("inventory")
-    if entity_stats.get("equipment"):
-        equipment = entity_stats.get("equipment")
-    if entity_stats.get("death_function"):
-        death_function = entity_stats.get("death_function", kill_monster)
-    if entity_stats.get("base_damage_min"):
-        entity_base_dmg_min = int(entity_stats.get("base_damage_min"))
-    if entity_stats.get("base_damage_max"):
-        entity_base_dmg_max = int(entity_stats.get("base_damage_max"))
-    if entity_stats.get("hp"):
-        entity_hp = int(entity_stats.get("hp"))
-    if entity_stats.get("might"):
-        entity_might = int(entity_stats.get("might"))
-    if entity_stats.get("dexterity"):
-        entity_dexterity = int(entity_stats.get("dexterity"))
-    if entity_stats.get("vitality"):
-        entity_vitality = int(entity_stats.get("vitality"))
-    if entity_stats.get("brain"):
-        ai_component = get_brain(entity_stats.get("brain"))
+    if not base_stats:
+        base_stats = {}
 
-    fighter_component = Fighter(
-        hp=entity_hp,
-        might=entity_might,
-        dexterity=entity_dexterity,
-        vitality=entity_vitality,
-        death_function=death_function,
-        base_dmg=(entity_base_dmg_min, entity_base_dmg_max),
-    )
-    if inventory:
-        inventory_component = Inventory(26)
-    else:
-        inventory_component = None
+    # we create the entity
+    entity = create_entity(game, base_stats, entity_stats)
+    entity.x, entity.y = x, y
 
-    if equipment:
-        equipment_component = Equipment()
-    else:
-        equipment_component = None
+    # we create fighting component
+    fighter_component = create_fighter_component(base_stats, entity_stats)
+    entity.add_component(fighter_component, 'fighter')
 
-    if player:
-        level_component = Level()
-    else:
-        level_component = None
+    # we create brain component
+    ai_component = create_ai_component(base_stats, entity_stats)
+    entity.add_component(ai_component, 'ai')
 
-    entity = Entity(
-        game,
-        x,
-        y,
-        entity_appearance,
-        entity_color,
-        entity_name,
-        blocks=True,
-        fighter=fighter_component,
-        inventory=inventory_component,
-        equipment=equipment_component,
-        ai=ai_component,
-        level=level_component,
-        render_order=RenderOrder.ACTOR,
-    )
-
+    # We calculate xp value
     xp_value = calculate_xp_value(entity.fighter)
     entity.fighter.xp_value = xp_value
 
-    print(f'end of create: entity {entity.name} brain is : {entity.ai}')
+    if player:
+        equipment_component = Equipment()
+        entity.add_component(equipment_component, 'equipment')
+
+        inventory_component = Inventory(26)
+        entity.add_component(inventory_component, 'inventory')
+
+        level_component = Level()
+        entity.add_component(level_component, 'level')
+
+        entity.fighter.death_function = kill_player
 
     return entity
 
@@ -140,10 +114,10 @@ def calculate_xp_value(fighter):
     might_value = fighter.might * game_config.MIGHT_XP_VALUE
     dexterity_value = fighter.dexterity * game_config.DEXTERITY_XP_VALUE
     vitality_value = fighter.vitality * game_config.VITALITY_XP_VALUE
-
     hp_value = fighter.max_hp * game_config.HP_XP_VALUE
 
     total_xp_value = might_value * vitality_value * hp_value * damage_value * dexterity_value
+    total_xp_value *= game_config.XP_GLOBAL_MODIFIER
     total_xp_value = int(total_xp_value)
 
     print("Total xp value of {} is {}".format(fighter.owner.name, total_xp_value))
