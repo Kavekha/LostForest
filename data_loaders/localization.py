@@ -25,7 +25,7 @@ class Texts:
 
     def __init__(self, language='francais'):
         Texts.available_languages, Texts.trad_dict = Texts.set_language_and_trad_dict_from_csv(
-            app_config.DATA_DIRECTORY + 'localization.csv'
+            app_config.DATA_DIRECTORY + app_config.LOCALIZATION_FILE
         )
 
         if language and language in Texts.available_languages:

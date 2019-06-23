@@ -1,4 +1,4 @@
-VERSION = "0.4.4"
+VERSION = "0.4.5"
 
 SCREEN_WIDTH = 80
 SCREEN_HEIGHT = 50
@@ -7,6 +7,11 @@ PANEL_HEIGHT = 7
 
 SAVE_DIRECTORY = 'saves/'
 DATA_DIRECTORY = 'data/'
+
+
+LOCALIZATION_FILE = 'localization.csv'
+MONSTER_BASE_FILE = 'monsters_base.csv'
+MONSTER_FULL_FILE = 'monster_full.csv'
 
 
 FOV_ALGORITHM = 0

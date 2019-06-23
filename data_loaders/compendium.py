@@ -33,10 +33,10 @@ class Compendium:
 
     def __init__(self):
         Compendium.monster_base_compendium = Compendium.create_compendium_from_csv(
-            app_config.DATA_DIRECTORY + 'monsters_base.csv'
+            app_config.DATA_DIRECTORY + app_config.MONSTER_BASE_FILE
         )
         Compendium.monster_full_compendium = Compendium.create_compendium_from_csv(
-            app_config.DATA_DIRECTORY + 'monster_full.csv'
+            app_config.DATA_DIRECTORY + app_config.MONSTER_FULL_FILE
         )
 
     @staticmethod
