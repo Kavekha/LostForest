@@ -1,8 +1,12 @@
+v0.4.2
+    Fiche de personnage contient les nouvelles statistiques.
+    Traduction des termes de jeu, de la fiche de personnage et de la fin standard.
+    Gain d'HP max au leveling.
+
 v0.4.1
     Ajout Dexterité, Armor, Puissance physique, resistance physique.
     Chances de toucher.
     Nouvelles formules de degats et de reduction des dommages subits.
-    TODO: Maj de la fenetre de perso.
 
 
 PRE-RELEASE 0.4 : Map algorithm and Localization.

@@ -24,6 +24,18 @@ CANNOT_USE_ITEM: {} est inutilisable.; The {} cannot be used.
 LEVEL_UP;Vous avez atteint le niveau {}! Vous vous sentez puissant.;You reach level {} ! You feel powerfull.
 LEVEL_UP_MENU_HEADER;Selectionnez la stat a ameliorer. \n Disponible: {};Choose which stat you want to increase. \n Available : {}.
 
+LEVEL_GAME_TERM;Niveau;Level
+MAX_HP_GAME_TERM;Max HP;Max HP
+MIGHT_GAME_TERM;Force;Might
+DEXTERITY_GAME_TERM;Dexterite;Dexterity
+VITALITY_GAME_TERM;Vitalite;Vitality
+WEAPON_DAMAGE_GAME_TERM;Dommages;Damages
+PHYSICAL_POWER_GAME_TERM;Puissance physique;Physical power
+PHYSICAL_RESISTANCE_GAME_TERM;Resistance physique;Physical resistance
+
+UNTIL_NEXT_LEVEL_CHAR_SCREEN;avant prochain niveau;until next level
+CHOOSE_STATS_INCREASE_CHAR_SCREEN;Choisissez la stat a ameliorer;Choose stat to increase
+
 QUIT_GAME_MENU_HEADER;Voulez vous quitter?;Do you want to quit?
 
 UNEQUIP_ITEM;Vous desequipez {}.;You dequipped {}.
@@ -53,8 +65,11 @@ CHAR_ATTACKS_OTHER_WITH_DAMAGE;{0} attaque {1} et inflige {2} dommages!;{0} atta
 CHAR_ATTACKS_OTHER_MISS;{0} rate {1} !;{0} misses {1}!
 
 REMAINS_OF_SOMEONE;Restes de ;Remains of 
-YOU_DIED;Vous etes mort.; You died.
+YOU_DIED;Vous etes mort; You died
 CHAR_IS_DEAD;{0} meurt!;{0} is dead!
+
+VICTORY_1_PART_1;Vous etes hors des bois, hors de danger.;You are now out of the woods, out of danger.
+VICTORY_1_PART_2;Derriere vous, la Foret Maudite grandit toujours.;Behind you, the Cursed Forest still grows.
 
 
 
