@@ -1,5 +1,6 @@
 from menus.menu import Menu, MenuType
 import tcod as libtcod
+from systems.localization import Texts
 
 
 class VictoryMenu(Menu):
@@ -7,12 +8,17 @@ class VictoryMenu(Menu):
         super().__init__()
         self.type = MenuType.GRAPHIC
         self.title = "VICTORY"
-        self.header = """
+        self.header = ("""
         
-You are now out of the woods, out of danger.
-Behind you, the Cursed Forest still grows.
+"""
+                       + Texts.get_text('VICTORY_1_PART_1')
+                       + ' \n'
+                       + Texts.get_text('VICTORY_1_PART_2')
+                       + '\n'
+                       + """
 
-        """
+"""
+                       )
         self.background_image = libtcod.image_load("menu_background.png")
         self._options = []
         self.forced_width = 48

@@ -14,27 +14,26 @@ ideal :
 
 
 class Fighter:
-    def __init__(
-        self,
-        hp,
-        might,
-        vitality,
-        dexterity=3,
-        death_function=kill_monster,
-        xp_value=0,
-        base_dmg=(0, 2),
-    ):
-        self.owner = None
-        self.base_max_hp = hp
-        self.hp = hp
-        self.death_function = death_function
-        self.xp_value = xp_value
+    def __init__(self,
+                 hp,
+                 might,
+                 vitality,
+                 dexterity=3,
+                 death_function=kill_monster,
+                 xp_value=0,
+                 base_dmg=(0, 2),
+                 ):
 
         self.base_might = might
         self.base_vitality = vitality
         self.base_dexterity = dexterity
         self.base_damage = base_dmg
 
+        self.owner = None
+        self.base_max_hp = hp
+        self.hp = self.max_hp
+        self.death_function = death_function
+        self.xp_value = xp_value
 
     @property
     def might(self):

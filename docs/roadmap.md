@@ -3,7 +3,6 @@ NEXT:
         [ ] 250     Tile personnalisée pour l'affichage : Char, couleurs selon la tile et non pas au niveau de la map.
         [ ] 250     'Salles' avec evenements-types & variantes.
         [ ] 50      monster_table pas utilisé dans les specs des maps de donjon.
-        [/] 250     Algorithme Brogue-like
 
     SAVES:
         [ ] 10      save & load : config Appli.
@@ -17,8 +16,6 @@ NEXT:
         [ ] 250     Depuis Inventory : Je selectionne l'objet : fenetre avec actions Use, Drop, Equip, etc + description.
 
     TARGET SYSTEM:
-        [/] 100     Autres critères de limitation : TILE only, TILE & ENTITY etc.
-        [/] 100     Pouvoir transmettre les autres objets récupérés par la cible pour textes "flavor", ou refuser et envoyer paitre.
         [ ] 250     Radius & Direct effect, splash damage, join message pour une seule ligne avec plusieurs victimes. Damage to self message.
 
     CONTROLES:
@@ -35,7 +32,7 @@ NEXT:
         [ ] ???     Niveau de danger pour modifier un monstre de base selon le niveau du donjon.
         [ ] ???     Table de mobs / items : poids dependant du niveau de danger.
         [ ] 50      Nom de monstre vs nom de reference du monstre & idem pour items
-        [ ] 100      Pack de monstres, thematique "monstre" de salles.
+        [ ] 100     Pack de monstres, thematique "monstre" de salles.
         [ ] 100     Items & monstres uniques, ou avec une limite, pour eviter trop grand nombre d'armes en doublon.
         [ ] 250     Creation d'items par morceaux selon region, chances de magique, budget magique a repartir, etc. affix / suffix and all that.
         [ ] 100     Creation de monstre par morceaux selon region, etc. cf.items?
@@ -57,7 +54,7 @@ NEXT:
 
     FIGHT:
         [ ] 50      Damage type : All reduced by Vitality. Acid, Fire, etc?
-        [ ] 500     Refaire le systeme de combat.
+        [/] 500     Refaire le systeme de combat.
 
     CAMERA / RENDER:
         [ ] 100    map : camera, map plus grande que l'ecran de jeu
@@ -72,17 +69,16 @@ NEXT:
         [ ] 50      Reflechir : Game Master pour diriger IA, gerer l'ambiance, les loots, etc?
         [ ] 50      Reflechir : Foret & interaction avec elle.
         [ ] 100     Menu: Resumé de la partie perdue, score, game over, etc.
-        [ ] 100     Monstres avec inventaire, peuvent utiliser des objets.
+        [ ] 100     Monstres avec inventaire, peuvent utiliser des objets, les recuperer ou meme les rattraper.
         [ ] 100     Fouiller l'inventaire d'un monstre mort.
         [ ] 100     Si monstres neutres ou amicaux, mode de combat : Attaquer, Parler, etc.
         [ ] 100     Potion acide devrait etre utilisable sur d'autres items.
         [ ] 250     Confirmation si action dangereuse que le joueur ne voudrait sans doute pas : Acide sur soit par exemple.
 
     LOCALIZATION
-        [ ] 250     Pouvoir choisir la langue du jeu.
+        [/] 250     Pouvoir choisir la langue du jeu.
         [ ] 100     Gerer l'utf8 ou en tout cas ne pas supprimer les mots avec accent. Libtcod ne semble pas suppoorter UTF8.
-        [/] 250     Avoir plusieurs langues disponibles, et les afficher.
-        [ ] 250     Traduction dans les menus
+        [/] 250     Traduction dans les menus
         [ ] 250     Traduction des items et monstres.
 
     IA / GAME MASTER
@@ -107,14 +103,8 @@ NEXT:
         [ ] 100     Refacto Target System. Pas souple du tout, specifique aux items.
         [ ] 50      Refacto effect functions / inventory / items : le message "{} thrown at {}" est dans effet. Devrait etre ailleurs.
         [ ] 100     Fonctions de combat hors Fighter : rends Fighter plus clean, permets de les utiliser sur les items et map.
-        [/] 50      Spawners pour une meilleure reparition methode et plus de souplesse entre monstres & items.
-        [/] 50      Constants / config pour Appli.
         [ ] 25      Requirements
-        [/] 50      Readme
-        [/] 100     savegame.bak grossit très vite. Semble faire ramer. Supprimer la save avant de la reecrire.
-        [/] 250     80x40 map = 3200 tiles. Faire une tuile de chaque etat et se referer à ces tuiles plutot. Defaut : une tuile pour toutes les cellules.
         [ ] 100     Spawner devrait recevoir un **parametre, et non pas elements par elements.
-        [/] 250     Creation de la map a part, Game Map ne gère que la map pendant le jeu, pas sa creation.
         [ ] 50      Room devrait etre un vrai objet, et Rect juste un outil de creation.
         [ ] 100     Terrains & Tiles, devraient etre definis dans MapSpec et surtout mieux gerées.
         [ ] 50      Colors dans map spec & dans la tile de reference.
@@ -129,36 +119,29 @@ NEXT:
         # Questionnement
         [ ] 50      map_is_in_fov testé dans enemy turn avant action et dans ai: take_turn. Doublon? Logique?
         [ ] 50      Refacto Target : devrait etre associé au personnage? If link then command on linked entity?
-         [ ] 50      Mieux utiliser les return True / False dans les fonctions, pour dire au moins "j'ai fais ce que tu m'a demandé"?
+        [ ] 50      Mieux utiliser les return True / False dans les fonctions, pour dire au moins "j'ai fais ce que tu m'a demandé"?
 
         # Bugs
         [ ] 100     Menu : Si _options avec des entités, et pas de display_options avec texte : crash. Cf inventory.
-        [/] 250     Probleme de save + crash. Nouvelle partie. Je meurs. Je charge la save : je suis en vie avec 1 pv. Je me deplace. Crash. Perte de la save. Why?
         [ ] 100     Crash au reload d'une save apres victory screen. Plus de dungeon value.
         [ ] 100     Retours à la ligne non pris en compte avec Texts.get_text
 
         # POC
         [ ] 500     Passage / POC sur bearlib terminal.
-        [/] 100     Localization.
 
 
 
     OBJECTIFS:
 
-        # RELEASE 0.4 : Localization & Creation de Map. (+1800)
-
-            [/] Ciblage amelioré, plus d'informations.
-            [/] Meilleur systeme de spawn & valeurs d'items / monstres.
-            [/] Nouvel algorithme de creation de map.
-            [/] Refacto Constants
-            [/] Localization, no menu.
-            [/] Choix de langue dans le menu.
-
         # RELEASE 0.5 : Systeme de combat & Ergos
-            [ ] enrichissement systeme de combat.
+            [/] Systeme de combat mis à jour.
+            [/] Nouvelle fiche de personnage.
+            [ ] Pluss d'infos sur les items dans les menus.
+            [ ] Nouveau systeme d'inventaire : equipement, throw, drop, etc.
+            [ ] Chargement des datas items & monstres via des CSV, plus faciles à mettre à jour.
             [ ] Egos items, base.
-            [ ] Meilleure data representation pour items & mobs.
             [ ] Monstres & items uniques : gestion.
+            [ ] Spawning plus pertinent?
 
         # RELEASE 0.6 : Apparence.
             [ ] Images du jeu.

@@ -1,6 +1,7 @@
 # XP SYSTEM
 LEVEL_UP_BASE = 200
 LEVEL_UP_FACTOR = 150
+HP_GAIN_AT_LEVEL__UP = 3
 
 
 # MOB XP VALUE
@@ -17,6 +18,7 @@ MODIFIER_HIT_CHANCE = 2.5   # Multiplie la difference de Dex entre les adversair
 MIN_HIT_CHANCE = 10
 MAX_HIT_CHANCE = 100
 TO_HIT_ROLL = 100
+
 
 # DAMAGE FORMULA
 FINAL_DAMAGE_MODIFIER = 0.3  # Modificateur sur la formule totale, pour nerfer ou renforcer plus facilement.
