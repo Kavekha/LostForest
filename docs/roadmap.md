@@ -140,7 +140,7 @@ NEXT:
             [/] Systeme de combat mis à jour.
             [/] Nouvelle fiche de personnage.
             [/] Chargement des datas monstres via des CSV, plus faciles à mettre à jour.
-            [ ] Refacto creation entités monstres & player.
+            [/] Refacto creation entités monstres & player.
             [ ] Pluss d'infos sur les items dans les menus.
             [ ] Chargement des datas items via des CSV.
             [ ] Nouveau systeme d'inventaire : equipement, throw, drop, etc.

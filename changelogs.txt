@@ -1,3 +1,9 @@
+v0.4.4
+    Refacto creation monstres depuis MonsterCompendium.
+    Meilleure gestion des absences d'entrée.
+    Reduction du code specifique pour generer Player.
+    Meilleur controle sur la valeur d'XP.
+
 v0.4.3
     New font, much readable.
     MonsterCompendium genere la base de monstres sur la base de CSV.

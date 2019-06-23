@@ -15,10 +15,10 @@ ideal :
 
 class Fighter:
     def __init__(self,
-                 hp,
-                 might,
-                 vitality,
-                 dexterity=3,
+                 hp=1,
+                 might=0,
+                 vitality=0,
+                 dexterity=0,
                  death_function=kill_monster,
                  xp_value=0,
                  base_dmg=(0, 2),

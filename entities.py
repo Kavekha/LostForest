@@ -82,7 +82,13 @@ class Entity:
         self.level = level
         self.equipment = equipment
         self.equippable = equippable
-        self.add_component(component_list)
+
+        #on donne owner a chaque component
+        for component in component_list:
+            if component:
+                component.owner = self
+            else:
+                continue
 
         # An equipable entity must be an item
         if self.equippable and not self.item:
@@ -96,12 +102,31 @@ class Entity:
 
         self.blocks = blocks
 
-    def add_component(self, component_list):
-        for component in component_list:
-            if component:
-                component.owner = self
-            else:
-                continue
+    def add_component(self, component, component_type):
+        if not component or not type:
+            return False
+
+        component_type = component_type.lower()
+        if component_type == 'fighter':
+            self.fighter = component
+        elif component_type == 'ai':
+            self.ai = component
+        elif component_type == 'inventory':
+            self.inventory = component
+        elif component_type == 'item':
+            self.item = component
+        elif component_type == 'landmark':
+            self.landmark = component
+        elif component_type == 'level':
+            self.level = component
+        elif component_type == 'equipment':
+            self.equipment = component
+        elif component_type == 'equippable':
+            self.equippable = component
+        else:
+            print('error add component')
+            return False
+        component.owner = self
 
     def end_turn(self):
         self.round += 1
