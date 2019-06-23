@@ -14,8 +14,10 @@ class PlayerCompendium:
             "inventory": True,
             "hp": 30,
             "might": 3,
+            "dexterity": 3,
             "vitality": 3,
-            "base_damage": (0, 2),
+            "base_damage_min": 0,
+            "base_damage_max": 2,
             "equipment": True,
         }
     }

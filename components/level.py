@@ -1,5 +1,5 @@
 from config import game_config, color_config
-from systems.localization import Texts
+from data_loaders.localization import Texts
 from menus.character_menu import CharacterMenu
 
 

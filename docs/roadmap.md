@@ -39,6 +39,7 @@ NEXT:
         [ ] 100     Monstres par MonsterClass, autre organisation.
         [ ] ???     Avec DangerLevel, limite de mobs / salle & facon de spawner : Trop homogene, peu de surprises.
         [ ] 50      Limite dans les types d'objet ou de monstres pour assurer variété et eviter doublon.
+        [ ] 100     Lieux avec frequence dans les infos de mobs, pouvoir recuperer tous les mobs liés à une zone.
 
     ITEMS :
         [ ] 50      Dropable : Graine, Piege
@@ -112,6 +113,8 @@ NEXT:
         [ ] 500     Refacto : passer en Entité Composant System ECS
         [ ] 50      Rassembler les Enums au meme endroit.
         [ ] 250     Refacto menus : Retirer les doublements, les hacks, mieux gerer les textes.
+        [ ] 250     Creation d'entités, gestion des erreurs pour eviter les crashs.
+        [ ] 100     MonsterCompendium : eviter d'avoir du eval Libtcod.color. Cf gestion pour Brain, ou equivalent.
 
         # Dirty fixes
         [ ] 50      render : solution degueu du reset game window pour artefacts map precedente.
@@ -136,9 +139,11 @@ NEXT:
         # RELEASE 0.5 : Systeme de combat & Ergos
             [/] Systeme de combat mis à jour.
             [/] Nouvelle fiche de personnage.
+            [/] Chargement des datas monstres via des CSV, plus faciles à mettre à jour.
+            [ ] Refacto creation entités monstres & player.
             [ ] Pluss d'infos sur les items dans les menus.
+            [ ] Chargement des datas items via des CSV.
             [ ] Nouveau systeme d'inventaire : equipement, throw, drop, etc.
-            [ ] Chargement des datas items & monstres via des CSV, plus faciles à mettre à jour.
             [ ] Egos items, base.
             [ ] Monstres & items uniques : gestion.
             [ ] Spawning plus pertinent?

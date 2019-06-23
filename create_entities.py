@@ -1,17 +1,19 @@
 import tcod as libtcod
+
 from components.fighter import Fighter
 from components.inventory import Inventory
 from components.equipment import Equipment
 from components.equippable import Equippable, EquipmentSlot
 from components.item import Item
 from utils.death_functions import kill_monster
-from data.monsters import get_base_monster_stats, get_monster_stats
+# from data.monsters import get_base_monster_stats, get_monster_stats
 from data.playable_archetypes import get_player_stats, get_base_player_stats
 from entities import Entity
 from render_engine import RenderOrder
 from components.ai import BasicMonster, Brainless
 from components.level import Level
 from config import game_config
+from data_loaders.compendium import Compendium
 
 
 def get_brain(brain):
@@ -25,12 +27,18 @@ def get_brain(brain):
 
 def create_fighting_entity(game, entity_defname, x, y, player=False):
     if not player:
-        entity_stats = get_monster_stats(entity_defname)
+        entity_stats = Compendium.get_monster(entity_defname)  # get_monster_stats(entity_defname)
     else:
         entity_stats = get_player_stats(entity_defname)
-    base = entity_stats.get("base")
+
+    if not entity_stats and not player:
+        entity_stats = Compendium.get_base_monster(entity_defname)
+        base = entity_defname
+    else:
+        base = entity_stats.get("base")
+
     if not player:
-        dict_stats = get_base_monster_stats(base)
+        dict_stats = Compendium.get_base_monster(base)  # get_base_monster_stats(base)
     else:
         dict_stats = get_base_player_stats(base)
 
@@ -40,11 +48,14 @@ def create_fighting_entity(game, entity_defname, x, y, player=False):
     inventory = dict_stats.get("inventory", False)
     equipment = dict_stats.get("equipment", False)
     death_function = dict_stats.get("death_function", kill_monster)
-    entity_base_dmg = dict_stats.get("base_damage", (0, 2))
-    entity_hp = dict_stats.get("hp", 10)
-    entity_might = dict_stats.get("might", 3)
-    entity_vitality = dict_stats.get("vitality", 3)
+    entity_base_dmg_min = int(dict_stats.get("base_damage_min", 0))
+    entity_base_dmg_max = int(dict_stats.get("base_damage_max", 2))
+    entity_hp = int(dict_stats.get("hp", 10))
+    entity_might = int(dict_stats.get("might", 3))
+    entity_dexterity = int(dict_stats.get("dexterity", 3))
+    entity_vitality = int(dict_stats.get("vitality", 3))
     ai_component = get_brain(dict_stats.get("brain", None))
+    # print(f'ai component for {entity_defname} is {ai_component} and get brain was {get')
 
     if entity_stats.get("name"):
         entity_name = entity_stats.get("name")
@@ -58,23 +69,28 @@ def create_fighting_entity(game, entity_defname, x, y, player=False):
         equipment = entity_stats.get("equipment")
     if entity_stats.get("death_function"):
         death_function = entity_stats.get("death_function", kill_monster)
-    if entity_stats.get("base_damage"):
-        entity_base_dmg = entity_stats.get("base_damage")
+    if entity_stats.get("base_damage_min"):
+        entity_base_dmg_min = int(entity_stats.get("base_damage_min"))
+    if entity_stats.get("base_damage_max"):
+        entity_base_dmg_max = int(entity_stats.get("base_damage_max"))
     if entity_stats.get("hp"):
-        entity_hp = entity_stats.get("hp")
+        entity_hp = int(entity_stats.get("hp"))
     if entity_stats.get("might"):
-        entity_might = entity_stats.get("might")
+        entity_might = int(entity_stats.get("might"))
+    if entity_stats.get("dexterity"):
+        entity_dexterity = int(entity_stats.get("dexterity"))
     if entity_stats.get("vitality"):
-        entity_vitality = entity_stats.get("vitality")
+        entity_vitality = int(entity_stats.get("vitality"))
     if entity_stats.get("brain"):
         ai_component = get_brain(entity_stats.get("brain"))
 
     fighter_component = Fighter(
         hp=entity_hp,
         might=entity_might,
+        dexterity=entity_dexterity,
         vitality=entity_vitality,
         death_function=death_function,
-        base_dmg=entity_base_dmg,
+        base_dmg=(entity_base_dmg_min, entity_base_dmg_max),
     )
     if inventory:
         inventory_component = Inventory(26)
@@ -110,6 +126,8 @@ def create_fighting_entity(game, entity_defname, x, y, player=False):
     xp_value = calculate_xp_value(entity.fighter)
     entity.fighter.xp_value = xp_value
 
+    print(f'end of create: entity {entity.name} brain is : {entity.ai}')
+
     return entity
 
 
@@ -118,13 +136,14 @@ def calculate_xp_value(fighter):
         return 0
 
     min_dmg, max_dmg = fighter.base_damage
-    damage_value = min_dmg + max_dmg * game_config.BASE_DAMAGE_XP_VALUE
+    damage_value = (min_dmg + max_dmg) * game_config.BASE_DAMAGE_XP_VALUE
     might_value = fighter.might * game_config.MIGHT_XP_VALUE
+    dexterity_value = fighter.dexterity * game_config.DEXTERITY_XP_VALUE
     vitality_value = fighter.vitality * game_config.VITALITY_XP_VALUE
 
     hp_value = fighter.max_hp * game_config.HP_XP_VALUE
 
-    total_xp_value = might_value * vitality_value * hp_value * damage_value
+    total_xp_value = might_value * vitality_value * hp_value * damage_value * dexterity_value
     total_xp_value = int(total_xp_value)
 
     print("Total xp value of {} is {}".format(fighter.owner.name, total_xp_value))

@@ -1,6 +1,6 @@
 from menus.menu import Menu
 from menus.level_menu import LevelUpMenu
-from systems.localization import Texts
+from data_loaders.localization import Texts
 
 
 class CharacterMenu(Menu):

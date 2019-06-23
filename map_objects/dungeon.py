@@ -1,6 +1,6 @@
 from data.dungeon_specs import get_dungeon_config
 from map_objects.game_map import GameMap
-from systems.localization import Texts
+from data_loaders.localization import Texts
 from config import color_config
 
 

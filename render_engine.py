@@ -37,10 +37,10 @@ class Render:
 
     def _initialize_render(self):
         libtcod.console_set_custom_font(
-            "dejavu16x16_gs_tc.png",
-            libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD,
-            32,
-            8,
+            "16x16_sm_ascii.png",
+            libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD | libtcod.FONT_LAYOUT_CP437,
+            16,
+            16,
         )
         libtcod.console_init_root(
             self.screen_width, self.screen_height, "Cursed Forest", False

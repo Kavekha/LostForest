@@ -129,7 +129,8 @@ class Spawner:
             monster_name = random_choice_from_dict(monster_list)
             if monster_name:
                 monster = create_fighting_entity(game, monster_name, x, y)
-                return monster
+                if monster:
+                    return monster
         return None
 
     def spawn_item(self, x, y):

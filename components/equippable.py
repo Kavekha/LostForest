@@ -1,5 +1,5 @@
 from enum import Enum
-from systems.localization import Texts
+from data_loaders.localization import Texts
 
 
 class EquipmentSlot(Enum):

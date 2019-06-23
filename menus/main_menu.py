@@ -1,10 +1,10 @@
 import tcod as libtcod
 
 from game import Game
-from data.data_loaders import load_game, refresh_at_load
+from data_loaders.data_loaders import load_game, refresh_at_load
 from menus.menu import MenuType, Menu
 from menus.language_menu import LanguageMenu
-from systems.localization import Texts
+from data_loaders.localization import Texts
 
 
 class MainMenu(Menu):

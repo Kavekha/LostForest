@@ -1,5 +1,5 @@
 from menus.menu import Menu
-from systems.localization import Texts
+from data_loaders.localization import Texts
 from config import game_config
 
 
