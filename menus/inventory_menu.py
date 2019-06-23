@@ -1,5 +1,5 @@
 from menus.menu import Menu
-from systems.localization import Texts
+from data_loaders.localization import Texts
 from components.equippable import slot_to_text, get_equipment_in_slot
 
 

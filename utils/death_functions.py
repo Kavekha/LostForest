@@ -2,7 +2,7 @@ import tcod as libtcod
 
 from render_engine import RenderOrder
 from config import color_config
-from systems.localization import Texts
+from data_loaders.localization import Texts
 
 
 def become_corpse(entity, npc_killed=True):

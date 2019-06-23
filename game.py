@@ -4,7 +4,7 @@ from config import app_config
 from create_entities import create_fighting_entity
 from utils.fov_functions import recompute_fov, discover_new_tiles
 from handlers.event_handler import EventHandler
-from data.data_loaders import save_game
+from data_loaders.data_loaders import save_game
 from map_objects.dungeon import Dungeon
 from utils.fov_functions import initialize_fov
 

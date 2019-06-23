@@ -1,5 +1,5 @@
 from config import color_config
-from systems.localization import Texts
+from data_loaders.localization import Texts
 from menus.inventory_menu import InventoryMenu, DropMenu
 from components.equippable import get_equipment_in_slot
 

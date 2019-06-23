@@ -1,13 +1,13 @@
 from menus.menu import Menu, MenuType
 import tcod as libtcod
-from systems.localization import Texts
+from data_loaders.localization import Texts
 
 
 class VictoryMenu(Menu):
     def __init__(self):
         super().__init__()
         self.type = MenuType.GRAPHIC
-        self.title = "VICTORY"
+        self.title = Texts.get_text('VICTORY_1_TITLE')
         self.header = ("""
         
 """

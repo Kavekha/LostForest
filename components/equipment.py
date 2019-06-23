@@ -1,5 +1,5 @@
 from components.equippable import EquipmentSlot, get_equipment_in_slot
-from systems.localization import Texts
+from data_loaders.localization import Texts
 from config import color_config
 
 

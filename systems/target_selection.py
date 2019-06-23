@@ -2,7 +2,7 @@ import tcod as libtcod
 
 from render_engine import RenderOrder
 from entities import Entity, EntityType, is_entity_type
-from systems.localization import Texts
+from data_loaders.localization import Texts
 from config import color_config
 
 

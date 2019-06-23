@@ -3,7 +3,7 @@ import tcod as libtcod
 import math
 
 from render_engine import RenderOrder
-from systems.localization import Texts
+from data_loaders.localization import Texts
 from config import color_config
 from components.item import Item
 

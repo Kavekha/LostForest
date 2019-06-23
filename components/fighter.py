@@ -2,7 +2,7 @@ from random import randint
 
 from config import color_config, game_config
 from utils.death_functions import kill_monster
-from systems.localization import Texts
+from data_loaders.localization import Texts
 
 
 """

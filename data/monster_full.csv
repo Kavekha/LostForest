@@ -1,0 +1,9 @@
+defname;name;base;char;color;brain;hp;might;dexterity;vitality;base_damage_min;base_damage_max;armor
+ougloth;;ougloth;;;;;;;;;;
+ougloth_weak;Ougloth malingre;ougloth;;libtcod.desaturated_red;;7;;2;;;;
+ougloth_brute;Brute Ougloth;ougloth;;libtcod.red;;14;5;;;;;1
+living_root;Racines vivantes;root;;;;;;;;;;
+murderous_root;Racines devorantes;root;;;BasicMonster;8;2;4;1;0;2;1
+charencon;Charencon;charencon;;;;;;;;;;
+gob_dog;;gob_dog;;;;;;;;;;
+tertre_errant;;tertre_errant;;;;;;;;;;
