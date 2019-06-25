@@ -40,6 +40,7 @@ NEXT:
         [ ] ???     Avec DangerLevel, limite de mobs / salle & facon de spawner : Trop homogene, peu de surprises.
         [ ] 50      Limite dans les types d'objet ou de monstres pour assurer variété et eviter doublon.
         [ ] 100     Lieux avec frequence dans les infos de mobs, pouvoir recuperer tous les mobs liés à une zone.
+        [ ] 100     Monstres & items table generés automatiquement par Zone de Donjon & Tiers, sur la base d'informations dans les datas Monsters & Items.
 
     ITEMS :
         [ ] 50      Dropable : Graine, Piege
@@ -141,8 +142,9 @@ NEXT:
             [/] Nouvelle fiche de personnage.
             [/] Chargement des datas monstres via des CSV, plus faciles à mettre à jour.
             [/] Refacto creation entités monstres & player.
-            [ ] Pluss d'infos sur les items dans les menus.
+            [/] Table items : Par categorie, puis par items. Idem pour monstres.
             [ ] Chargement des datas items via des CSV.
+            [ ] Pluss d'infos sur les items dans les menus.
             [ ] Nouveau systeme d'inventaire : equipement, throw, drop, etc.
             [ ] Egos items, base.
             [ ] Monstres & items uniques : gestion.

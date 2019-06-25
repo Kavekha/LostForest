@@ -4,6 +4,7 @@ from data.monster_table import get_monster_table
 from data.item_table import get_item_table
 from data.items import get_item_attributes
 from utils.random_functions import random_choice_from_dict
+from config import map_gen_config
 
 
 class Spawner:
@@ -124,22 +125,48 @@ class Spawner:
 
     def spawn_monster(self, x, y):
         game = self.map_owner.dungeon.game
-        monster_list = self.monsters_table
-        if monster_list:
-            monster_name = random_choice_from_dict(monster_list)
-            if monster_name:
-                monster = create_fighting_entity(game, monster_name, x, y)
-                if monster:
-                    return monster
+        map_type = self.map_owner.map_type
+        monster_name = self.get_last_object_from_table(map_type, get_monster_table)
+        if monster_name:
+            monster = create_fighting_entity(game, monster_name, x, y)
+            if monster:
+                return monster
         return None
 
     def spawn_item(self, x, y):
-        item_list = self.items_table
-        if item_list:
-            item_name = random_choice_from_dict(item_list)
-            item_attributes = get_item_attributes(item_name)
-            if item_attributes:
-                game = self.map_owner.dungeon.game
-                item = create_entity_item(game, item_name, x, y, item_attributes)
-                return item
+        map_type = self.map_owner.map_type
+        item_name = self.get_last_object_from_table(map_type, get_item_table)
+        item_attributes = get_item_attributes(item_name)
+        if item_attributes:
+            game = self.map_owner.dungeon.game
+            item = create_entity_item(game, item_name, x, y, item_attributes)
+            return item
         return None
+
+    def get_last_object_from_table(self, key, func_get_table):
+        key_received = key
+        count = 0
+        while True and count < map_gen_config.MAX_TABLE_ITERATIONS:
+            key_received, stop_searching = self.get_object_from_table(key_received, func_get_table)
+            count +=1
+            if stop_searching:
+                break
+        return key_received
+
+    def get_object_from_table(self, key, func_get_table):
+        # by default, this is the map type, used as key for dict item table
+        # we want to know if there is another item table in it.
+        try:
+            # Est ce que la table item contient "key"? => Si oui
+            current_table = func_get_table(key)
+            # Pas d except, donc la table contenait une key vers une autre table de item_table:
+            object_returned = random_choice_from_dict(current_table)
+            return object_returned, False
+        except:
+            return key, True
+
+
+
+
+
+

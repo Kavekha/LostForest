@@ -1,3 +1,8 @@
+v0.4.5
+    Tables for items can now have their own tables, allowing table for categories and items in category table.
+    Same for monsters, various packs can be made inside a dungeon region.
+    Better control on items & monsters frequency with map_gen_config constants.
+
 v0.4.4
     Refacto creation monstres depuis MonsterCompendium.
     Meilleure gestion des absences d'entrée.
