@@ -1,3 +1,7 @@
+v0.4.6
+    If no item or no monster in Compendium, nothing will be generated but the game won't crash.
+    Compendium now generate items from csv. Armor, jewel are basics, no additional statistics.
+
 v0.4.5
     Tables for items can now have their own tables, allowing table for categories and items in category table.
     Same for monsters, various packs can be made inside a dungeon region.

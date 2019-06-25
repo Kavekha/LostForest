@@ -32,9 +32,9 @@ FINAL_DAMAGE_MODIFIER = 0.3  # Modificateur sur la formule totale, pour nerfer o
 
 
 # DEFAULT CREATURE STATS if not found.
-DEFAULT_CREATURE_NAME = 'Unknown'
-DEFAULT_CREATURE_APPEARANCE = '?'
-DEFAULT_CREATURE_COLOR = libtcod.red
+DEFAULT_NAME = 'Unknown'
+DEFAULT_APPEARANCE = '?'
+DEFAULT_COLOR = libtcod.red
 DEFAULT_CREATURE_BRAIN = BasicMonster
 
 # DEFAULT FIGHTER COMPONENT STATS if not found

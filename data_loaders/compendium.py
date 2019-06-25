@@ -30,6 +30,7 @@ at the end we want this:
 class Compendium:
     monster_base_compendium = {}
     monster_full_compendium = {}
+    item_full_compendium = {}
 
     def __init__(self):
         Compendium.monster_base_compendium = Compendium.create_compendium_from_csv(
@@ -37,6 +38,9 @@ class Compendium:
         )
         Compendium.monster_full_compendium = Compendium.create_compendium_from_csv(
             app_config.DATA_DIRECTORY + app_config.MONSTER_FULL_FILE
+        )
+        Compendium.item_full_compendium = Compendium.create_compendium_from_csv(
+            app_config.DATA_DIRECTORY + app_config.ITEM_FULL_FILE
         )
 
     @staticmethod
@@ -74,7 +78,13 @@ class Compendium:
     def get_base_monster(defname):
         return Compendium.monster_base_compendium.get(defname.lower(), None)
 
+    @staticmethod
+    def get_item(defname):
+        return Compendium.item_full_compendium.get(defname.lower(), None)
+
 
 Compendium()
 print(f'Monster base compendium : {Compendium.monster_base_compendium}')
 print(f'Monster full compendium : {Compendium.monster_full_compendium}')
+print(f'Item full compendium : {Compendium.item_full_compendium}')
+print(f'healing_potion is : {Compendium.item_full_compendium.get("healing_potion")}')

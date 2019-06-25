@@ -61,7 +61,8 @@ class Spawner:
                         ]
                 ):
                     item = self.spawn_item(x, y)
-                    self.map_owner.add_entity(item)
+                    if item:
+                        self.map_owner.add_entity(item)
                     item_by_room[i] -= 1
 
     def spawn_creatures(self):
@@ -98,7 +99,8 @@ class Spawner:
                     ]
                 ):
                     monster = self.spawn_monster(x, y)
-                    self.map_owner.add_entity(monster)
+                    if monster:
+                        self.map_owner.add_entity(monster)
                     monster_by_room[i] -= 1
 
     # table : [[nb_max, level],[nb_max, level + x]]
@@ -139,7 +141,7 @@ class Spawner:
         item_attributes = get_item_attributes(item_name)
         if item_attributes:
             game = self.map_owner.dungeon.game
-            item = create_entity_item(game, item_name, x, y, item_attributes)
+            item = create_entity_item(game, item_name, x, y)
             return item
         return None
 
