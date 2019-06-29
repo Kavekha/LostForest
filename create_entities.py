@@ -150,6 +150,24 @@ def create_equippable_component(entity_stats):
     return equippable_component
 
 
+def add_ego_attributes(item, defname):
+    ego_attributes = Compendium.get_egos(defname)
+
+    if not ego_attributes:
+        return False
+
+    try:
+        item.equippable.physical_power_bonus += int(ego_attributes.get('physical_power', 0))
+        item.equippable.might_bonus += int(ego_attributes.get('might', 0))
+        item.equippable.hp_bonus += int(ego_attributes.get('hp', 0))
+        item.equippable.vitality_bonus += int(ego_attributes.get('vitality', 0))
+        item.equippable.dexterity_bonus += int(ego_attributes.get('dexterity', 0))
+        item.equippable.armor_bonus += int(ego_attributes.get('armor', 0))
+        item.name = item.name + ' ' + ego_attributes.get('name')
+    except AttributeError:
+        return False
+
+
 def create_entity_item(game, item_defname, x, y):
     print(f'entity item requested : {item_defname}')
     entity_stats = Compendium.get_item(item_defname)
