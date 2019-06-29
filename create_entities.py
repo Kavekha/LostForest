@@ -12,25 +12,61 @@ from components.level import Level
 from config import game_config
 from data_loaders.compendium import Compendium
 from utils.death_functions import kill_player
+from systems.target_selection import TargetType
+from utils.effect_functions import heal, acide
 
 
 def get_brain(brain):
-    if brain == "BasicMonster":
-        return BasicMonster()
-    elif brain == "Brainless":
-        return Brainless()
-    else:
+    brain = brain.lower()
+
+    brains = {
+        'basicmonster': BasicMonster(),
+        'brainless': Brainless()
+    }
+
+    return brains.get(brain, Brainless())
+
+
+def get_target_type(target_type):
+    if not target_type:
         return None
+
+    target_type = target_type.lower()
+
+    targets = {
+        'self': TargetType.SELF,
+        'fighting_entity': TargetType.FIGHTING_ENTITY,
+        'item_entity': TargetType.ITEM_ENTITY,
+        'other_entity': TargetType.OTHER_ENTITY,
+        'tile': TargetType.TILE
+    }
+
+    return targets.get(target_type, TargetType.NONE)
+
+
+def get_use_function(use_function):
+    if not use_function:
+        return None
+    use_function = use_function.lower()
+
+    functions = {
+        'heal': heal,
+        'acide': acide
+    }
+
+    return functions.get(use_function, None)
 
 
 def create_entity(game, base_stats, entity_stats):
-    name = entity_stats.get('name', base_stats.get('name', game_config.DEFAULT_CREATURE_NAME))
-    appearance = entity_stats.get('char', base_stats.get('char', game_config.DEFAULT_CREATURE_APPEARANCE))
-    color = entity_stats.get('color', base_stats.get('color', game_config.DEFAULT_CREATURE_COLOR))
+    if not entity_stats:
+        entity_stats = base_stats
+
+    name = entity_stats.get('name', base_stats.get('name', game_config.DEFAULT_NAME))
+    appearance = entity_stats.get('char', base_stats.get('char', game_config.DEFAULT_APPEARANCE))
+    color = entity_stats.get('color', base_stats.get('color', game_config.DEFAULT_COLOR))
 
     entity = Entity(game, 0, 0,
-                    appearance, color, name,
-                    blocks=True, render_order=RenderOrder.ACTOR)
+                    appearance, color, name)
 
     return entity
 
@@ -58,6 +94,109 @@ def create_ai_component(base_stats, entity_stats):
     return ai_component
 
 
+def create_item_component(entity_stats):
+    use_function = get_use_function(entity_stats.get('use_function', None))
+    power = int(entity_stats.get('power', 0))
+    target_type = get_target_type(entity_stats.get('target_type'))
+
+    return Item(use_function, power, target_type)
+
+
+def get_equippable_slot(slot):
+    print(f'slot requested was {slot}')
+    if not slot:
+        return None
+
+    slot = slot.lower()
+    slots = {
+        'main_hand': EquipmentSlot.MAIN_HAND,
+        'off_hand': EquipmentSlot.OFF_HAND,
+        'neck': EquipmentSlot.NECK,
+        'chest': EquipmentSlot.CHEST
+    }
+    print(f'slot about to be return is {slots.get(slot, EquipmentSlot.NONE)}')
+    return slots.get(slot, EquipmentSlot.NONE)
+
+
+def create_equippable_component(entity_stats):
+
+    equippable = entity_stats.get('equippable', False)
+    print(f'equippable is {equippable}')
+
+    if not equippable:
+        return None
+
+    equippable_slot = get_equippable_slot(entity_stats.get("slot", None))
+    equippable_weapon_dmg_min = int(entity_stats.get("weapon_dmg_min", 0))
+    equippable_weapon_dmg_max = int(entity_stats.get('weapon_dmg_max', 2))
+    equippable_dmg_bonus = int(entity_stats.get("physical_power_bonus", 0))
+    equippable_might_bonus = int(entity_stats.get("might_bonus", 0))
+    equippable_hp_bonus = int(entity_stats.get("hp_bonus", 0))
+    equippable_vitality_bonus = int(entity_stats.get("vitality_bonus", 0))
+    equippable_dexterity_bonus = int(entity_stats.get('dexterity_bonus', 0))
+    equippable_armor_bonus = int(entity_stats.get('armor_bonus', 0))
+
+    equippable_component = Equippable(
+        equippable_slot,
+        weapon_damage=(equippable_weapon_dmg_min, equippable_weapon_dmg_max),
+        physical_power_bonus=equippable_dmg_bonus,
+        might_bonus=equippable_might_bonus,
+        hp_bonus=equippable_hp_bonus,
+        vitality_bonus=equippable_vitality_bonus,
+        dexterity_bonus=equippable_dexterity_bonus,
+        armor_bonus=equippable_armor_bonus
+    )
+
+    return equippable_component
+
+
+def add_ego_attributes(item, defname):
+    ego_attributes = Compendium.get_egos(defname)
+
+    if not ego_attributes:
+        return False
+
+    try:
+        item.equippable.physical_power_bonus += int(ego_attributes.get('physical_power', 0))
+        item.equippable.might_bonus += int(ego_attributes.get('might', 0))
+        item.equippable.hp_bonus += int(ego_attributes.get('hp', 0))
+        item.equippable.vitality_bonus += int(ego_attributes.get('vitality', 0))
+        item.equippable.dexterity_bonus += int(ego_attributes.get('dexterity', 0))
+        item.equippable.armor_bonus += int(ego_attributes.get('armor', 0))
+        item.name = item.name + ' ' + ego_attributes.get('name')
+    except AttributeError:
+        return False
+
+
+def create_entity_item(game, item_defname, x, y):
+    print(f'entity item requested : {item_defname}')
+    entity_stats = Compendium.get_item(item_defname)
+
+    if not entity_stats:
+        return False
+
+    print(f'entity state of {item_defname} is {entity_stats}')
+
+    # we create the entity
+    entity = create_entity(game, entity_stats, {})
+    entity.blocks = False
+    entity.render_order = RenderOrder.ITEM
+    entity.x, entity.y = x, y
+
+    item_component = create_item_component(entity_stats)
+    entity.add_component(item_component, 'item')
+
+    equippable_component = create_equippable_component(entity_stats)
+    if equippable_component:
+        entity.add_component(equippable_component, 'equippable')
+
+    print(f"created item is {entity.name}, and equipable is {entity.equippable} ")
+    if entity.equippable:
+        print(f'slot equipement is {entity.equippable.slot}')
+
+    return entity
+
+
 def create_fighting_entity(game, entity_defname, x, y, player=False):
     # we get the entity stats from the defname
     entity_stats = Compendium.get_monster(entity_defname)
@@ -74,8 +213,13 @@ def create_fighting_entity(game, entity_defname, x, y, player=False):
     if not base_stats:
         base_stats = {}
 
+    if not base_stats and not entity_stats:
+        return False
+
     # we create the entity
     entity = create_entity(game, base_stats, entity_stats)
+    entity.blocks = True
+    entity.render_order = RenderOrder.ACTOR
     entity.x, entity.y = x, y
 
     # we create fighting component
@@ -124,7 +268,7 @@ def calculate_xp_value(fighter):
     return total_xp_value
 
 
-def create_entity_item(game, item_defname, x, y, dict_attributes):
+def old_create_entity_item(game, item_defname, x, y, dict_attributes):
     name = dict_attributes.get("name", "?")
     appearance = dict_attributes.get("char", "?")
     color = dict_attributes.get("color", libtcod.red)

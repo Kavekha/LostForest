@@ -29,15 +29,12 @@ NEXT:
         [ ] 100     Elements de map pouvant être detruits. Structure & resistance selon type Tuile. Attributs sur Tuile seulement une fois touché, sinon dans le type.
 
     LOOTS / MONSTRES:
-        [ ] ???     Niveau de danger pour modifier un monstre de base selon le niveau du donjon.
-        [ ] ???     Table de mobs / items : poids dependant du niveau de danger.
-        [ ] 50      Nom de monstre vs nom de reference du monstre & idem pour items
+        [/] 50      Nom de monstre vs nom de reference du monstre & idem pour items
         [ ] 100     Pack de monstres, thematique "monstre" de salles.
         [ ] 100     Items & monstres uniques, ou avec une limite, pour eviter trop grand nombre d'armes en doublon.
         [ ] 250     Creation d'items par morceaux selon region, chances de magique, budget magique a repartir, etc. affix / suffix and all that.
         [ ] 100     Creation de monstre par morceaux selon region, etc. cf.items?
         [ ] 100     Monstres par MonsterClass, autre organisation.
-        [ ] ???     Avec DangerLevel, limite de mobs / salle & facon de spawner : Trop homogene, peu de surprises.
         [ ] 50      Limite dans les types d'objet ou de monstres pour assurer variété et eviter doublon.
         [ ] 100     Lieux avec frequence dans les infos de mobs, pouvoir recuperer tous les mobs liés à une zone.
         [ ] 100     Monstres & items table generés automatiquement par Zone de Donjon & Tiers, sur la base d'informations dans les datas Monsters & Items.
@@ -116,6 +113,9 @@ NEXT:
         [ ] 250     Refacto menus : Retirer les doublements, les hacks, mieux gerer les textes.
         [ ] 250     Creation d'entités, gestion des erreurs pour eviter les crashs.
         [ ] 100     MonsterCompendium : eviter d'avoir du eval Libtcod.color. Cf gestion pour Brain, ou equivalent.
+        [ ] 100     Compendium : Meilleure gestion des Brains, use_function, target type, etc. Dictionnaires relous à M.A.J.
+        [ ] 100     Compendium : Json plus lisible sur la durée.
+        [ ] 250     Pluss de securité à la creation du dictionnaire monstres / items et plus de sécurité pour leur ajout.
 
         # Dirty fixes
         [ ] 50      render : solution degueu du reset game window pour artefacts map precedente.
@@ -129,6 +129,7 @@ NEXT:
         [ ] 100     Menu : Si _options avec des entités, et pas de display_options avec texte : crash. Cf inventory.
         [ ] 100     Crash au reload d'une save apres victory screen. Plus de dungeon value.
         [ ] 100     Retours à la ligne non pris en compte avec Texts.get_text
+        [ ] 50      Message "Item equipé" si slot.NONE. Ne devrait pas etre possible.
 
         # POC
         [ ] 500     Passage / POC sur bearlib terminal.
@@ -137,26 +138,27 @@ NEXT:
 
     OBJECTIFS:
 
-        # RELEASE 0.5 : Systeme de combat & Ergos
+        # RELEASE 0.5 : Systeme de combat & Egos
             [/] Systeme de combat mis à jour.
             [/] Nouvelle fiche de personnage.
             [/] Chargement des datas monstres via des CSV, plus faciles à mettre à jour.
             [/] Refacto creation entités monstres & player.
             [/] Table items : Par categorie, puis par items. Idem pour monstres.
-            [ ] Chargement des datas items via des CSV.
-            [ ] Pluss d'infos sur les items dans les menus.
-            [ ] Nouveau systeme d'inventaire : equipement, throw, drop, etc.
-            [ ] Egos items, base.
-            [ ] Monstres & items uniques : gestion.
-            [ ] Spawning plus pertinent?
+            [/] Chargement des datas items via des CSV.
+            [/] Egos items, base.
+            [ ] ?
 
-        # RELEASE 0.6 : Apparence.
+        # RELEASE 0.6 : BearLib !!
+            [ ] Remplacement des Commands / keys.
+            [ ] Affichage Render, sans layer.
+            [ ] Affichage avec layer.
+            [ ] Refacto menus.
+
+        # RELEASE ? : Apparence.
             [ ] Images du jeu.
             [ ] Score
             [ ] multi-saves, nom du personnage.
             [ ] Interface, tutoriel ou meilleures indications?
             [ ] Py2game ou Nuitka (?) : exe pour windoz.
 
-        # RELEASE 0.7 :
-            [ ] Bearlib!
 

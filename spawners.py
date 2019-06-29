@@ -1,8 +1,8 @@
 from random import randint
-from create_entities import create_entity_item, create_fighting_entity
+from create_entities import create_entity_item, create_fighting_entity, add_ego_attributes
 from data.monster_table import get_monster_table
 from data.item_table import get_item_table
-from data.items import get_item_attributes
+from data.egos_table import get_ego_table
 from utils.random_functions import random_choice_from_dict
 from config import map_gen_config
 
@@ -61,7 +61,8 @@ class Spawner:
                         ]
                 ):
                     item = self.spawn_item(x, y)
-                    self.map_owner.add_entity(item)
+                    if item:
+                        self.map_owner.add_entity(item)
                     item_by_room[i] -= 1
 
     def spawn_creatures(self):
@@ -98,7 +99,8 @@ class Spawner:
                     ]
                 ):
                     monster = self.spawn_monster(x, y)
-                    self.map_owner.add_entity(monster)
+                    if monster:
+                        self.map_owner.add_entity(monster)
                     monster_by_room[i] -= 1
 
     # table : [[nb_max, level],[nb_max, level + x]]
@@ -134,12 +136,14 @@ class Spawner:
         return None
 
     def spawn_item(self, x, y):
+        game = self.map_owner.dungeon.game
         map_type = self.map_owner.map_type
         item_name = self.get_last_object_from_table(map_type, get_item_table)
-        item_attributes = get_item_attributes(item_name)
-        if item_attributes:
-            game = self.map_owner.dungeon.game
-            item = create_entity_item(game, item_name, x, y, item_attributes)
+        if item_name:
+            item = create_entity_item(game, item_name, x, y)
+            if item.equippable:
+                ego_name = self.get_last_object_from_table(map_type, get_ego_table)
+                add_ego_attributes(item, ego_name)
             return item
         return None
 

@@ -1,0 +1,6 @@
+defname;name;might;dexterity;vitality;hp;armor;physical_power
+ego_might;de Puissance;2;0;0;0;0;0
+ego_dexterity;de Precision;0;2;0;0;0;0
+ego_vitality;de Robustesse;0;0;2;0;0;0
+ego_hp;d'Endurance;0;0;0;20;0;0
+ego_armor;de Resistance;0;0;0;0;2;0

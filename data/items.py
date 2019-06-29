@@ -32,7 +32,7 @@ def get_item_attributes(item):
             "value": 30,
         },
         "staff_force": {
-            "name": "Baton de voyageur",
+            "name": "Baton de force",
             "char": "/",
             "color": libtcod.white,
             "equippable": {
