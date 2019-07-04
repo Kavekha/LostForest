@@ -1,3 +1,9 @@
+v0.5.2
+    Layers pour Map, Entities, interface, menus.
+    Logs et menus correctement raffraichis.
+    Replacement des differentes interfaces.
+    TODO: Refacto des attributs de Render.
+
 v0.5.1
     config.ini
     Render map en bearlib.

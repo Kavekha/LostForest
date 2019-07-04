@@ -8,6 +8,13 @@ from menus.menu import MenuType
 from config import app_config
 
 
+class RenderLayer(Enum):
+    MAP = 0 # floor & wall
+    ENTITIES = 1    # Characters & items
+    INTERFACE = 2
+    BACKGROUND = 3  # Image
+    MENU = 4
+
 class RenderOrder(Enum):
     CORPSE = 1
     LANDMARK = 2
@@ -23,46 +30,43 @@ class Render:
     """
 
     def __init__(self, screen_width=80, screen_height=50, bar_width=20, panel_height=7):
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        blt.open()
+
+        bar_width = blt.state(blt.TK_WIDTH) - (blt.state(blt.TK_WIDTH) // 4)
+        panel_height = blt.state(blt.TK_HEIGHT) // 6
+
+        self.screen_width = blt.state(blt.TK_WIDTH)
+        self.screen_height = blt.state(blt.TK_HEIGHT)
         self.panel_height = panel_height
         self.bar_width = bar_width
         self.panel_y = screen_height - panel_height
-        self.message_x = bar_width + 2
+        self.message_x = bar_width
         self.message_width = screen_width - bar_width - 2
         self.message_height = panel_height - 1
-        self.log_message_x = bar_width + 2
+        self.log_message_x = int(blt.state(blt.TK_WIDTH) / 3.5)
         self.log_message_width = screen_width - bar_width - 2
         self.log_message_height = panel_height - 1
 
-        self._initialize_render()
+        print(f'bar width is {self.bar_width}, message x is {self.message_x}')
 
-    def _initialize_render(self):
-        blt.open()
         blt.refresh()
 
-    def render_app(self, app, mouse=None):
+    def render_app(self, app):
         if app.app_states == AppStates.MAIN_MENU:
             self._render_main_menu(app)
         elif app.app_states == AppStates.GAME:
-            self._render_all(app, mouse)
+            self._render_all(app)
         else:
             print("ERROR : Nothing to render.")
 
     def _render_main_menu(self, app):
-        if app.current_menu:
-            current_menu = app.current_menu
-        else:
-            current_menu = app.game.current_menu
+        current_menu = app.current_menu if app.current_menu else app.game.current_menu
 
         if current_menu:
-            if current_menu.type == MenuType.GRAPHIC:
-                self._main_menu(current_menu, self.screen_width, self.screen_height
-                )
-            elif current_menu.type == MenuType.STANDARD:
-                self._menu(current_menu)
+            self._main_menu(current_menu)
 
     def _menu(self, current_menu, width=None):
+        blt.layer(RenderLayer.MENU.value)
         if len(current_menu.options) > 26:
             raise ValueError("Cannot have a menu with more than 26 options.")
 
@@ -85,9 +89,11 @@ class Render:
             blt.printf(topleft_x, topleft_y + y, text)
             y += 1
             letter_index += 1
+
         blt.refresh()
 
-    def _main_menu(self, current_menu_object, screen_width, screen_height):
+    def _main_menu(self, current_menu_object):
+        blt.layer(RenderLayer.BACKGROUND.value)
         if current_menu_object.background_image:
             blt.set(f"U+E000: {current_menu_object.background_image}, resize=1260x800, resize-filter=nearest")
             blt.put(0, 0, 0xE000)  # Background
@@ -107,18 +113,16 @@ class Render:
         self._menu(current_menu_object, width)
 
     # Nous sommes In Game.
-    def _render_all(self, app, mouse):
+    def _render_all(self, app):
         game = app.game
         if game.fov_recompute:
+            game.fov_recompute = False
+
             self._render_map(game)
 
         self._render_entities(game)
 
-        # print message
-        self._render_messages(game)
-        # self._render_under_mouse(game, mouse)
         self._render_interface(game)
-        self._render_dungeon_level(game)
 
         if game.current_menu:
             self._render_main_menu(app)
@@ -128,50 +132,39 @@ class Render:
         self._clear_all(game.dungeon.current_map.get_entities())
 
     def _render_interface(self, game):
+        blt.layer(RenderLayer.INTERFACE.value)
         self._render_bar(
             1,
-            1,
+            blt.state(blt.TK_HEIGHT) - blt.state(blt.TK_HEIGHT) // 10,
             "HP",
             game.player.fighter.hp,
             game.player.fighter.max_hp,
             libtcod.light_red,
             libtcod.darker_red,
         )
-
-    def _render_under_mouse(self, game, mouse):
-        blt.printf(self.panel, 1, '[color=grey]' + self._get_names_under_mouse(mouse, game))
-
-    def _render_messages(self, game):
-        messages = game.events.message_log.messages
-        y = 1
-        for message in messages:
-            blt.printf(self.log_message_x, y, message.text)
-            y += 1
-
-    def _get_names_under_mouse(self, mouse, game):
-        (x, y) = (mouse.cx, mouse.cy)
-
-        names = [
-            entity.name
-            for entity in game.dungeon.current_map.get_entities()
-            if entity.x == x
-            and entity.y == y
-            and libtcod.map_is_in_fov(
-                game.dungeon.current_map.fov_map, entity.x, entity.y
-            )
-        ]
-        names = ", ".join(names)
-
-        return names.capitalize()
-
-    def _render_dungeon_level(self, game):
-        dungeon = game.dungeon
-        blt.printf(1, 3, "{0} : {1}".format(dungeon.name, dungeon.current_floor))
+        self._render_messages(game)
+        self._render_dungeon_name(game)
+        blt.refresh()
 
     def _render_bar(self, x, y, name, value, maximum, bar_color, back_color):
-        blt.printf(int(x + self.bar_width / 2), y, "{0}: {1}/{2}".format(name, value, maximum))
+        blt.printf(x, y, "{0}: {1}/{2}".format(name, value, maximum))
+
+    def _render_messages(self, game):
+        blt.layer(RenderLayer.INTERFACE.value)
+        messages = game.events.message_log.messages
+        x = self.log_message_x
+        y = blt.state(blt.TK_HEIGHT) - self.panel_height
+        for message in messages:
+            blt.printf(x, y, message.text)
+            y += 1
+
+    def _render_dungeon_name(self, game):
+        dungeon = game.dungeon
+        y = blt.state(blt.TK_HEIGHT) - self.panel_height
+        blt.printf(1, y, "{0} : {1}".format(dungeon.name, dungeon.current_floor))
 
     def _render_map(self, game):
+        blt.layer(RenderLayer.MAP.value)
         game_map = game.dungeon.current_map
         terrain = game_map.get_terrain()
         width, height = game_map.get_map_sizes()
@@ -203,6 +196,7 @@ class Render:
                         blt.printf(x, y, '[bkcolor=darker green] [/bkcolor]')
 
     def _render_entities(self, game):
+        blt.layer(RenderLayer.ENTITIES.value)
         game_map = game.dungeon.current_map
         entities_in_render_order = sorted(
             game_map.get_entities(), key=lambda x: x.render_order.value
@@ -216,9 +210,17 @@ class Render:
             blt.printf(entity.x, entity.y, entity.char)
 
     def _clear_all(self, entities):
+        blt.layer(RenderLayer.ENTITIES.value)
         for entity in entities:
             self._clear_entity(entity)
 
+        blt.layer(RenderLayer.INTERFACE.value)
+        blt.clear_area(0, 0, blt.state(blt.TK_WIDTH, blt.TK_HEIGHT))
+
+        blt.layer(RenderLayer.MENU.value)
+        blt.clear_area(0, 0, blt.state(blt.TK_WIDTH, blt.TK_HEIGHT))
+
     def _clear_entity(self, entity):
         # erase the character that represents this object
-        blt.printf(entity.x, entity.y, ' ')
+        blt.clear_area(entity.x, entity.y, entity.x, entity.y)
+

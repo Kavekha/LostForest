@@ -1,4 +1,4 @@
-NEXT:
+
     DONGEON:
         [ ] 250     Tile personnalisée pour l'affichage : Char, couleurs selon la tile et non pas au niveau de la map.
         [ ] 250     'Salles' avec evenements-types & variantes.
@@ -138,21 +138,12 @@ NEXT:
 
     OBJECTIFS:
 
-        # RELEASE 0.5 : Systeme de combat & Egos
-            [/] Systeme de combat mis à jour.
-            [/] Nouvelle fiche de personnage.
-            [/] Chargement des datas monstres via des CSV, plus faciles à mettre à jour.
-            [/] Refacto creation entités monstres & player.
-            [/] Table items : Par categorie, puis par items. Idem pour monstres.
-            [/] Chargement des datas items via des CSV.
-            [/] Egos items, base.
-            [ ] ?
-
         # RELEASE 0.6 : BearLib !!
-            [ ] Remplacement des Commands / keys.
-            [ ] Affichage Render, sans layer.
+            [/] Remplacement des Commands / keys.
+            [ /] Affichage Render, sans layer.
             [ ] Affichage avec layer.
             [ ] Refacto menus.
+            [ ] Refacto render
 
         # RELEASE ? : Apparence.
             [ ] Images du jeu.
