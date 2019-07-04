@@ -1,5 +1,5 @@
 defname;name;base;char;color;brain;hp;might;dexterity;vitality;base_damage_min;base_damage_max;armor
-player;Vagabond;player;@;libtcod.white;None;30;3;3;3;0;2;0
+player;Vagabond;player;@;libtcod.white;None;3000;3;3;3;0;2;0
 ougloth;Ougloth;ougloth;o;libtcod.dark_red;BasicMonster;10;4;3;3;0;2;0
 root;Racines;root;x;libtcod.desaturated_red;Brainless;5;0;0;1;0;0;2
 gob_dog;Chien goblin;gob_dog;c;libtcod.desaturated_orange;BasicMonster;6;3;5;2;2;4;0

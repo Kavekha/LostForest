@@ -1,9 +1,11 @@
-import tcod as libtcod
+from bearlibterminal import terminal as blt
+
+import sys
+
 from states.app_states import AppStates
 from systems.commands import *
 
 
-# Command version of inputhandler. v0.0.14
 class InputHandler:
     def __init__(self, app, command_controller):
         self.app = app
@@ -20,50 +22,50 @@ class InputHandler:
 
     def press(self, key):
         current_menu = self.get_current_menu()
-        # key comes from libtcod.
-        converted_key = self.convert_libtcod_to_key(key)
+        converted_key = self.convert_blt_to_key(key)
         command_key = self.get_command_from_key(converted_key)
 
         if current_menu:
-            index = key.c - ord("a")
+            index = blt.state(blt.TK_CHAR) - ord('a')
             if index >= 0:
                 current_menu.receive_option_choice(index)
 
         self.command_requested(command_key)
 
-    def convert_libtcod_to_key(self, key):
-        key_char = chr(key.c)
-
-        if key.vk == libtcod.KEY_UP:
+    def convert_blt_to_key(self, key):
+        if key == blt.TK_UP:
             return "button_arrow_up"
-        elif key.vk == libtcod.KEY_DOWN:
+        elif key == blt.TK_DOWN:
             return "button_arrow_down"
-        elif key.vk == libtcod.KEY_LEFT:
+        elif key == blt.TK_LEFT:
             return "button_arrow_left"
-        elif key.vk == libtcod.KEY_RIGHT:
+        elif key == blt.TK_RIGHT:
             return "button_arrow_right"
 
-        if key_char == "z":
+        if key == blt.TK_Z:
             return "button_z"
-        elif key_char == "g":
+        elif key == blt.TK_G:
             return "button_g"
-        elif key_char == "j":
+        elif key == blt.TK_J:
             return "button_j"
-        elif key_char == "i":
+        elif key == blt.TK_I:
             return "button_i"
-        elif key_char == "c":
+        elif key == blt.TK_C:
             return "button_c"
-        elif key_char == "d":
+        elif key == blt.TK_D:
             return "button_d"
 
-        if key.vk == libtcod.KEY_ESCAPE:
+        if key == blt.TK_ESCAPE:
             return "button_escape"
 
-        if key.vk == libtcod.KEY_ENTER and key.lalt:
+        if key == blt.TK_ENTER and blt.state(blt.TK_ALT):
             return "button_alt_enter"
 
-        if key.vk == libtcod.KEY_SPACE:
+        if key == blt.TK_SPACE:
             return "button_space"
+
+        if key == blt.TK_CLOSE:
+            sys.exit()
 
         return
 

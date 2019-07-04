@@ -1,3 +1,5 @@
+from bearlibterminal import terminal as blt
+
 import shelve
 import os
 
@@ -26,14 +28,16 @@ def load_game(file):
 
 
 def save_game(game):
-    with shelve.open(app_config.SAVE_DIRECTORY + "savegame", flag='n') as data_file:
-        try:
+    try:
+        with shelve.open(app_config.SAVE_DIRECTORY + "savegame", flag='n') as data_file:
             data_file['game'] = game
-        except Exception:
-            print('ERROR SAVE')
+    except FileNotFoundError as e:
+        print(f'ERROR: Cant save, no such file. {e}')
 
 
 def refresh_at_load(source):
+    blt.clear()
+    blt.refresh()
 
     # This is needed so the map & chars are fully rendered.
     source.game.dungeon.current_map.fov_map = initialize_fov(
@@ -42,6 +46,5 @@ def refresh_at_load(source):
     source.game.full_recompute_fov()
     source.game.app = source  # On associe Game à App.
     source.app_states = AppStates.GAME
-    source.reset_game_windows = True
-    source.render_engine.reset_render_windows()
+
     source.current_menu = None

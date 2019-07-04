@@ -1,4 +1,4 @@
-import tcod as libtcod
+from bearlibterminal import terminal as blt
 
 from game import Game
 from data_loaders.data_loaders import load_game, refresh_at_load
@@ -13,7 +13,7 @@ class MainMenu(Menu):
         self.type = MenuType.GRAPHIC
         self.title = "CURSED FOREST"
         self.header = ""
-        self.background_image = libtcod.image_load("menu_background.png")
+        self.background_image = './medias/creepy_wood.jpg'
         self.display_options = [Texts.get_text('MAIN_MENU_NEW_GAME'),
                                 Texts.get_text('MAIN_MENU_LOAD_GAME'),
                                 Texts.get_text('MAIN_MENU_LANGUAGES'),

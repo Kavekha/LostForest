@@ -1,3 +1,15 @@
+v0.5.1
+    config.ini
+    Render map en bearlib.
+    Transition entre niveaux OK.
+    Interface visible mais mal placée.
+    Menus affichés mais non raffraichis.
+    TOFIX : Raffraichissement.
+    TOFIX : Save auto cassée. No such file or directory: 'saves/savegame.dat'
+    TOFIX: spawner equippable : bool recu... oO
+
+PRE-RELEASE 0.5 : Compendiums
+
 v0.4.7
     Compendium generates basic Egos attributes.
     If equippable, an item will have an ego when created.

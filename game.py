@@ -1,4 +1,5 @@
 import tcod as libtcod
+from bearlibterminal import terminal as blt
 
 from config import app_config
 from create_entities import create_fighting_entity
@@ -30,7 +31,6 @@ class Game:
 
         # menus / hacks
         self.current_menu = None
-        self.reset_game_windows = False  # Pour contrer les artefacts lors d'un changement d'etage.
 
         self.player = None
         self.target_mode = False
@@ -84,6 +84,7 @@ class Game:
         )
 
     def full_recompute_fov(self):
+        blt.clear()
         game_map = self.dungeon.current_map
         game_map.fov_map = initialize_fov(game_map)
         self.recompute_fov()
