@@ -1,9 +1,11 @@
+from bearlibterminal import terminal as blt
+
 from enum import Enum
 
 
 class MenuType(Enum):
     GRAPHIC = 0
-    STANDARD = 0
+    STANDARD = 1
 
 
 class Menu:

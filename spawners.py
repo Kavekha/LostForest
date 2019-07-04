@@ -141,10 +141,13 @@ class Spawner:
         item_name = self.get_last_object_from_table(map_type, get_item_table)
         if item_name:
             item = create_entity_item(game, item_name, x, y)
-            if item.equippable:
-                ego_name = self.get_last_object_from_table(map_type, get_ego_table)
-                add_ego_attributes(item, ego_name)
-            return item
+            try:
+                if item.equippable:
+                    ego_name = self.get_last_object_from_table(map_type, get_ego_table)
+                    add_ego_attributes(item, ego_name)
+                return item
+            except:
+                print(f'Object not an item : {item}')
         return None
 
     def get_last_object_from_table(self, key, func_get_table):

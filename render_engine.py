@@ -1,9 +1,11 @@
 import tcod as libtcod
+from bearlibterminal import terminal as blt
 
 from enum import Enum
 
 from states.app_states import AppStates
 from menus.menu import MenuType
+from config import app_config
 
 
 class RenderOrder(Enum):
@@ -36,40 +38,10 @@ class Render:
         self._initialize_render()
 
     def _initialize_render(self):
-        libtcod.console_set_custom_font(
-            "16x16_sm_ascii.png",
-            libtcod.FONT_TYPE_GREYSCALE | libtcod.FONT_LAYOUT_TCOD | libtcod.FONT_LAYOUT_CP437,
-            16,
-            16,
-        )
-        libtcod.console_init_root(
-            self.screen_width, self.screen_height, "Cursed Forest", False
-        )
+        blt.open()
+        blt.refresh()
 
-        # create render windows
-        self.reset_render_windows()
-
-    def reset_render_windows(
-        self, game_win=True, panel_win=True, menu_win=True, app_win=True
-    ):
-        # la fenetre dans lequel le personnage circule.
-        if game_win:
-            self.game_window = libtcod.console_new(
-                self.screen_width, self.screen_height
-            )
-        # interface
-        if panel_win:
-            self.panel = libtcod.console_new(self.screen_width, self.panel_height)
-        # les menus divers
-        if menu_win:
-            self.menu_window = libtcod.console_new(
-                self.screen_width, self.screen_height
-            )
-        # le main menu
-        if app_win:
-            self.app_window = libtcod.console_new(self.screen_width, self.screen_height)
-
-    def render_app(self, app, mouse):
+    def render_app(self, app, mouse=None):
         if app.app_states == AppStates.MAIN_MENU:
             self._render_main_menu(app)
         elif app.app_states == AppStates.GAME:
@@ -77,98 +49,62 @@ class Render:
         else:
             print("ERROR : Nothing to render.")
 
-    # STATIC METHODS.
-    # Nous sommes dans APP.
     def _render_main_menu(self, app):
-        current_menu = None
-        if app.game and app.game.current_menu:
-            current_menu = app.game.current_menu
-        elif app.current_menu:
+        if app.current_menu:
             current_menu = app.current_menu
+        else:
+            current_menu = app.game.current_menu
 
         if current_menu:
             if current_menu.type == MenuType.GRAPHIC:
-                self._main_menu(
-                    self.app_window, current_menu, self.screen_width, self.screen_height
+                self._main_menu(current_menu, self.screen_width, self.screen_height
                 )
             elif current_menu.type == MenuType.STANDARD:
-                self._menu(
-                    self.app_window,
-                    current_menu,
-                    int(self.screen_width / 1.5),
-                    self.screen_width,
-                    self.screen_height,
-                )
+                self._menu(current_menu)
 
-        libtcod.console_flush()
-        libtcod.console_clear(self.app_window)
-
-    # v0.0.15
-    def _menu(self, con, current_menu, width, screen_width, screen_height):
+    def _menu(self, current_menu, width=None):
         if len(current_menu.options) > 26:
             raise ValueError("Cannot have a menu with more than 26 options.")
 
-        # calculate total height for the header (after auto-wrap) and one line per option
-        header_height = libtcod.console_get_height_rect(
-            con, 0, 0, width, screen_height, current_menu.header
-        )
+        header_height = 2
         height = len(current_menu.options) + header_height
 
-        # create an off-screen console that represents the menu's window
-        self.menu_window = libtcod.console_new(self.screen_width, self.screen_height)
+        if not width:
+            width = blt.state(blt.TK_WIDTH) // 6
 
-        # print the header, with auto-wrap
-        libtcod.console_set_default_foreground(self.menu_window, libtcod.white)
-        libtcod.console_print_rect_ex(
-            self.menu_window,
-            0,
-            0,
-            width,
-            height,
-            libtcod.BKGND_NONE,
-            libtcod.LEFT,
-            current_menu.header,
-        )
+        blt.printf(width, height, current_menu.header)
 
-        # print all the options
+        topleft_x = blt.state(blt.TK_WIDTH) // 2 - width
+        topleft_y = blt.state(blt.TK_HEIGHT) // 2 - height // 2
+
         y = header_height
         letter_index = ord("a")
 
         for option_text in current_menu.options:
-            text = "(" + chr(letter_index) + ") " + option_text
-            libtcod.console_print_ex(
-                self.menu_window, 0, y, libtcod.BKGND_NONE, libtcod.LEFT, text
-            )
+            text = f'({chr(letter_index)}) - {option_text}'
+            blt.printf(topleft_x, topleft_y + y, text)
             y += 1
             letter_index += 1
+        blt.refresh()
 
-        # blit the contents of "window" to the root console
-        x = int(screen_width / 2 - width / 2)
-        y = int(screen_height / 2 - height / 2)
-        libtcod.console_blit(self.menu_window, 0, 0, width, height, 0, x, y, 1.0, 0.7)
-
-    # v0.0.15
-    def _main_menu(self, con, current_menu_object, screen_width, screen_height):
+    def _main_menu(self, current_menu_object, screen_width, screen_height):
         if current_menu_object.background_image:
-            libtcod.image_blit_2x(current_menu_object.background_image, 0, 0, 0)
-        # libtcod.image_blit_2x(current_menu_object.background_image, 0, 0, 0)
+            blt.set(f"U+E000: {current_menu_object.background_image}, resize=1260x800, resize-filter=nearest")
+            blt.put(0, 0, 0xE000)  # Background
 
-        libtcod.console_set_default_foreground(0, libtcod.light_yellow)
-        libtcod.console_print_ex(
-            0,
-            int(screen_width / 2),
-            int(screen_height / 2) - 4,
-            libtcod.BKGND_NONE,
-            libtcod.CENTER,
-            current_menu_object.title,
-        )
-        # libtcod.console_print_ex(0, int(screen_width / 2), int(screen_height - 2), libtcod.BKGND_NONE, libtcod.CENTER,
-        #                         'By (Your name here)')
+        title = app_config.APP_TITLE
+        center = (blt.state(blt.TK_WIDTH) - len(title)) // 2
+        blt.printf(center, blt.state(blt.TK_HEIGHT) // 2 - 4, title)
+
+        title = app_config.VERSION
+        center = (blt.state(blt.TK_WIDTH) - len(title)) // 2
+        blt.printf(center, blt.state(blt.TK_HEIGHT) - 2, title)
+
         if current_menu_object.forced_width:
             width = current_menu_object.forced_width
         else:
             width = 24
-        self._menu(con, current_menu_object, width, screen_width, screen_height)
+        self._menu(current_menu_object, width)
 
     # Nous sommes In Game.
     def _render_all(self, app, mouse):
@@ -176,37 +112,19 @@ class Render:
         if game.fov_recompute:
             self._render_map(game)
 
-        # fix pour eviter artefact lors de changement de niveau...TODO: autre solution.
-        if game.reset_game_windows:
-            self.reset_render_windows()
-            game.reset_game_windows = False
-
-        libtcod.console_set_default_background(self.menu_window, libtcod.black)
-        libtcod.console_clear(self.menu_window)
-
         self._render_entities(game)
-
-        libtcod.console_blit(
-            self.game_window, 0, 0, self.screen_width, self.screen_height, 0, 0, 0
-        )
-
-        libtcod.console_set_default_background(self.panel, libtcod.black)
-        libtcod.console_clear(self.panel)
 
         # print message
         self._render_messages(game)
-        self._render_under_mouse(game, mouse)
+        # self._render_under_mouse(game, mouse)
         self._render_interface(game)
         self._render_dungeon_level(game)
-        libtcod.console_blit(
-            self.panel, 0, 0, self.screen_width, self.panel_height, 0, 0, self.panel_y
-        )
 
         if game.current_menu:
             self._render_main_menu(app)
 
         game.fov_recompute = False
-        libtcod.console_flush()
+        blt.refresh()
         self._clear_all(game.dungeon.current_map.get_entities())
 
     def _render_interface(self, game):
@@ -221,29 +139,13 @@ class Render:
         )
 
     def _render_under_mouse(self, game, mouse):
-        libtcod.console_set_default_foreground(self.panel, libtcod.light_gray)
-        libtcod.console_print_ex(
-            self.panel,
-            1,
-            0,
-            libtcod.BKGND_NONE,
-            libtcod.LEFT,
-            self._get_names_under_mouse(mouse, game),
-        )
+        blt.printf(self.panel, 1, '[color=grey]' + self._get_names_under_mouse(mouse, game))
 
     def _render_messages(self, game):
         messages = game.events.message_log.messages
         y = 1
         for message in messages:
-            libtcod.console_set_default_foreground(self.panel, message.color)
-            libtcod.console_print_ex(
-                self.panel,
-                self.log_message_x,
-                y,
-                libtcod.BKGND_NONE,
-                libtcod.LEFT,
-                message.text,
-            )
+            blt.printf(self.log_message_x, y, message.text)
             y += 1
 
     def _get_names_under_mouse(self, mouse, game):
@@ -264,38 +166,10 @@ class Render:
 
     def _render_dungeon_level(self, game):
         dungeon = game.dungeon
-        libtcod.console_print_ex(
-            self.panel,
-            1,
-            3,
-            libtcod.BKGND_NONE,
-            libtcod.LEFT,
-            "{0} : {1}".format(dungeon.name, dungeon.current_floor),
-        )
+        blt.printf(1, 3, "{0} : {1}".format(dungeon.name, dungeon.current_floor))
 
     def _render_bar(self, x, y, name, value, maximum, bar_color, back_color):
-        current_bar_width = int(float(value) / maximum * self.bar_width)
-
-        libtcod.console_set_default_background(self.panel, back_color)
-        libtcod.console_rect(
-            self.panel, x, y, self.bar_width, 1, False, libtcod.BKGND_SCREEN
-        )
-
-        libtcod.console_set_default_background(self.panel, bar_color)
-        if current_bar_width > 0:
-            libtcod.console_rect(
-                self.panel, x, y, current_bar_width, 1, False, libtcod.BKGND_SCREEN
-            )
-
-        libtcod.console_set_default_foreground(self.panel, libtcod.white)
-        libtcod.console_print_ex(
-            self.panel,
-            int(x + self.bar_width / 2),
-            y,
-            libtcod.BKGND_NONE,
-            libtcod.CENTER,
-            "{0}: {1}/{2}".format(name, value, maximum),
-        )
+        blt.printf(int(x + self.bar_width / 2), y, "{0}: {1}/{2}".format(name, value, maximum))
 
     def _render_map(self, game):
         game_map = game.dungeon.current_map
@@ -311,46 +185,22 @@ class Render:
                                         terrain.get('indestructible_wall'),
                                         terrain.get('indestructible_wall_explored')
                                         ):
-                        libtcod.console_set_char_background(
-                            self.game_window,
-                            x,
-                            y,
-                            game_map.colors.get("light_wall"),
-                            libtcod.BKGND_SET,
-                        )
+                        blt.printf(x, y, '[bkcolor=grey] [/bkcolor]')
                     elif current_tile in (terrain.get('ground'),
                                           terrain.get('ground_explored')
                                           ):
-                        libtcod.console_set_char_background(
-                            self.game_window,
-                            x,
-                            y,
-                            game_map.colors.get("light_ground"),
-                            libtcod.BKGND_SET,
-                        )
+                        blt.printf(x, y, '[bkcolor=dark green] [/bkcolor]')
                 elif current_tile.explored:
                     if current_tile in (terrain.get('wall'),
                                         terrain.get('wall_explored'),
                                         terrain.get('indestructible_wall'),
                                         terrain.get('indestructible_wall_explored')
                                         ):
-                        libtcod.console_set_char_background(
-                            self.game_window,
-                            x,
-                            y,
-                            game_map.colors.get("dark_wall"),
-                            libtcod.BKGND_SET,
-                        )
+                        blt.printf(x, y, '[bkcolor=dark grey] [/bkcolor]')
                     elif current_tile in (terrain.get('ground'),
                                           terrain.get('ground_explored')
                                           ):
-                        libtcod.console_set_char_background(
-                            self.game_window,
-                            x,
-                            y,
-                            game_map.colors.get("dark_ground"),
-                            libtcod.BKGND_SET,
-                        )
+                        blt.printf(x, y, '[bkcolor=darker green] [/bkcolor]')
 
     def _render_entities(self, game):
         game_map = game.dungeon.current_map
@@ -363,8 +213,7 @@ class Render:
     def _draw_entity(self, entity, game_map):
         if libtcod.map_is_in_fov(game_map.fov_map, entity.x, entity.y) or \
                 (entity.landmark and game_map.tiles[entity.x][entity.y].explored):
-            libtcod.console_set_default_foreground(self.game_window, entity.color)
-            libtcod.console_put_char(self.game_window, entity.x, entity.y, entity.char, libtcod.BKGND_NONE)
+            blt.printf(entity.x, entity.y, entity.char)
 
     def _clear_all(self, entities):
         for entity in entities:
@@ -372,6 +221,4 @@ class Render:
 
     def _clear_entity(self, entity):
         # erase the character that represents this object
-        libtcod.console_put_char(
-            self.game_window, entity.x, entity.y, " ", libtcod.BKGND_NONE
-        )
+        blt.printf(entity.x, entity.y, ' ')

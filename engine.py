@@ -1,4 +1,4 @@
-import tcod as libtcod
+from bearlibterminal import terminal as blt
 
 from config import app_config
 from render_engine import Render
@@ -27,30 +27,19 @@ class App:
         self.app_states = None
         self.current_menu = None
         self.quit_app = False
-
         self.game = None
 
     def run(self):
-        # initialize controls.
-        key = libtcod.Key()
-        mouse = libtcod.Mouse()
-
         self.app_states = AppStates.MAIN_MENU
         self.current_menu = MainMenu(self)
 
-        # main loop
-        while not libtcod.console_is_window_closed():
-            # check key / mouse event
-            libtcod.sys_check_for_event(
-                libtcod.EVENT_KEY_PRESS | libtcod.EVENT_MOUSE, key, mouse
-            )
+        while True:
+            if blt.has_input():
+                key = blt.read()
 
-            self.render_engine.render_app(self, mouse)
+                self.input_handler.press(key)
 
-            if self.game and self.game.reset_game_windows:
-                self.render_engine.reset_render_windows()
-
-            self.input_handler.press(key)
+            self.render_engine.render_app(self)
 
             if self.app_states == AppStates.GAME:
                 self.game.game_turn()
@@ -59,10 +48,9 @@ class App:
                 break
 
     def open_menu(self, menu):
-        self.current_menu = None
-        self.render_engine.render_app(self, None)
+        blt.clear()
+        blt.refresh()
         self.current_menu = menu
-
 
     def exit_window(self):
         # Menus in game
@@ -88,6 +76,8 @@ class App:
                 self.quit_app = True
             else:
                 self.current_menu = MainMenu(self)
+        blt.clear()
+        blt.refresh()
 
     def full_screen(self):
-        libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
+        raise NotImplementedError

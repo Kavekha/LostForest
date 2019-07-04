@@ -1,7 +1,12 @@
-VERSION = "0.4.7"
+VERSION = '0.5.1b'
+APP_TITLE = 'Cursed Forest'
 
 SCREEN_WIDTH = 80
 SCREEN_HEIGHT = 50
+
+CELL_SIZE = '16x16'
+APP_FONT = 'Default'
+
 BAR_WIDTH = 20
 PANEL_HEIGHT = 7
 
