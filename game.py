@@ -8,6 +8,7 @@ from handlers.event_handler import EventHandler
 from data_loaders.data_loaders import save_game
 from map_objects.dungeon import Dungeon
 from utils.fov_functions import initialize_fov
+from render_engine import RenderLayer
 
 
 from systems.target_selection import Target
@@ -56,7 +57,19 @@ class Game:
 
         self.full_recompute_fov()
 
+    def open_menu(self, menu):
+        blt.layer(RenderLayer.BACKGROUND.value)
+        blt.clear()
+        blt.layer(RenderLayer.MENU.value)
+        blt.clear()
+        blt.refresh()
+        self.current_menu = menu
+
     def close_menu(self):
+        blt.layer(RenderLayer.BACKGROUND.value)
+        blt.clear()
+        blt.layer(RenderLayer.MENU.value)
+        blt.clear()
         self.current_menu = None
 
     def activate_target_mode(self, target_source, target_type):

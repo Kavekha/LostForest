@@ -62,7 +62,7 @@ class Inventory:
             raise NotImplementedError
 
         game = self.owner.game
-        game.current_menu = menu
+        game.open_menu(menu)
 
     def create_drop_menu(self):
         drop_menu = DropMenu(self)

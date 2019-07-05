@@ -4,8 +4,6 @@ from bearlibterminal import terminal as blt
 from enum import Enum
 
 from states.app_states import AppStates
-from menus.menu import MenuType
-from config import app_config
 
 
 class RenderLayer(Enum):
@@ -14,6 +12,7 @@ class RenderLayer(Enum):
     INTERFACE = 2
     BACKGROUND = 3  # Image
     MENU = 4
+
 
 class RenderOrder(Enum):
     CORPSE = 1
@@ -29,25 +28,17 @@ class Render:
     doit pouvoir être remplacé facilement par une autre librairie.
     """
 
-    def __init__(self, screen_width=80, screen_height=50, bar_width=20, panel_height=7):
+    def __init__(self):
         blt.open()
 
-        bar_width = blt.state(blt.TK_WIDTH) - (blt.state(blt.TK_WIDTH) // 4)
-        panel_height = blt.state(blt.TK_HEIGHT) // 6
-
-        self.screen_width = blt.state(blt.TK_WIDTH)
-        self.screen_height = blt.state(blt.TK_HEIGHT)
-        self.panel_height = panel_height
-        self.bar_width = bar_width
-        self.panel_y = screen_height - panel_height
-        self.message_x = bar_width
-        self.message_width = screen_width - bar_width - 2
-        self.message_height = panel_height - 1
+        self.bar_width = blt.state(blt.TK_WIDTH) - (blt.state(blt.TK_WIDTH) // 4)
+        self.panel_height = blt.state(blt.TK_HEIGHT) // 6
+        self.panel_y = blt.state(blt.TK_WIDTH) - self.panel_height
+        self.message_width = blt.state(blt.TK_WIDTH)- self.bar_width - 2
+        self.message_height = self.panel_height - 1
         self.log_message_x = int(blt.state(blt.TK_WIDTH) / 3.5)
-        self.log_message_width = screen_width - bar_width - 2
-        self.log_message_height = panel_height - 1
-
-        print(f'bar width is {self.bar_width}, message x is {self.message_x}')
+        self.log_message_width = blt.state(blt.TK_WIDTH) - self.bar_width - 2
+        self.log_message_height = self.panel_height - 1
 
         blt.refresh()
 
@@ -70,16 +61,20 @@ class Render:
         if len(current_menu.options) > 26:
             raise ValueError("Cannot have a menu with more than 26 options.")
 
+        info = current_menu.info
+        center = (blt.state(blt.TK_WIDTH) - len(info)) // 2
+        blt.printf(center, blt.state(blt.TK_HEIGHT) - 2, info)
+
         header_height = 2
         height = len(current_menu.options) + header_height
 
         if not width:
             width = blt.state(blt.TK_WIDTH) // 6
 
-        blt.printf(width, height, current_menu.header)
-
         topleft_x = blt.state(blt.TK_WIDTH) // 2 - width
         topleft_y = blt.state(blt.TK_HEIGHT) // 2 - height // 2
+
+        blt.printf(topleft_x, topleft_y - height, current_menu.header)
 
         y = header_height
         letter_index = ord("a")
@@ -98,13 +93,9 @@ class Render:
             blt.set(f"U+E000: {current_menu_object.background_image}, resize=1260x800, resize-filter=nearest")
             blt.put(0, 0, 0xE000)  # Background
 
-        title = app_config.APP_TITLE
+        title = current_menu_object.title
         center = (blt.state(blt.TK_WIDTH) - len(title)) // 2
         blt.printf(center, blt.state(blt.TK_HEIGHT) // 2 - 4, title)
-
-        title = app_config.VERSION
-        center = (blt.state(blt.TK_WIDTH) - len(title)) // 2
-        blt.printf(center, blt.state(blt.TK_HEIGHT) - 2, title)
 
         if current_menu_object.forced_width:
             width = current_menu_object.forced_width
@@ -178,22 +169,22 @@ class Render:
                                         terrain.get('indestructible_wall'),
                                         terrain.get('indestructible_wall_explored')
                                         ):
-                        blt.printf(x, y, '[bkcolor=grey] [/bkcolor]')
+                        blt.printf(x, y, f'[bkcolor={game_map.colors.get("light_wall")}] [/bkcolor]')
                     elif current_tile in (terrain.get('ground'),
                                           terrain.get('ground_explored')
                                           ):
-                        blt.printf(x, y, '[bkcolor=dark green] [/bkcolor]')
+                        blt.printf(x, y, f'[bkcolor={game_map.colors.get("light_ground")}] [/bkcolor]')
                 elif current_tile.explored:
                     if current_tile in (terrain.get('wall'),
                                         terrain.get('wall_explored'),
                                         terrain.get('indestructible_wall'),
                                         terrain.get('indestructible_wall_explored')
                                         ):
-                        blt.printf(x, y, '[bkcolor=dark grey] [/bkcolor]')
+                        blt.printf(x, y, f'[bkcolor={game_map.colors.get("dark_wall")}] [/bkcolor]')
                     elif current_tile in (terrain.get('ground'),
                                           terrain.get('ground_explored')
                                           ):
-                        blt.printf(x, y, '[bkcolor=darker green] [/bkcolor]')
+                        blt.printf(x, y, f'[bkcolor={game_map.colors.get("dark_ground")}] [/bkcolor]')
 
     def _render_entities(self, game):
         blt.layer(RenderLayer.ENTITIES.value)

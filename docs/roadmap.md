@@ -116,6 +116,7 @@
         [ ] 100     Compendium : Meilleure gestion des Brains, use_function, target type, etc. Dictionnaires relous à M.A.J.
         [ ] 100     Compendium : Json plus lisible sur la durée.
         [ ] 250     Pluss de securité à la creation du dictionnaire monstres / items et plus de sécurité pour leur ajout.
+        [ ] 250     Gestion des menus au niveau de l'app. Close & Open dans ce systeme plutot que dans Game et App.
 
         # Dirty fixes
         [ ] 50      render : solution degueu du reset game window pour artefacts map precedente.

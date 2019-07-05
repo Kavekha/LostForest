@@ -1,7 +1,6 @@
 from bearlibterminal import terminal as blt
 
-from config import app_config
-from render_engine import Render
+from render_engine import Render, RenderLayer
 from states.app_states import AppStates
 from systems.commands import CommandController
 from handlers.input_handlers import InputHandler
@@ -16,13 +15,7 @@ class App:
         self.input_handler = InputHandler(self, self.command_controller)
 
         # render engine
-        screen_width = app_config.SCREEN_WIDTH
-        screen_height = app_config.SCREEN_HEIGHT
-        bar_width = app_config.BAR_WIDTH
-        panel_height = app_config.PANEL_HEIGHT
-        self.render_engine = Render(
-            screen_width, screen_height, bar_width, panel_height
-        )
+        self.render_engine = Render()
 
         self.app_states = None
         self.current_menu = None
@@ -48,6 +41,9 @@ class App:
                 break
 
     def open_menu(self, menu):
+        blt.layer(RenderLayer.BACKGROUND.value)
+        blt.clear()
+        blt.layer(RenderLayer.MENU.value)
         blt.clear()
         blt.refresh()
         self.current_menu = menu
