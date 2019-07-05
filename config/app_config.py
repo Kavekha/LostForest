@@ -1,5 +1,5 @@
-VERSION = '0.5.2'
-APP_TITLE = 'Cursed Forest'
+VERSION = '0.5.3'
+APP_TITLE = 'CURSED FOREST'
 
 CELL_SIZE = '16x16'
 APP_FONT = 'Default'

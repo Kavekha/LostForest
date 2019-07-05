@@ -4,6 +4,7 @@ from bearlibterminal import terminal as blt
 from enum import Enum
 
 from states.app_states import AppStates
+from menus.menu import MenuType
 
 
 class RenderLayer(Enum):
@@ -23,6 +24,99 @@ class RenderOrder(Enum):
 
 
 class Render:
+    def __init__(self):
+        self.has_menu = False
+
+        blt.open()
+        blt.refresh()
+
+    def render_app(self, app):
+        # que doit on mettre à jour?
+        if self.has_menu != app.has_menu_open():
+            self.has_menu = app.has_menu_open()
+            if self.has_menu:
+                self.render_menu(self.has_menu)
+
+        blt.refresh()
+
+    def render_menu(self, open_menu):
+        print(f'j ai un menu que je n ai pas affiche jusqu a maintenant {open_menu}')
+        # on efface les menus existants.
+        self._clear_layer_background()
+        self._clear_layer_menu()
+
+        if open_menu.type == MenuType.GRAPHIC:
+            self._render_graphic_menu(open_menu)
+        self._render_standard_menu(open_menu)
+
+    def _render_graphic_menu(self, open_menu):
+        blt.layer(RenderLayer.BACKGROUND.value)
+        blt.set(f"U+E000: {open_menu.background_image}, resize=1260x800, resize-filter=nearest")
+        blt.put(0, 0, 0xE000)  # Background
+
+    def _render_standard_menu(self, open_menu):
+        blt.layer(RenderLayer.MENU.value)
+
+        title = open_menu.title
+        header = open_menu.header
+        info = open_menu.info
+        options = open_menu.display_options
+
+        print(f'menu has {title}, {header}, {info}, {options}')
+
+        x = blt.state(blt.TK_WIDTH) // 2
+        y = blt.state(blt.TK_HEIGHT) // 2
+
+        x_title = blt.state(blt.TK_WIDTH) // 2 - (len(title) // 2)
+        y_title = blt.state(blt.TK_HEIGHT) // 4
+        blt.printf(x_title, y_title, title)
+
+        x_header = blt.state(blt.TK_WIDTH) // 2 - (len(header) // 2)
+        y_header = blt.state(blt.TK_HEIGHT) // 3
+        blt.printf(x_header, y_header, header)
+
+        if options:
+            x_option = blt.state(blt.TK_WIDTH) // 2 - (len(title) // 2)
+            y_option = blt.state(blt.TK_HEIGHT) // 3 + 3
+            for option in options:
+                blt.printf(x_option, y_option, option)
+                y_option += 1
+
+        x_info = blt.state(blt.TK_WIDTH) // 2 - (len(info) // 2)
+        y_info = blt.state(blt.TK_HEIGHT) - 2
+        blt.printf(x_info, y_info, info)
+
+
+    def _clear_layer_background(self):
+        blt.layer(RenderLayer.BACKGROUND.value)
+        blt.clear()
+
+    def _clear_layer_menu(self):
+        blt.layer(RenderLayer.MENU.value)
+        blt.clear()
+
+
+    '''
+    game = app.game
+    if game.fov_recompute:
+        game.fov_recompute = False
+
+        self._render_map(game)
+
+    self._render_entities(game)
+
+    self._render_interface(game)
+
+    if game.current_menu:
+        self._render_main_menu(app)
+
+    game.fov_recompute = False
+    blt.refresh()
+    self._clear_all(game.dungeon.current_map.get_entities())
+    '''
+
+
+class OldRender:
     """
     responsabilité: Afficher les elements du jeu & interface.
     doit pouvoir être remplacé facilement par une autre librairie.

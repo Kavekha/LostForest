@@ -1,3 +1,12 @@
+v0.5.3
+    TODO:
+        refacto Render
+        width, height, etc pour meilleur placement.
+        couleurs dans texte
+        couleurs npc / items
+        fix : auto save
+        fix : fov recompute systematique (event quand on move? Quand on change d'etage?)
+
 v0.5.2
     Layers pour Map, Entities, interface, menus.
     Logs et menus correctement raffraichis.

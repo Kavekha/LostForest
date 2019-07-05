@@ -11,7 +11,7 @@ class MainMenu(Menu):
         super().__init__(source)
         self.type = MenuType.GRAPHIC
         self.title = app_config.APP_TITLE
-        self.header = ""
+        self.header = "Welcome"
         self.info = app_config.VERSION
         self.background_image = './medias/creepy_wood.jpg'
         self.display_options = [Texts.get_text('MAIN_MENU_NEW_GAME'),

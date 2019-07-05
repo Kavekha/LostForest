@@ -40,6 +40,13 @@ class App:
             if self.quit_app:
                 break
 
+    def has_menu_open(self):
+        if self.current_menu:
+            return self.current_menu
+        elif self.game and self.game.current_menu:
+            return self.game.current_menu
+        return False
+
     def open_menu(self, menu):
         blt.layer(RenderLayer.BACKGROUND.value)
         blt.clear()
