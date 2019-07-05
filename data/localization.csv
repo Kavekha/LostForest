@@ -11,11 +11,11 @@ WOUND_HEALED;Vos blessures vont mieux!;Your wounds start to feel better!
 INVENTORY_FULL;Votre inventaire est plein.;You cannot carry any more, your inventory is full
 NOTHING_TO_PICK_UP;Il n y a rien a ramasser ici.;There is nothing here to pick up.
 INVENTORY_EMPTY;Inventaire vide;Inventory is empty
-INVENTORY_HEADER;Appuyez sur la touche associe a l objet a utiliser. ESC pour annuler. \n;Press the key next to an item to use it, or Esc to cancel.
+INVENTORY_HEADER;Appuyez sur la touche associe a l objet a utiliser. ESC pour annuler.;Press the key next to an item to use it, or Esc to cancel.
 DROP_INVENTORY_HEADER;"(
-        ""Appuyer sur la touche a cote de l objet a jeter. ESC pour annuler.\n""
+        ""Appuyer sur la touche a cote de l objet a jeter. ESC pour annuler.""
     )";"(
-        ""Press the key next to an item to drop it, or Esc to cancel.\n""
+        ""Press the key next to an item to drop it, or Esc to cancel."
     )"
 DROP_ITEM;Vous lachez {} sur le sol.;You drop {} on the floor.
 PICK_UP_ITEM;Vous ramassez {}.;You pick up the {}.
