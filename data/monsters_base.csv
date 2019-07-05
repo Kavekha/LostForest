@@ -1,7 +1,7 @@
 defname;name;base;char;color;brain;hp;might;dexterity;vitality;base_damage_min;base_damage_max;armor
-player;Vagabond;player;@;libtcod.white;None;3000;3;3;3;0;2;0
-ougloth;Ougloth;ougloth;o;libtcod.dark_red;BasicMonster;10;4;3;3;0;2;0
-root;Racines;root;x;libtcod.desaturated_red;Brainless;5;0;0;1;0;0;2
-gob_dog;Chien goblin;gob_dog;c;libtcod.desaturated_orange;BasicMonster;6;3;5;2;2;4;0
-charencon;Charencon Geant;charencon;N;libtcod.desaturated_blue;BasicMonster;20;4;2;5;2;5;2
-tertre_errant;Tertre Errant;tertre_errant;Y;libtcod.desaturated_turquoise;BasicMonster;25;4;2;6;1;3;3
+player;Vagabond;player;@;white;None;3000;3;3;3;0;2;0
+ougloth;Ougloth;ougloth;o;red;BasicMonster;10;4;3;3;0;2;0
+root;Racines;root;x;libtcod.red;Brainless;5;0;0;1;0;0;2
+gob_dog;Chien goblin;gob_dog;c;light red;BasicMonster;6;3;5;2;2;4;0
+charencon;Charencon Geant;charencon;N;light red;BasicMonster;20;4;2;5;2;5;2
+tertre_errant;Tertre Errant;tertre_errant;Y;light red;BasicMonster;25;4;2;6;1;3;3

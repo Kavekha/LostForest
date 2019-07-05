@@ -117,6 +117,7 @@
         [ ] 100     Compendium : Json plus lisible sur la durée.
         [ ] 250     Pluss de securité à la creation du dictionnaire monstres / items et plus de sécurité pour leur ajout.
         [ ] 250     Gestion des menus au niveau de l'app. Close & Open dans ce systeme plutot que dans Game et App.
+        [ ] 50      PAs de dossier saves? Le creer automatiquement.
 
         # Dirty fixes
         [ ] 50      render : solution degueu du reset game window pour artefacts map precedente.

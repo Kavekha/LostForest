@@ -1,6 +1,6 @@
 defname;name;char;color;use_function;equippable;power;target_type;slot;weapon_dmg_min;weapon_dmg_max
-healing_potion;Potion de soins;!;libtcod.violet;heal;;8;SELF;;;
-acid_potion;Potion d acide;!;libtcod.violet;acide;;12;FIGHTING_ENTITY;;;
+healing_potion;Potion de soins;!;light violet;heal;;8;SELF;;;
+acid_potion;Potion d acide;!;light violet;acide;;12;FIGHTING_ENTITY;;;
 staff;staff;/;libtcod.white;;True;;;MAIN_HAND;1;4
 bracelet;bracelet;o;libtcod.white;;True;;;OFF_HAND;;
 talisman;talisman;v;libtcod.white;;True;;;NECK;;

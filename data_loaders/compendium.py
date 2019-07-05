@@ -64,13 +64,15 @@ class Compendium:
                         if carac:
                             if carac == 'defname':
                                 defname = value.lower()
-                            elif carac == 'color' and value:
-                                compendium_stats.update({carac: eval(value)})
                             else:
                                 if not value:
                                     continue
                                 compendium_stats.update({carac: value})
                                 compendium.update({defname: compendium_stats})
+                            '''
+                            elif carac == 'color' and value:
+                                compendium_stats.update({carac: eval(value)})
+                            '''
 
         return compendium
 

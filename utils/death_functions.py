@@ -7,7 +7,7 @@ from data_loaders.localization import Texts
 
 def become_corpse(entity, npc_killed=True):
     entity.char = "%"
-    entity.color = libtcod.dark_red
+    entity.color = 'dark red'
     if npc_killed:
         entity.render_order = RenderOrder.CORPSE
         entity.blocks = False

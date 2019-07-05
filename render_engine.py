@@ -27,6 +27,7 @@ class RenderOrder(Enum):
 class Render:
     def __init__(self):
         self.has_menu = False
+        self.round = 0
 
         blt.open()
         self.menu_title_placement = (
@@ -55,7 +56,6 @@ class Render:
         )
 
         blt.refresh()
-
 
     def get_menu_position(self, position):
         position = position.lower()
@@ -90,6 +90,14 @@ class Render:
             if game.fov_recompute:
                 game.fov_recompute = False
                 self.render_map(game)
+
+            '''
+            if game.fov_recompute and self.round < game.round:
+                game.fov_recompute = False
+                self.render_map(game)
+                print('render map requested')
+                self.round = game.round
+                '''
 
             self.render_entities(game)
 
@@ -172,8 +180,6 @@ class Render:
             x, y = self.menu_header_placement
         x = (blt.state(blt.TK_WIDTH) - get_biggest_line_len(header)) // 2
         blt.printf(x, y, header)
-        print(f'header len is {header}')
-        print(f'lines in header is {get_biggest_line_len(header)}')
 
         if position:
             x, y = position
@@ -214,6 +220,7 @@ class Render:
 
     def render_interface(self, game):
         blt.layer(RenderLayer.INTERFACE.value)
+        blt.color(blt.color_from_name('white'))
         self._clear_layer_interface()
         x, y = self.panel
         self._render_bar(
@@ -235,7 +242,8 @@ class Render:
         messages = game.events.message_log.messages
         x, y = self.log_panel
         for message in messages:
-            blt.printf(x, y, message.text)
+            text = f'[color={message.color}]{message.text}'
+            blt.printf(x, y, text)
             y += 1
 
     def _render_dungeon_name(self, game):
@@ -256,7 +264,11 @@ class Render:
     def _draw_entity(self, entity, game_map):
         if libtcod.map_is_in_fov(game_map.fov_map, entity.x, entity.y) or \
                 (entity.landmark and game_map.tiles[entity.x][entity.y].explored):
+            prev_color = blt.state(blt.TK_COLOR)
+            print(f'entity to draw is {entity.name}')
+            blt.color(blt.color_from_name(entity.color))
             blt.printf(entity.x, entity.y, entity.char)
+            blt.color(prev_color)
 
     def _clear_all(self, entities):
         blt.layer(RenderLayer.ENTITIES.value)

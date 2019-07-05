@@ -27,12 +27,14 @@ class App:
         self.current_menu = MainMenu(self)
 
         while True:
+            key = None
+
             if blt.has_input():
                 key = blt.read()
 
-                self.input_handler.press(key)
-
             self.render_engine.render_app(self)
+
+            self.input_handler.press(key)
 
             if self.app_states == AppStates.GAME:
                 self.game.game_turn()

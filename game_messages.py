@@ -2,7 +2,7 @@ import tcod as libtcod
 
 
 class Message:
-    def __init__(self, text, color=libtcod.white):
+    def __init__(self, text, color='white'):
         self.text = text
         self.color = color
 
@@ -12,7 +12,7 @@ class MessageLog:
         self.messages = []
         self.history = []
 
-    def add_message(self, message, color=libtcod.white):
+    def add_message(self, message, color='white'):
         self.messages.append(Message(message, color))
         if len(self.messages) > 5:
             self.add_history(self.messages[0])

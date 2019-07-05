@@ -1,37 +1,37 @@
 import tcod as libtcod
 
 
-NEUTRAL_INFO_COLOR = libtcod.white
-IMPORTANT_INFO_COLOR = libtcod.yellow
-POSITIVE_INFO_COLOR = libtcod.lighter_blue
+NEUTRAL_INFO_COLOR = 'white'
+IMPORTANT_INFO_COLOR = 'yellow'
+POSITIVE_INFO_COLOR = 'lighter blue'
 
 # Fighting info
-YOU_ARE_DEAD = libtcod.red
-HOSTILE_KILLED = libtcod.orange
-DAMAGING_ATTACK = libtcod.white
-NO_DAMAGE_ATTACK = libtcod.grey
+YOU_ARE_DEAD = 'red'
+HOSTILE_KILLED = 'orange'
+DAMAGING_ATTACK = 'white'
+NO_DAMAGE_ATTACK = 'grey'
 
 # collection
-ITEM_PICKED = libtcod.light_blue
-ITEM_DROPED = libtcod.light_blue
-INVENTORY_FULL = libtcod.yellow
-NOTHING_TO_PICK_UP = libtcod.yellow
-CANNOT_BE_USED = libtcod.orange
+ITEM_PICKED = 'light blue'
+ITEM_DROPED = 'light blue'
+INVENTORY_FULL = 'yellow'
+NOTHING_TO_PICK_UP = 'yellow'
+CANNOT_BE_USED = 'orange'
 
 # Items
-THROW_ITEM_COLOR = libtcod.orange
+THROW_ITEM_COLOR = 'orange'
 
 # Health
-FULL_HEAL_ALREADY = libtcod.yellow
-WOUND_HEALED = libtcod.green
+FULL_HEAL_ALREADY = 'yellow'
+WOUND_HEALED = 'green'
 
 # Travel
-REST_AFTER_LANDMARK_COLOR = libtcod.light_violet
+REST_AFTER_LANDMARK_COLOR = 'light violet'
 
 # Equipement
-UNEQUIP = libtcod.dark_yellow
-EQUIP = libtcod.yellow
+UNEQUIP = 'dark yellow'
+EQUIP = 'yellow'
 
 # Target
-TARGET_MESS_COLOR = libtcod.dark_yellow
-TARGET_ERROR_COLOR = libtcod.yellow
+TARGET_MESS_COLOR = 'dark yellow'
+TARGET_ERROR_COLOR = 'yellow'

@@ -246,6 +246,8 @@ def create_fighting_entity(game, entity_defname, x, y, player=False):
 
         entity.fighter.death_function = kill_player
 
+        entity.player = True
+
     return entity
 
 
