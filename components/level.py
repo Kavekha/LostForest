@@ -40,7 +40,7 @@ class Level:
 
     def show_character_screen(self):
         game = self.owner.game
-        game.current_menu = self.create_character_menu()
+        game.open_menu(self.create_character_menu())
 
     def create_character_menu(self):
         character_screen = CharacterMenu(self.owner)

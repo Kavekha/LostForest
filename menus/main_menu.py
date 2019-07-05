@@ -1,5 +1,4 @@
-from bearlibterminal import terminal as blt
-
+from config import app_config
 from game import Game
 from data_loaders.data_loaders import load_game, refresh_at_load
 from menus.menu import MenuType, Menu
@@ -11,8 +10,9 @@ class MainMenu(Menu):
     def __init__(self, source):
         super().__init__(source)
         self.type = MenuType.GRAPHIC
-        self.title = "CURSED FOREST"
+        self.title = app_config.APP_TITLE
         self.header = ""
+        self.info = app_config.VERSION
         self.background_image = './medias/creepy_wood.jpg'
         self.display_options = [Texts.get_text('MAIN_MENU_NEW_GAME'),
                                 Texts.get_text('MAIN_MENU_LOAD_GAME'),

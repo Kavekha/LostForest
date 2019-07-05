@@ -1,9 +1,6 @@
 VERSION = '0.5.2'
 APP_TITLE = 'Cursed Forest'
 
-SCREEN_WIDTH = 80
-SCREEN_HEIGHT = 50
-
 CELL_SIZE = '16x16'
 APP_FONT = 'Default'
 
