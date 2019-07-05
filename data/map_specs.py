@@ -9,29 +9,6 @@ from map_generators.broguelike_method import MapGeneratorBrogueLike
 
 def get_map_config(map_name):
     config = {
-        'map_test': {
-            'map_algorithm': MapGeneratorJotaf,
-            'map_width': 80,
-            'map_height': 60,
-            'room_min_size': 3,
-            'room_max_size': 5,
-            'max_rooms': 30,
-            'max_placement_iterations': 20,
-            'max_iterations': 600,
-            'corridor_chances': 0,
-            'room_if_no_corridor': 0,
-            'any_room_may_be_previous': 0,
-            "min_mobs": [[10, 1], [11, 2], [13, 4], [15, 6], [17, 8], [20, 10]],
-            "max_mob_room": [[10, 1], [11, 2], [13, 4], [15, 6], [17, 8], [20, 10]],
-            "min_items": [[10, 1]],
-            "max_item_room": [[3, 1]],
-            "colors": {
-                "dark_wall": libtcod.Color(0, 0, 100),
-                "dark_ground": libtcod.Color(50, 50, 150),
-                "light_wall": libtcod.Color(130, 110, 50),
-                "light_ground": libtcod.Color(200, 180, 50),
-            }
-        },
         "standard_map": {
             'map_algorithm': MapGeneratorJotaf,
             'map_width': 80,
@@ -49,10 +26,10 @@ def get_map_config(map_name):
             "min_items": [[10, 1]],
             "max_item_room": [[3, 1]],
             "colors": {
-                "dark_wall": libtcod.Color(0, 0, 100),
-                "dark_ground": libtcod.Color(50, 50, 150),
-                "light_wall": libtcod.Color(130, 110, 50),
-                "light_ground": libtcod.Color(200, 180, 50),
+                "dark_wall": 'standard_dark_wall',
+                "dark_ground": 'standard_dark_ground',
+                "light_wall": 'standard_light_wall',
+                "light_ground": 'standard_light_ground'
             },
         },
         "forest_map": {
@@ -72,10 +49,10 @@ def get_map_config(map_name):
             "min_items": [[10, 1]],
             "max_item_room": [[3, 1]],
             "colors": {
-                "dark_wall": libtcod.Color(20, 50, 50),
-                "dark_ground": libtcod.Color(20, 100, 50),
-                "light_wall": libtcod.Color(40, 125, 90),
-                "light_ground": libtcod.Color(60, 175, 120),
+                "dark_wall": 'forest_dark_wall', # libtcod.Color(20, 50, 50),
+                "dark_ground": 'forest_dark_ground', # libtcod.Color(20, 100, 50),
+                "light_wall": 'forest_light_wall', # libtcod.Color(40, 125, 90),
+                "light_ground": 'forest_light_ground'   # libtcod.Color(60, 175, 120),
             },
         },
         "old_forest": {
@@ -95,10 +72,10 @@ def get_map_config(map_name):
             "min_items": [[10, 1]],
             "max_item_room": [[3, 1]],
             "colors": {
-                "dark_wall": libtcod.Color(20, 40, 60),
-                "dark_ground": libtcod.Color(20, 90, 70),
-                "light_wall": libtcod.Color(40, 105, 100),
-                "light_ground": libtcod.Color(60, 155, 140),
+                "dark_wall": 'old_forest_dark_wall',
+                "dark_ground": 'old_forest_dark_ground',
+                "light_wall": 'old_forest_light_wall',
+                "light_ground": 'old_forest_light_ground'
             },
         },
         "thorns": {
@@ -118,10 +95,10 @@ def get_map_config(map_name):
             "min_items": [[10, 1]],
             "max_item_room": [[3, 1]],
             "colors": {
-                "dark_wall": libtcod.Color(30, 30, 20),
-                "dark_ground": libtcod.Color(30, 45, 25),
-                "light_wall": libtcod.Color(60, 40, 40),
-                "light_ground": libtcod.Color(60, 90, 50),
+                "dark_wall": 'thorns_dark_wall',
+                "dark_ground": 'thorns_dark_ground',
+                "light_wall": 'thorns_light_wall',
+                "light_ground": 'thorns_light_ground'
             },
         },
     }

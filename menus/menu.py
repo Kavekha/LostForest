@@ -14,6 +14,7 @@ class Menu:
         self.type = MenuType.STANDARD
         self.title = ""  # Graphic only
         self.header = ""
+        self.info = ""
         self.background_image = None  # libtcod.image_load('menu_background.png')
         self._options = []
         self.display_options = None

@@ -1,4 +1,4 @@
-NEXT:
+
     DONGEON:
         [ ] 250     Tile personnalisée pour l'affichage : Char, couleurs selon la tile et non pas au niveau de la map.
         [ ] 250     'Salles' avec evenements-types & variantes.
@@ -116,6 +116,7 @@ NEXT:
         [ ] 100     Compendium : Meilleure gestion des Brains, use_function, target type, etc. Dictionnaires relous à M.A.J.
         [ ] 100     Compendium : Json plus lisible sur la durée.
         [ ] 250     Pluss de securité à la creation du dictionnaire monstres / items et plus de sécurité pour leur ajout.
+        [ ] 250     Gestion des menus au niveau de l'app. Close & Open dans ce systeme plutot que dans Game et App.
 
         # Dirty fixes
         [ ] 50      render : solution degueu du reset game window pour artefacts map precedente.
@@ -138,21 +139,12 @@ NEXT:
 
     OBJECTIFS:
 
-        # RELEASE 0.5 : Systeme de combat & Egos
-            [/] Systeme de combat mis à jour.
-            [/] Nouvelle fiche de personnage.
-            [/] Chargement des datas monstres via des CSV, plus faciles à mettre à jour.
-            [/] Refacto creation entités monstres & player.
-            [/] Table items : Par categorie, puis par items. Idem pour monstres.
-            [/] Chargement des datas items via des CSV.
-            [/] Egos items, base.
-            [ ] ?
-
         # RELEASE 0.6 : BearLib !!
-            [ ] Remplacement des Commands / keys.
-            [ ] Affichage Render, sans layer.
+            [/] Remplacement des Commands / keys.
+            [ /] Affichage Render, sans layer.
             [ ] Affichage avec layer.
             [ ] Refacto menus.
+            [ ] Refacto render
 
         # RELEASE ? : Apparence.
             [ ] Images du jeu.

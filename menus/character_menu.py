@@ -11,7 +11,7 @@ class CharacterMenu(Menu):
         self.background_image = None  # libtcod.image_load('menu_background.png')
         self._options = []
         self.display_options = None
-        self.forced_width = 48
+        self.forced_width = None
         self.update_options()
 
     def update_options(self):
